@@ -25,8 +25,13 @@ namespace rg
 
 		void Show();
 
+		void ShutDown();
+
+		const HWND& getWindow();
+
 	private:
 		HWND mHwnd;
+		WNDCLASSEX mWc;
 	};
 
 

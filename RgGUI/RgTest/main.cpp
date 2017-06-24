@@ -1,10 +1,15 @@
 #include "../RgGUI/RgGUIWindow.h"
+#include "../RgGUI/Rgdx11.h"
 #pragma comment(lib,"RgGUI.lib")
 
 using namespace rg;
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	//MSG proc
+
+	//dx11 proc
+
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -32,7 +37,16 @@ int main()
 	desc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 
 	RgGUIWindow window(desc);
+
+	RgDX11 dx11;
+	if (dx11.CreateDeiviceD3D(window.getWindow()) < 0)
+	{
+		dx11.ShutDown();
+		window.ShutDown();
+		return 1;
+	}
 	window.Show();
+
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -49,6 +63,9 @@ int main()
 			done = true;
 		}
 	}
+
+	dx11.ShutDown();
+	window.ShutDown();
 
 	return 0;
 }

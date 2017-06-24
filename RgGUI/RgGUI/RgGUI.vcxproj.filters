@@ -24,12 +24,18 @@
     <ClInclude Include="RgGUIdx11.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Rgdx11.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RgGUIWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RgGUIdx11.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Rgdx11.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

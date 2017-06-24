@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Rgdx11.h" />
     <ClInclude Include="RgGUIdx11.h" />
     <ClInclude Include="RgGUIWindow.h" />
     <ClInclude Include="RgInclude.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Rgdx11.cpp" />
     <ClCompile Include="RgGUIdx11.cpp" />
     <ClCompile Include="RgGUIWindow.cpp" />
   </ItemGroup>
