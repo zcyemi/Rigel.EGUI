@@ -1,14 +1,23 @@
 #include "../RgGUI/RgGUIWindow.h"
 #include "../RgGUI/Rgdx11.h"
+#include "../RgGUI/RgGUIdx11.h"
+
 #pragma comment(lib,"RgGUI.lib")
 
 using namespace rg;
+
+
+RgDX11 *dx11;
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	//MSG proc
 
 	//dx11 proc
+	if (dx11 != nullptr && dx11->WndProcHandler(hwnd, msg, wparam, lparam))
+	{
+		return true;
+	}
 
 	switch (msg)
 	{
@@ -38,14 +47,17 @@ int main()
 
 	RgGUIWindow window(desc);
 
-	RgDX11 dx11;
-	if (dx11.CreateDeiviceD3D(window.getWindow()) < 0)
+	dx11 = new RgDX11();
+	if (dx11->CreateDeiviceD3D(window.getWindow()) < 0)
 	{
-		dx11.ShutDown();
+		dx11->ShutDown();
+		delete dx11;
 		window.ShutDown();
 		return 1;
 	}
 	window.Show();
+
+	RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
 
 
 	MSG msg;
@@ -57,14 +69,25 @@ int main()
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			continue;
 		}
+
+		RgGUI_dx11_Frame();
+
 		if (msg.message == WM_QUIT)
 		{
 			done = true;
 		}
+
+
+		dx11->PreRender();
+		//do draw
+		dx11->Present();
+
 	}
 
-	dx11.ShutDown();
+	dx11->ShutDown();
+	delete dx11;
 	window.ShutDown();
 
 	return 0;

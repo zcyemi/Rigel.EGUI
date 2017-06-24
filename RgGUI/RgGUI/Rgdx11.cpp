@@ -75,14 +75,37 @@ namespace rg
 		if (g_pD3D11Context)g_pD3D11Context->Release(); g_pD3D11Context = nullptr;
 		if (g_pD3D11Device) g_pD3D11Device->Release(); g_pD3D11Device = nullptr;
 	}
+	ID3D11Device * RgDX11::getD3D11Device()
+	{
+		return g_pD3D11Device;
+	}
+	ID3D11DeviceContext * RgDX11::getD3D11DeviceContext()
+	{
+		return g_pD3D11Context;
+	}
+	void RgDX11::PreRender()
+	{
+		g_pD3D11Context->ClearRenderTargetView(g_pMainRenderTargetView, (float*)&mClearColor);
+	}
+	void RgDX11::Present()
+	{
+		g_pSwapChain->Present(0, 0);
+	}
 	LRESULT RgDX11::WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+		if (mWndProcCust != nullptr)
+		{
+			if (mWndProcCust(hwnd, msg, wparam, lparam))
+				return true;
+		}
 		switch (msg)
 		{
 		case WM_SIZE:
 			if (g_pD3D11Device != NULL && wparam != SIZE_MINIMIZED)
 			{
-
+				CleanupRenderTarget();
+				g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam), DXGI_FORMAT_UNKNOWN, 0);
+				CreateRenderTarget();
 			}
 			return 0;
 		}

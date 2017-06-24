@@ -13,8 +13,6 @@
 using namespace DirectX;
 
 namespace rg {
-
-
 	class RgDX11
 	{
 	public:
@@ -29,6 +27,12 @@ namespace rg {
 		void CleanupRenderTarget();
 		void CleanupDeviceD3D();
 
+		ID3D11Device * getD3D11Device();
+		ID3D11DeviceContext *getD3D11DeviceContext();
+
+		void PreRender();
+		void Present();
+
 	public:
 		LRESULT WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -37,6 +41,10 @@ namespace rg {
 		ID3D11DeviceContext * g_pD3D11Context = NULL;
 		IDXGISwapChain * g_pSwapChain = NULL;
 		ID3D11RenderTargetView * g_pMainRenderTargetView = NULL;
+
+		WNDPROC mWndProcCust = nullptr;
+
+		float mClearColor[3] = { 255,0,0 };
 
 	};
 }
