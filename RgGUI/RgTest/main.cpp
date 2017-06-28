@@ -2,6 +2,8 @@
 #include "../RgGUI/Rgdx11.h"
 #include "../RgGUI/RgGUIdx11.h"
 
+#include "../RgGUI/rglog.h"
+
 #pragma comment(lib,"RgGUI.lib")
 
 using namespace rg;
@@ -58,6 +60,7 @@ int main()
 	window.Show();
 
 	RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
+
 
 
 	MSG msg;
