@@ -27,6 +27,12 @@
     <ClInclude Include="Rgdx11.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="rggui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rggui_vec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RgGUIWindow.cpp">
@@ -37,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="Rgdx11.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_context.cpp">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
