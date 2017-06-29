@@ -44,7 +44,7 @@ namespace rg {
 
 		WNDPROC mWndProcCust = nullptr;
 
-		float mClearColor[3] = { 255,0,0 };
+		float mClearColor[3] = { 0,0,0 };
 
 	};
 }

@@ -16,8 +16,6 @@ namespace rg
 		g_hWnd = (HWND)hwnd;
 		g_pd3dDevice = device;
 		g_pd3dDeviceContext = context;
-		
-
 
 		return true;
 	}
@@ -29,6 +27,8 @@ namespace rg
 		g_pd3dDeviceContext = 0;
 		g_pvertexBuffer = 0;
 		g_pindexBuffer = 0;
+
+		std::cout << "rggui shutdown" << std::endl;
 	}
 
 	void RgGUI_dx11_Frame()

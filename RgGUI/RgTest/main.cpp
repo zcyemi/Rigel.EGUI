@@ -1,6 +1,7 @@
 #include "../RgGUI/RgGUIWindow.h"
 #include "../RgGUI/Rgdx11.h"
 #include "../RgGUI/RgGUIdx11.h"
+#include "../RgGUI/rggui.h"
 
 #include "../RgGUI/rglog.h"
 
@@ -34,9 +35,12 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 }
 
+void update();
+
 
 int main()
 {
+
 	WindowDesc desc;
 	desc.appName = L"App Test";
 	desc.height = 600;
@@ -74,17 +78,21 @@ int main()
 			DispatchMessage(&msg);
 			continue;
 		}
-
-		RgGUI_dx11_Frame();
-
 		if (msg.message == WM_QUIT)
 		{
 			done = true;
 		}
 
+		RgGUI_dx11_Frame();
+		update();
+
 
 		dx11->PreRender();
 		//do draw
+
+		//render rggui
+		gui::Render();
+
 		dx11->Present();
 
 	}
@@ -94,4 +102,17 @@ int main()
 	window.ShutDown();
 
 	return 0;
+}
+
+void update()
+{
+	//do draw
+
+	gui::Begin();
+	gui::Text("test text");
+	if (gui::Button("click me"))
+	{
+		std::cout << "you click the button" << std::endl;
+	}
+	gui::End();
 }

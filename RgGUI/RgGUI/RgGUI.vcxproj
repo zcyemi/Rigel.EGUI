@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rgdx11.cpp" />
+    <ClCompile Include="rggui.cpp" />
     <ClCompile Include="RgGUIdx11.cpp" />
     <ClCompile Include="RgGUIWindow.cpp" />
     <ClCompile Include="rggui_context.cpp" />
