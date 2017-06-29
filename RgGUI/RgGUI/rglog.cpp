@@ -2,31 +2,34 @@
 
 namespace rg
 {
-	RgLogger::RgLogger(const char * file, const char * function, int line)
+	RgLogger::RgLogger(const char * file, const char * function, int line): m_line(line),m_file(file),m_func(function)
 	{
+		m_Stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 
 	RgLogger::~RgLogger()
 	{
-		std::cout << m_sstream.str() << std::endl;
+		std::cout << m_sstream.str()<<"       "<<m_file <<' '<<m_func <<" line: "<<m_line << std::endl;
+		SetConsoleTextAttribute(m_Stdout, FOREGROUND_INTENSITY);
 	}
 
 	RgLogger & RgLogger::Debug()
 	{
+		SetConsoleTextAttribute(m_Stdout, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+		m_sstream << "[Debug] ";
 		return *this;
 	}
-
-	RgLogger & RgLogger::operator<<(const char * v)
+	RgLogger & RgLogger::Warning()
 	{
-		m_sstream << v;
+		SetConsoleTextAttribute(m_Stdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		m_sstream << "[Warning] ";
 		return *this;
 	}
-
-	RgLogger & RgLogger::operator<<(int v)
+	RgLogger & RgLogger::Error()
 	{
-		m_sstream << v;
+		SetConsoleTextAttribute(m_Stdout, FOREGROUND_RED);
+		m_sstream << "[Error] ";
 		return *this;
 	}
-
 }
 
