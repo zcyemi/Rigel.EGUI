@@ -1,26 +1,32 @@
 #include "rglog.h"
 
-void RgLogContext::copy(const RgLogContext & context)
+namespace rg
 {
-	this->m_file = context.m_file;
-	this->m_function = context.m_function;
-	this->m_line = context.m_line;
+	RgLogger::RgLogger(const char * file, const char * function, int line)
+	{
+	}
+
+	RgLogger::~RgLogger()
+	{
+		std::cout << m_sstream.str() << std::endl;
+	}
+
+	RgLogger & RgLogger::Debug()
+	{
+		return *this;
+	}
+
+	RgLogger & RgLogger::operator<<(const char * v)
+	{
+		m_sstream << v;
+		return *this;
+	}
+
+	RgLogger & RgLogger::operator<<(int v)
+	{
+		m_sstream << v;
+		return *this;
+	}
+
 }
 
-RgDebug RgLogger::info() const
-{
-	RgDebug dbg = RgDebug();
-	RgLogContext &ctx = dbg.stream->context;
-	ctx.copy(m_context);
-	dbg.stream->logtype = Info;
-	return dbg;
-}
-
-RgDebug RgLogger::debug() const
-{
-	RgDebug dbg = RgDebug();
-	RgLogContext &ctx = dbg.stream->context;
-	ctx.copy(m_context);
-	dbg.stream->logtype = Debug;
-	return dbg;
-}
