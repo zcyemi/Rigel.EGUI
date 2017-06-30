@@ -45,6 +45,11 @@ namespace rg
 			m_sstream << t;
 			return space();
 		}
+		inline RgLogger& operator<<(unsigned int t)
+		{
+			m_sstream << t;
+			return space();
+		}
 
 		inline RgLogger& space()
 		{

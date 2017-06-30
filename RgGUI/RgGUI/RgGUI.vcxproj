@@ -32,7 +32,6 @@
     <ClCompile Include="rggui.cpp" />
     <ClCompile Include="RgGUIdx11.cpp" />
     <ClCompile Include="RgGUIWindow.cpp" />
-    <ClCompile Include="rggui_context.cpp" />
     <ClCompile Include="rglog.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

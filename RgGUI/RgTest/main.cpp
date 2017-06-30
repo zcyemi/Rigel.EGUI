@@ -108,7 +108,7 @@ void update()
 {
 	//do draw
 
-	gui::Begin();
+	gui::Begin("testwindow");
 	gui::Text("test text");
 	if (gui::Button("click me"))
 	{
