@@ -54,7 +54,28 @@ namespace rg
 		struct RgGuiContext
 		{
 			RgGuiWindow* CurrentWindow;
+			RgGuiDrawList * DrawList;
+
 			vector<RgGuiWindow *> Windows;
+		};
+		struct RgGuiDrawList
+		{
+			vector<RgGuiDrawIdx> IndicesBuffer;
+			vector<RgGuiDrawVert> VertexBuffer;
+
+			void AddRect(const RgVec2& lb, const RgVec2& rt);
+
+			RgGuiDrawList()
+			{
+				RgLogD() << "create draw list";
+			}
+		};
+
+		struct RgGuiDrawVert
+		{
+			RgVec2 pos;
+			RgVec2 uv;
+			RgU32 color;
 		};
 
 		struct RgMemAlloc
@@ -65,6 +86,14 @@ namespace rg
 			{
 				AllocsCount++;
 				return malloc(sz);
+			}
+
+			template <class T>
+			T* New()
+			{
+				T *t = (T*)Alloc(sizeof(T));
+				new(t) T();
+				return t;
 			}
 		};
 
@@ -109,6 +138,15 @@ namespace rg
 			return window;
 		}
 
+		void Init()
+		{
+			RgGuiContext& ctx = GetContext();
+			if (ctx.DrawList == nullptr)
+			{
+				ctx.DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
+			}
+		}
+
 		void Render()
 		{
 		}
@@ -119,7 +157,11 @@ namespace rg
 
 		void ShutDown()
 		{
+			//before release mem
 
+
+			//end release mem;
+			RgLogW() << "RgGUI memAlloc cout:" << g_RgGuiMemAlloc.AllocsCount;
 		}
 
 
@@ -149,7 +191,11 @@ namespace rg
 			return false;
 		}
 
-	}
+		void RgGuiDrawList::AddRect(const RgVec2 & lb, const RgVec2 & rt)
+		{
+		}
+
+}
 
 }
 

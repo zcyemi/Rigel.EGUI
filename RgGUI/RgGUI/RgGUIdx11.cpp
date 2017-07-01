@@ -1,5 +1,5 @@
 #include "RgGUIdx11.h"
-
+#include "rggui.h"
 namespace rg
 {
 	static HWND g_hWnd = 0;
@@ -17,6 +17,8 @@ namespace rg
 		g_pd3dDevice = device;
 		g_pd3dDeviceContext = context;
 
+		gui::Init();
+
 		return true;
 	}
 
@@ -28,11 +30,14 @@ namespace rg
 		g_pvertexBuffer = 0;
 		g_pindexBuffer = 0;
 
+		gui::ShutDown();
+
 		std::cout << "rggui shutdown" << std::endl;
 	}
 
 	void RgGUI_dx11_Frame()
 	{
+		gui::NewFrame();
 	}
 
 	LRESULT RgGUI_dx11_WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

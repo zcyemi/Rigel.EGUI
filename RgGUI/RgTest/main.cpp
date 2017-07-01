@@ -16,6 +16,8 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	//MSG proc
 
+	RgLogD() << msg;
+
 	//dx11 proc
 	if (dx11 != nullptr && dx11->WndProcHandler(hwnd, msg, wparam, lparam))
 	{

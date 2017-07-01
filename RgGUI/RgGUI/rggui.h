@@ -4,8 +4,15 @@
 namespace rg {
 	namespace gui
 	{
+		typedef unsigned short RgGuiDrawIdx;
+		typedef unsigned int RgU32;
+
 		struct RgGuiWindow;
 		struct RgGuiContext;
+
+		struct RgGuiDrawVert;
+		struct RgGuiDrawList;
+		struct RgGuiDrawData;
 
 		struct RgMemAlloc;
 
@@ -19,6 +26,8 @@ namespace rg {
 
 		RgGuiWindow *GetWindow(const char * name);
 		RgGuiWindow *CreateGuiWindow(const char* name);
+
+		void Init();
 
 
 		void Render();
