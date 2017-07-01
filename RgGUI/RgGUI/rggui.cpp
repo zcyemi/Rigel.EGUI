@@ -36,66 +36,16 @@ namespace rg
 				}
 			}
 			return ~crc;
-		};
-
-
-		struct RgGuiWindow
+		}
+		bool IsKeyDown(char key)
 		{
-			const char * Name;
-			unsigned int ID;
-			RgVec2 Pos;
-			RgVec2 Size;
+			RgGuiIO& io = GetIO();
+			return io.KeyDown[key];
+		}
+		;
 
-			RgGuiWindow(const char * name) :Name(name)
-			{
-				ID = RgHash(name, 0);
-			}
-		};
-		struct RgGuiContext
-		{
-			RgGuiWindow* CurrentWindow;
-			RgGuiDrawList * DrawList;
 
-			vector<RgGuiWindow *> Windows;
-		};
-		struct RgGuiDrawList
-		{
-			vector<RgGuiDrawIdx> IndicesBuffer;
-			vector<RgGuiDrawVert> VertexBuffer;
 
-			void AddRect(const RgVec2& lb, const RgVec2& rt);
-
-			RgGuiDrawList()
-			{
-				RgLogD() << "create draw list";
-			}
-		};
-
-		struct RgGuiDrawVert
-		{
-			RgVec2 pos;
-			RgVec2 uv;
-			RgU32 color;
-		};
-
-		struct RgMemAlloc
-		{
-			unsigned int AllocsCount = 0;
-
-			void * Alloc(size_t sz)
-			{
-				AllocsCount++;
-				return malloc(sz);
-			}
-
-			template <class T>
-			T* New()
-			{
-				T *t = (T*)Alloc(sizeof(T));
-				new(t) T();
-				return t;
-			}
-		};
 
 
 		static RgMemAlloc g_RgGuiMemAlloc;
@@ -115,13 +65,18 @@ namespace rg
 			return *GRgGui;
 		}
 
+		RgGuiIO & GetIO()
+		{
+			return GRgGui->IO;
+		}
+
 		RgGuiWindow* GetWindow(const char * name)
 		{
 			RgGuiContext& g = GetContext();
 			unsigned int id = RgHash(name, 0);
-			for (auto w : g.Windows)
+			for (RgGuiWindow* w : g.Windows)
 			{
-				if (w->ID == id) return w;
+				if (w ->ID == id) return w;
 			}
 			return nullptr;
 		}
@@ -141,10 +96,6 @@ namespace rg
 		void Init()
 		{
 			RgGuiContext& ctx = GetContext();
-			if (ctx.DrawList == nullptr)
-			{
-				ctx.DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
-			}
 		}
 
 		void Render()
@@ -193,6 +144,21 @@ namespace rg
 
 		void RgGuiDrawList::AddRect(const RgVec2 & lb, const RgVec2 & rt)
 		{
+		}
+
+		RgGuiDrawList::RgGuiDrawList()
+		{
+			RgLogD() << "create draw list";
+		}
+
+		RgGuiWindow::RgGuiWindow(const char * name) :Name(name)
+		{
+			ID = RgHash(name, 0);
+		}
+
+		void * RgMemAlloc::Alloc(size_t sz) {
+			AllocsCount++;
+			return malloc(sz);
 		}
 
 }

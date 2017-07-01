@@ -14,9 +14,10 @@ RgDX11 *dx11;
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	//MSG proc
 
-	RgLogD() << msg;
+	//imgui
+	if (RgGUI_dx11_WndProc(hwnd, msg, wparam, lparam))
+		return true;
 
 	//dx11 proc
 	if (dx11 != nullptr && dx11->WndProcHandler(hwnd, msg, wparam, lparam))
@@ -109,6 +110,7 @@ int main()
 void update()
 {
 	//do draw
+
 
 	gui::Begin("testwindow");
 	gui::Text("test text");
