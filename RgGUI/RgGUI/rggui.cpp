@@ -5,6 +5,10 @@ namespace rg
 {
 	namespace gui
 	{
+		RgVec2 operator+(RgVec2 & v1, RgVec2 & v2) {
+			return RgVec2(v1.x + v2.x, v1.y + v2.y);
+		}
+
 		int RgHash(const void * data, int data_size, unsigned int seed = 0)
 		{
 			static unsigned int crc32_lut[256] = { 0 };
@@ -100,6 +104,7 @@ namespace rg
 
 		void Render()
 		{
+
 		}
 
 		void NewFrame()
@@ -127,6 +132,12 @@ namespace rg
 			}
 
 			g.CurrentWindow = win;
+
+			//clear win drawdata
+			win->DrawList->ClearData();
+			win->DrawSelf();
+
+
 		}
 
 		void End()
@@ -142,8 +153,27 @@ namespace rg
 			return false;
 		}
 
-		void RgGuiDrawList::AddRect(const RgVec2 & lb, const RgVec2 & rt)
+		void RgGuiDrawList::AddRect(const RgVec2 & lt, const RgVec2 & rb)
 		{
+
+			RgGuiDrawVert v1(lt, RgVec2(),0);
+			RgGuiDrawVert v2(RgVec2(rb.x,lt.y), RgVec2(), 0);
+			RgGuiDrawVert v3(rb, RgVec2(), 0);
+			RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), 0);
+
+			VertexBuffer.push_back(v1);
+			VertexBuffer.push_back(v2);
+			VertexBuffer.push_back(v3);
+			VertexBuffer.push_back(v4);
+
+			IndicesBuffer.push_back(IndicesIndex);
+			IndicesBuffer.push_back(IndicesIndex + 1);
+			IndicesBuffer.push_back(IndicesIndex + 2);
+			IndicesBuffer.push_back(IndicesIndex);
+			IndicesBuffer.push_back(IndicesIndex + 2);
+			IndicesBuffer.push_back(IndicesIndex+ 3);
+
+			IndicesIndex += 6;
 		}
 
 		RgGuiDrawList::RgGuiDrawList()
@@ -151,14 +181,36 @@ namespace rg
 			RgLogD() << "create draw list";
 		}
 
+		void RgGuiDrawList::ClearData()
+		{
+			IndicesIndex = 0;
+			IndicesBuffer.clear();
+			VertexBuffer.clear();
+		}
+
 		RgGuiWindow::RgGuiWindow(const char * name) :Name(name)
 		{
 			ID = RgHash(name, 0);
+			this->DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
+		}
+
+		void RgGuiWindow::DrawSelf()
+		{
+			DrawList->AddRect(Pos, Pos + Size);
+		}
+
+		void RgGuiWindow::SetSize(RgVec2 & s)
+		{
+			Size = s;
 		}
 
 		void * RgMemAlloc::Alloc(size_t sz) {
 			AllocsCount++;
 			return malloc(sz);
+		}
+
+		RgGuiDrawVert::RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_):pos(pos_),uv(uv_),color(col_)
+		{
 		}
 
 }

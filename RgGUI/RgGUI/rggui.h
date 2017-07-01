@@ -6,8 +6,28 @@ namespace rg {
 	{
 		typedef unsigned short RgGuiDrawIdx;
 		typedef unsigned int RgU32;
+
+		struct RgGuiDrawList;
+		struct RgVec2;
+		struct RgVec4;
 		
 #define RgVector std::vector
+
+		struct RgVec2
+		{
+			float x, y;
+			RgVec2() { x = y = 0.0f; }
+			RgVec2(float _x, float _y) { x = _x; y = _y; }
+		};
+
+		struct RgVec4
+		{
+			float x, y, z, w;
+			RgVec4() { x = y = z = w = 0.0f; }
+			RgVec4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; }
+		};
+
+		RgVec2 operator +(RgVec2& v1, RgVec2& v2);
 
 		enum RgGuiKey
 		{
@@ -51,7 +71,12 @@ namespace rg {
 			RgVec2 Pos;
 			RgVec2 Size;
 
+			RgGuiDrawList * DrawList;
+
 			RgGuiWindow(const char * name);
+
+			void DrawSelf();
+			void SetSize(RgVec2& s);
 		};
 
 		struct RgGuiDrawVert
@@ -59,6 +84,8 @@ namespace rg {
 			RgVec2 pos;
 			RgVec2 uv;
 			RgU32 color;
+
+			RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_);
 		};
 
 		struct RgGuiDrawList
@@ -66,8 +93,12 @@ namespace rg {
 			RgVector<RgGuiDrawIdx> IndicesBuffer;
 			RgVector<RgGuiDrawVert> VertexBuffer;
 
+			RgU32 IndicesIndex = 0;
+
 			void AddRect(const RgVec2& lb, const RgVec2& rt);
 			RgGuiDrawList();
+
+			void ClearData();
 		};
 
 		struct RgGuiContext

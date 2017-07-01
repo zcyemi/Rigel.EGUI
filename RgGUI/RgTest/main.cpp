@@ -98,6 +98,8 @@ int main()
 
 		dx11->Present();
 
+		Sleep(10);
+
 	}
 
 	dx11->ShutDown();
@@ -111,8 +113,9 @@ void update()
 {
 	//do draw
 
-
 	gui::Begin("testwindow");
+
+	gui::GetCurrentWindow()->SetSize(gui::RgVec2(100, 200));
 	gui::Text("test text");
 	if (gui::Button("click me"))
 	{
