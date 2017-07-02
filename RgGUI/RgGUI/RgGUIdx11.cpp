@@ -11,6 +11,8 @@ namespace rg
 	static ID3D11DeviceContext * g_pd3dDeviceContext = 0;
 	static ID3D11Buffer * g_pvertexBuffer = 0;
 	static ID3D11Buffer * g_pindexBuffer = 0;
+	static unsigned int g_pVertexBufferSize = 0;
+	static unsigned int g_pIndexBufferSize = 0;
 
 	static ID3DBlob * g_pVertexShaderBlob;
 	static ID3D11VertexShader *g_pVertexShader;
@@ -24,6 +26,109 @@ namespace rg
 	static ID3D11BlendState * g_pBlendState;
 	static ID3D11RasterizerState * g_pRasterizerState;
 	static ID3D11DepthStencilState *g_pDepthStencilState;
+
+	static ID3D11Texture2D * g_pDepthStencilBuffer;
+	static ID3D11DepthStencilView * g_pDepthStencilView;
+
+	bool RgGUI_dx11_RenderDrawList(RgGuiDrawList* data)
+	{
+		ID3D11DeviceContext * ctx = g_pd3dDeviceContext;
+		
+		if (g_pvertexBuffer == nullptr)
+		{
+			g_pVertexBufferSize = data->VertexCount;
+			D3D11_BUFFER_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = g_pVertexBufferSize * sizeof(RgGuiDrawVert);
+			desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			if (g_pd3dDevice->CreateBuffer(&desc, nullptr, &g_pvertexBuffer) != S_OK)
+			{
+				RgLogE() << "create vertex buffer error "<<g_pVertexBufferSize ;
+				return false;
+			}
+
+			RgLogD() << "create vertex buffer success";
+		}
+		if (g_pindexBuffer == nullptr)
+		{
+			g_pIndexBufferSize = data->IndicesIndex;
+			D3D11_BUFFER_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.ByteWidth = g_pIndexBufferSize * sizeof(RgGuiDrawIdx);
+			desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			desc.MiscFlags = 0;
+			if (g_pd3dDevice->CreateBuffer(&desc, nullptr, &g_pindexBuffer) != S_OK)
+			{
+				RgLogE() << "create index bufffer error";
+				return false;
+			}
+			RgLogD() <<"create index buffer success";
+		}
+
+		D3D11_MAPPED_SUBRESOURCE vertex_res, index_res;
+		if (ctx->Map(g_pvertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertex_res) != S_OK)
+		{
+			RgLogE() << "map vertex res error";
+			return false;
+		}
+		if (ctx->Map(g_pindexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &index_res) != S_OK)
+		{
+			RgLogE() << "map index res error";
+			return false;
+		}
+
+
+		RgGuiDrawVert * vertex_data = (RgGuiDrawVert*)vertex_res.pData;
+		RgGuiDrawIdx* index_data = (RgGuiDrawIdx*)index_res.pData;
+
+		memcpy(vertex_data,data->VertexBuffer.data(), sizeof(RgGuiDrawVert)* g_pVertexBufferSize);
+		memcpy(index_data, data->IndicesBuffer.data(), sizeof(RgGuiDrawIdx)* g_pIndexBufferSize);
+
+		ctx->Unmap(g_pvertexBuffer, 0);
+		ctx->Unmap(g_pindexBuffer, 0);
+
+		//TODO:
+		//const buffer data
+		//mvp matrix caculation and mapping
+
+
+		//TODO:
+		//backup directx11 pipeline state
+		//for fast implement,not implement bakcup and recover here
+
+		
+		//Set Pipeline state
+
+
+
+
+		//set shader and buffers
+		unsigned int stride = sizeof(RgGuiDrawVert);
+		unsigned int offset = 0;
+		ctx->IASetInputLayout(g_pInputLayout);
+		ctx->IASetVertexBuffers(0, 1, &g_pvertexBuffer, &stride, &offset);
+		ctx->IASetIndexBuffer(g_pindexBuffer, sizeof(RgGuiDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
+		ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		ctx->VSSetShader(g_pVertexShader, NULL, 0);
+		ctx->PSSetShader(g_pPixelShader, NULL, 0);
+
+		const float blend_factor[4] = { 0.f, 0.f, 0.f, 0.f };
+		//ctx->OMSetBlendState(g_pBlendState, blend_factor, 0xffffffff);
+		ctx->OMSetDepthStencilState(g_pDepthStencilState, 0);
+		ctx->RSSetState(g_pRasterizerState);
+
+
+		ctx->DrawIndexed(3, 0, 0);
+
+		return true;
+
+	}
+
 
 	bool RgGUI_dx11_CreateDeviceObjects()
 	{
@@ -39,8 +144,8 @@ namespace rg
             struct VS_INPUT\
             {\
             float2 pos : POSITION;\
-            float4 col : COLOR0;\
             float2 uv  : TEXCOORD0;\
+			float4 col : COLOR0; \
             };\
             \
             struct PS_INPUT\
@@ -54,6 +159,7 @@ namespace rg
             {\
             PS_INPUT output;\
             output.pos = mul( ProjectionMatrix, float4(input.pos.xy, 0.f, 1.f));\
+			output.pos = float4(input.pos.xy,1,1.f);\
             output.col = input.col;\
             output.uv  = input.uv;\
             return output;\
@@ -71,7 +177,7 @@ namespace rg
             float4 main(PS_INPUT input) : SV_Target\
             {\
             float4 out_col = input.col * texture0.Sample(sampler0, input.uv); \
-            return out_col; \
+            return float4(1,0,0,1); \
             }";
 #pragma endregion
 		//compileshader
@@ -143,6 +249,18 @@ namespace rg
 			g_pd3dDevice->CreateRasterizerState(&desc, &g_pRasterizerState);
 		}
 
+		//viewport
+		D3D11_VIEWPORT viewport;
+		ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+		viewport.Width = (float)800;
+		viewport.Height = (float)600;
+		viewport.MaxDepth = 1.0f;
+		viewport.MinDepth = 0.0f;
+		viewport.TopLeftX = 0.0f;
+		viewport.TopLeftY = 20.0f;
+
+		g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+
 		//depthe stencil state
 		{
 			D3D11_DEPTH_STENCIL_DESC desc;
@@ -158,6 +276,29 @@ namespace rg
 			desc.BackFace = desc.FrontFace;
 			g_pd3dDevice->CreateDepthStencilState(&desc, &g_pDepthStencilState);
 		}
+
+		//depth stencil buffer
+		D3D11_TEXTURE2D_DESC depthBufferDesc;
+		ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+		depthBufferDesc.Width = 800;
+		depthBufferDesc.Height = 600;
+		depthBufferDesc.MipLevels = 1;
+		depthBufferDesc.ArraySize = 1;
+		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthBufferDesc.SampleDesc.Count = 1;
+		depthBufferDesc.SampleDesc.Quality = 0;
+		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthBufferDesc.CPUAccessFlags = 0;
+		depthBufferDesc.MiscFlags = 0;
+
+		if (g_pd3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &g_pDepthStencilBuffer) != S_OK)
+		{
+			RgLogE() << "create depth buffe error";
+			return false;
+		}
+
+		//depth stencil view
 
 		return true;
 		
@@ -200,6 +341,9 @@ namespace rg
 		io.KeyMap[RgGuiKey_Escape] = VK_ESCAPE;
 		io.KeyMap[RgGuiKey_PageUp] = VK_PRIOR;
 		io.KeyMap[RgGuiKey_PageDown] = VK_NEXT;
+
+		RgGuiContext& ctx = gui::GetContext();
+		ctx.RenderDrawListFunction = RgGUI_dx11_RenderDrawList;
 
 		RgGUI_dx11_CreateDeviceObjects();
 
@@ -262,8 +406,11 @@ namespace rg
 			if (wparam < 256)
 			{
 				io.KeyDown[wparam] = true;
+				if (wparam == 'Q')
+				{
+					PostQuitMessage(0);
+				}
 			}
-				
 			return true;
 		case WM_KEYUP:
 			if (wparam < 256)

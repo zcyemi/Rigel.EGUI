@@ -102,9 +102,15 @@ namespace rg
 			RgGuiContext& ctx = GetContext();
 		}
 
-		void Render()
+		bool Render()
 		{
+			RgGuiContext& ctx = GetContext();
+			if (ctx.RenderDrawListFunction != nullptr)
+			{
+				return ctx.RenderDrawListFunction(ctx.CurrentWindow->DrawList);
+			}
 
+			return false;
 		}
 
 		void NewFrame()
@@ -133,15 +139,18 @@ namespace rg
 
 			g.CurrentWindow = win;
 
-			//clear win drawdata
-			win->DrawList->ClearData();
-			win->DrawSelf();
+			
 
 
 		}
 
 		void End()
 		{
+			RgGuiWindow* win = GetCurrentWindow();
+			//clear win drawdata
+			win->DrawList->ClearData();
+			win->DrawSelf();
+
 		}
 
 		void Text(const char * t)
@@ -155,11 +164,16 @@ namespace rg
 
 		void RgGuiDrawList::AddRect(const RgVec2 & lt, const RgVec2 & rb)
 		{
+			RgU32 col = 0xffffffff;
+			//RgGuiDrawVert v1(lt, RgVec2(), col);
+			//RgGuiDrawVert v2(RgVec2(rb.x,lt.y), RgVec2(), col);
+			//RgGuiDrawVert v3(rb, RgVec2(), col);
+			//RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), col);
 
-			RgGuiDrawVert v1(lt, RgVec2(),0);
-			RgGuiDrawVert v2(RgVec2(rb.x,lt.y), RgVec2(), 0);
-			RgGuiDrawVert v3(rb, RgVec2(), 0);
-			RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), 0);
+			RgGuiDrawVert v1(RgVec2(0, 0), RgVec2(), col);
+			RgGuiDrawVert v2(RgVec2(1, 0), RgVec2(), col);
+			RgGuiDrawVert v3(RgVec2(1, 1), RgVec2(), col);
+			RgGuiDrawVert v4(RgVec2(0, 1), RgVec2(), col);
 
 			VertexBuffer.push_back(v1);
 			VertexBuffer.push_back(v2);
@@ -167,13 +181,14 @@ namespace rg
 			VertexBuffer.push_back(v4);
 
 			IndicesBuffer.push_back(IndicesIndex);
+			IndicesBuffer.push_back(IndicesIndex + 2);
 			IndicesBuffer.push_back(IndicesIndex + 1);
-			IndicesBuffer.push_back(IndicesIndex + 2);
 			IndicesBuffer.push_back(IndicesIndex);
-			IndicesBuffer.push_back(IndicesIndex + 2);
-			IndicesBuffer.push_back(IndicesIndex+ 3);
+			IndicesBuffer.push_back(IndicesIndex + 3);
+			IndicesBuffer.push_back(IndicesIndex+ 2);
 
 			IndicesIndex += 6;
+			VertexCount += 4;
 		}
 
 		RgGuiDrawList::RgGuiDrawList()
@@ -184,6 +199,7 @@ namespace rg
 		void RgGuiDrawList::ClearData()
 		{
 			IndicesIndex = 0;
+			VertexCount = 0;
 			IndicesBuffer.clear();
 			VertexBuffer.clear();
 		}
@@ -209,8 +225,11 @@ namespace rg
 			return malloc(sz);
 		}
 
-		RgGuiDrawVert::RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_):pos(pos_),uv(uv_),color(col_)
+		RgGuiDrawVert::RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_)
 		{
+			pos = pos_;
+			uv = uv_;
+			color = col_;
 		}
 
 }

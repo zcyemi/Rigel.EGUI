@@ -94,6 +94,7 @@ namespace rg {
 			RgVector<RgGuiDrawVert> VertexBuffer;
 
 			RgU32 IndicesIndex = 0;
+			RgU32 VertexCount = 0;
 
 			void AddRect(const RgVec2& lb, const RgVec2& rt);
 			RgGuiDrawList();
@@ -107,6 +108,7 @@ namespace rg {
 			RgGuiDrawList DrawList;
 			RgGuiIO IO;
 			RgVector<RgGuiWindow *> Windows;
+			bool(*RenderDrawListFunction)(RgGuiDrawList* data);
 		};
 
 		struct RgMemAlloc
@@ -140,7 +142,7 @@ namespace rg {
 		void Init();
 
 
-		void Render();
+		bool Render();
 		void NewFrame();
 		void ShutDown();
 

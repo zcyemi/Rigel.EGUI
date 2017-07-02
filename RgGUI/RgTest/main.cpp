@@ -66,13 +66,11 @@ int main()
 	}
 	window.Show();
 
-	RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
-
-
+	bool done = false;
+	done |= !RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
-	bool done = false;
 	while (!done)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -94,17 +92,20 @@ int main()
 		//do draw
 
 		//render rggui
-		gui::Render();
+		done |= !gui::Render();
 
 		dx11->Present();
 
 		Sleep(10);
 
 	}
+	RgGUI_dx11_Shutdown();
 
 	dx11->ShutDown();
 	delete dx11;
 	window.ShutDown();
+
+	getchar();
 
 	return 0;
 }
@@ -115,7 +116,8 @@ void update()
 
 	gui::Begin("testwindow");
 
-	gui::GetCurrentWindow()->SetSize(gui::RgVec2(100, 200));
+	auto win = gui::GetCurrentWindow();
+	win->SetSize(gui::RgVec2(20, 30));
 	gui::Text("test text");
 	if (gui::Button("click me"))
 	{
