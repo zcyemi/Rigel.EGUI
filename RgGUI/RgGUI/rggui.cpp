@@ -233,7 +233,6 @@ namespace rg
 		{
 			pos = pos_;
 			uv = uv_;
-			color = col_;
 		}
 
 }

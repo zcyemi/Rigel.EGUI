@@ -118,15 +118,15 @@ namespace rg
 
 			m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
 			m_vertexdata[0].uv = RgVec2(0, 0);
-			m_vertexdata[0].color = 0;
+			//m_vertexdata[0].color = 0;
 
 			m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
 			m_vertexdata[1].uv = RgVec2(0, 0);
-			m_vertexdata[1].color = 0;
+			//m_vertexdata[1].color = 0;
 
 			m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
 			m_vertexdata[2].uv = RgVec2(0, 0);
-			m_vertexdata[2].color = 0;
+			//m_vertexdata[2].color = 0;
 
 			D3D11_SUBRESOURCE_DATA vertexdata;
 			vertexdata.pSysMem = m_vertexdata;
@@ -134,6 +134,7 @@ namespace rg
 			vertexdata.SysMemSlicePitch = 0;
 
 			result = dx_device->CreateBuffer(&vbufferdesc, &vertexdata, &m_vertexBuffer);
+			if (result != S_OK) RgLogE() << "Create vertex buffer error";
 		}
 
 		//index buffer
@@ -154,35 +155,40 @@ namespace rg
 			indexdata.SysMemSlicePitch = 0;
 
 			result = dx_device->CreateBuffer(&ibufferdesc, &indexdata, &m_indexBuffer);
+			if (result != S_OK) RgLogE() << "create index buffer error";
 		}
 
 		{
 			//shader
-			D3DCompileFromFile(L"F:\\_Proj_RgEngine\\SimpleDX\\SimpleDX\\vs.hlsl", nullptr, nullptr, "main", "vs_4_0", 0, 0, &m_vertexShaderBlob, nullptr);
+			D3DCompileFromFile(L"../RgGUI/vs.hlsl", nullptr, nullptr, "main", "vs_4_0", 0, 0, &m_vertexShaderBlob, nullptr);
 			if (m_vertexShaderBlob == nullptr)
 			{
+				RgLogE() << "compile vertex shader error";
 				return false;
 			}
 			if (dx_device->CreateVertexShader(m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), NULL, &m_vertexShader) != S_OK)
 			{
+				RgLogE() << "create vertex shader error";
 				return false;
 			}
 
-			D3DCompileFromFile(L"F:\\_Proj_RgEngine\\SimpleDX\\SimpleDX\\ps.hlsl", nullptr, nullptr, "main", "ps_4_0", 0, 0, &m_pixleShaderBlob, NULL);
+			D3DCompileFromFile(L"../RgGUI/ps.hlsl", nullptr, nullptr, "main", "ps_4_0", 0, 0, &m_pixleShaderBlob, NULL);
 			if (m_pixleShaderBlob == nullptr)
 			{
+				RgLogE() << "compile pixel shader error";
 				return false;
 			}
 
 			if (dx_device->CreatePixelShader(m_pixleShaderBlob->GetBufferPointer(), m_pixleShaderBlob->GetBufferSize(), nullptr, &m_pixelShader) != S_OK)
 			{
+				RgLogE() << "create pixel shader error";
 				return false;
 			}
 		}
 
 		//input layout
 		{
-			D3D11_INPUT_ELEMENT_DESC layout[3];
+			D3D11_INPUT_ELEMENT_DESC layout[2];
 			layout[0].SemanticName = "POSITION";
 			layout[0].SemanticIndex = 0;
 			layout[0].Format = DXGI_FORMAT_R32G32_FLOAT;
@@ -199,23 +205,24 @@ namespace rg
 			layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			layout[1].InstanceDataStepRate = 0;
 
-			layout[2].SemanticName = "COLOR";
-			layout[2].SemanticIndex = 0;
-			layout[2].Format = DXGI_FORMAT_R32_UINT;
-			layout[2].InputSlot = 0;
-			layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-			layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			layout[2].InstanceDataStepRate = 0;
+			//layout[2].SemanticName = "COLOR";
+			//layout[2].SemanticIndex = 0;
+			//layout[2].Format = DXGI_FORMAT_R32_UINT;
+			//layout[2].InputSlot = 0;
+			//layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+			//layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			//layout[2].InstanceDataStepRate = 0;
 
-			result = dx_device->CreateInputLayout(layout, 3, m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), &m_inputlayout);
+			result = dx_device->CreateInputLayout(layout, 2, m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), &m_inputlayout);
+
+			if (result != S_OK)
+				RgLogE() << "create input layout error";
 		}
 
 		return true;
 	}
 	bool RgGUI_dx11_Draw(RgGuiDrawList * data)
 	{
-
-		//dx_deviceContext->ClearRenderTargetView(g_pMainRenderTargetView, (float*)&mClearColor);
 
 		unsigned int stride = sizeof(RgGuiDrawVert);
 		unsigned int offset = 0;

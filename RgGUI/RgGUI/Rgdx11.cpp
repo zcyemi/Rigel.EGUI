@@ -201,6 +201,7 @@ namespace rg
 	void RgDX11::PreRender()
 	{
 		g_pD3D11Context->ClearRenderTargetView(g_pMainRenderTargetView, (float*)&mClearColor);
+		g_pD3D11Context->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0, 0);
 	}
 	void RgDX11::Present()
 	{
