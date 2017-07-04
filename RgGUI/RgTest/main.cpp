@@ -15,6 +15,7 @@ RgDX11 *dx11;
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
+
 	//imgui
 	if (RgGUI_dx11_WndProc(hwnd, msg, wparam, lparam))
 		return true;
@@ -31,6 +32,9 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);
 		return 0;
 	case WM_CLOSE:
+		PostQuitMessage(0);
+		return 0;
+	case WM_QUIT:
 		PostQuitMessage(0);
 		return 0;
 	default:
@@ -57,7 +61,7 @@ int main()
 	RgGUIWindow window(desc);
 
 	dx11 = new RgDX11();
-	if (dx11->CreateDeiviceD3D(window.getWindow()) < 0)
+	if (dx11->CreateDeiviceD3D(window.getWindow(),800,600) < 0)
 	{
 		dx11->ShutDown();
 		delete dx11;
@@ -67,7 +71,7 @@ int main()
 	window.Show();
 
 	bool done = false;
-	done |= !RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
+	RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -92,7 +96,7 @@ int main()
 		//do draw
 
 		//render rggui
-		done |= !gui::Render();
+		gui::Render();
 
 		dx11->Present();
 
@@ -103,9 +107,11 @@ int main()
 
 	dx11->ShutDown();
 	delete dx11;
+
+	RgLogD() << "shutdown window";
 	window.ShutDown();
 
-	getchar();
+
 
 	return 0;
 }

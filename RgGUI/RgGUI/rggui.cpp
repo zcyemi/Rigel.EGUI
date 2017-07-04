@@ -170,25 +170,25 @@ namespace rg
 			//RgGuiDrawVert v3(rb, RgVec2(), col);
 			//RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), col);
 
-			RgGuiDrawVert v1(RgVec2(0, 0), RgVec2(), col);
-			RgGuiDrawVert v2(RgVec2(1, 0), RgVec2(), col);
-			RgGuiDrawVert v3(RgVec2(1, 1), RgVec2(), col);
-			RgGuiDrawVert v4(RgVec2(0, 1), RgVec2(), col);
+			RgGuiDrawVert v1(RgVec2(-1.0f, -1.0f), RgVec2(), col);
+			RgGuiDrawVert v2(RgVec2(0, 1.0f), RgVec2(), col);
+			RgGuiDrawVert v3(RgVec2(1.0f, -1.0f), RgVec2(), col);
+			//RgGuiDrawVert v4(RgVec2(0, 1), RgVec2(), col);
 
 			VertexBuffer.push_back(v1);
 			VertexBuffer.push_back(v2);
 			VertexBuffer.push_back(v3);
-			VertexBuffer.push_back(v4);
+			//VertexBuffer.push_back(v4);
 
 			IndicesBuffer.push_back(IndicesIndex);
-			IndicesBuffer.push_back(IndicesIndex + 2);
 			IndicesBuffer.push_back(IndicesIndex + 1);
-			IndicesBuffer.push_back(IndicesIndex);
-			IndicesBuffer.push_back(IndicesIndex + 3);
-			IndicesBuffer.push_back(IndicesIndex+ 2);
+			IndicesBuffer.push_back(IndicesIndex + 2);
+			//IndicesBuffer.push_back(IndicesIndex);
+			//IndicesBuffer.push_back(IndicesIndex + 3);
+			//IndicesBuffer.push_back(IndicesIndex+ 2);
 
-			IndicesIndex += 6;
-			VertexCount += 4;
+			IndicesIndex += 3;
+			VertexCount += 3;
 		}
 
 		RgGuiDrawList::RgGuiDrawList()
@@ -223,6 +223,10 @@ namespace rg
 		void * RgMemAlloc::Alloc(size_t sz) {
 			AllocsCount++;
 			return malloc(sz);
+		}
+
+		RgGuiDrawVert::RgGuiDrawVert()
+		{
 		}
 
 		RgGuiDrawVert::RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_)

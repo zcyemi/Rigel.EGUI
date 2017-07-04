@@ -20,8 +20,7 @@ namespace rg
 		mWc.cbSize =sizeof(WNDCLASSEX);
 
 		RegisterClassEx(&mWc);
-
-		mHwnd = CreateWindowEx(WS_EX_APPWINDOW, desc.appName, desc.appName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, desc.posx, desc.posy, desc.width, desc.height, NULL, NULL, desc.hInstance, NULL);
+		mHwnd = CreateWindowEx(WS_EX_APPWINDOW, desc.appName, desc.appName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU, desc.posx, desc.posy, desc.width, desc.height, NULL, NULL, desc.hInstance, NULL);
 
 	}
 
@@ -41,6 +40,7 @@ namespace rg
 	void RgGUIWindow::ShutDown()
 	{
 		UnregisterClass(mWc.lpszClassName, mWc.hInstance);
+		CloseWindow(mHwnd);
 	}
 
 	const HWND & RgGUIWindow::getWindow()

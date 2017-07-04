@@ -22,7 +22,7 @@ namespace rg {
 	public:
 		void ShutDown();
 
-		HRESULT CreateDeiviceD3D(HWND hwnd);
+		HRESULT CreateDeiviceD3D(HWND hwnd,int width,int height);
 		void CreateRenderTarget();
 		void CleanupRenderTarget();
 		void CleanupDeviceD3D();
@@ -42,9 +42,17 @@ namespace rg {
 		IDXGISwapChain * g_pSwapChain = NULL;
 		ID3D11RenderTargetView * g_pMainRenderTargetView = NULL;
 
+		ID3D11Texture2D * g_pDepthStencilBuffer;
+		ID3D11DepthStencilState * g_pDepthStencilState;
+		ID3D11DepthStencilView * g_pDepthStencilView;
+		ID3D11RasterizerState * g_pRasterState;
+
 		WNDPROC mWndProcCust = nullptr;
 
 		float mClearColor[3] = { 0.5,0.5,0.5 };
+
+		int mWidth;
+		int mHeight;
 
 	};
 }

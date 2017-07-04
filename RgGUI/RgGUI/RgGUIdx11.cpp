@@ -6,374 +6,52 @@ using namespace DirectX;
 
 namespace rg
 {
-	static HWND g_hWnd = 0;
-	static ID3D11Device * g_pd3dDevice = 0;
-	static ID3D11DeviceContext * g_pd3dDeviceContext = 0;
-	static ID3D11Buffer * g_pvertexBuffer = 0;
-	static ID3D11Buffer * g_pindexBuffer = 0;
-	static unsigned int g_pVertexBufferSize = 0;
-	static unsigned int g_pIndexBufferSize = 0;
+	static HWND mhwnd;
+	static ID3D11Device* dx_device;
+	static ID3D11DeviceContext * dx_deviceContext;
 
-	static ID3DBlob * g_pVertexShaderBlob;
-	static ID3D11VertexShader *g_pVertexShader;
-	static ID3D11InputLayout *g_pInputLayout;
+	static ID3D11Buffer * m_constBuffer;
+	static ID3D11Buffer * m_vertexBuffer;
+	static ID3D11Buffer * m_indexBuffer;
 
-	static ID3D11Buffer *g_pConstBuffer;
+	static RgGuiDrawVert * m_vertexdata;
+	static unsigned int *m_indexdata;
+	
+	static ID3DBlob * m_vertexShaderBlob;
+	static ID3DBlob * m_pixleShaderBlob;
+	static ID3D11VertexShader * m_vertexShader;
+	static ID3D11PixelShader * m_pixelShader;
+	static ID3D11InputLayout * m_inputlayout;
 
-	static ID3DBlob * g_pPixelShaderBlob;
-	static ID3D11PixelShader *g_pPixelShader;
+	bool RgGUI_dx11_createObjects();
 
-	static ID3D11BlendState * g_pBlendState;
-	static ID3D11RasterizerState * g_pRasterizerState;
-	static ID3D11DepthStencilState *g_pDepthStencilState;
-
-	static ID3D11Texture2D * g_pDepthStencilBuffer;
-	static ID3D11DepthStencilView * g_pDepthStencilView;
-
-	bool RgGUI_dx11_RenderDrawList(RgGuiDrawList* data)
-	{
-		ID3D11DeviceContext * ctx = g_pd3dDeviceContext;
-		
-		if (g_pvertexBuffer == nullptr)
-		{
-			g_pVertexBufferSize = data->VertexCount;
-			D3D11_BUFFER_DESC desc;
-			ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
-			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = g_pVertexBufferSize * sizeof(RgGuiDrawVert);
-			desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			desc.MiscFlags = 0;
-			if (g_pd3dDevice->CreateBuffer(&desc, nullptr, &g_pvertexBuffer) != S_OK)
-			{
-				RgLogE() << "create vertex buffer error "<<g_pVertexBufferSize ;
-				return false;
-			}
-
-			RgLogD() << "create vertex buffer success";
-		}
-		if (g_pindexBuffer == nullptr)
-		{
-			g_pIndexBufferSize = data->IndicesIndex;
-			D3D11_BUFFER_DESC desc;
-			ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
-			desc.Usage = D3D11_USAGE_DYNAMIC;
-			desc.ByteWidth = g_pIndexBufferSize * sizeof(RgGuiDrawIdx);
-			desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			desc.MiscFlags = 0;
-			if (g_pd3dDevice->CreateBuffer(&desc, nullptr, &g_pindexBuffer) != S_OK)
-			{
-				RgLogE() << "create index bufffer error";
-				return false;
-			}
-			RgLogD() <<"create index buffer success";
-		}
-
-		D3D11_MAPPED_SUBRESOURCE vertex_res, index_res;
-		if (ctx->Map(g_pvertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertex_res) != S_OK)
-		{
-			RgLogE() << "map vertex res error";
-			return false;
-		}
-		if (ctx->Map(g_pindexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &index_res) != S_OK)
-		{
-			RgLogE() << "map index res error";
-			return false;
-		}
-
-
-		RgGuiDrawVert * vertex_data = (RgGuiDrawVert*)vertex_res.pData;
-		RgGuiDrawIdx* index_data = (RgGuiDrawIdx*)index_res.pData;
-
-		memcpy(vertex_data,data->VertexBuffer.data(), sizeof(RgGuiDrawVert)* g_pVertexBufferSize);
-		memcpy(index_data, data->IndicesBuffer.data(), sizeof(RgGuiDrawIdx)* g_pIndexBufferSize);
-
-		ctx->Unmap(g_pvertexBuffer, 0);
-		ctx->Unmap(g_pindexBuffer, 0);
-
-		//TODO:
-		//const buffer data
-		//mvp matrix caculation and mapping
-
-
-		//TODO:
-		//backup directx11 pipeline state
-		//for fast implement,not implement bakcup and recover here
-
-		
-		//Set Pipeline state
-
-
-
-
-		//set shader and buffers
-		unsigned int stride = sizeof(RgGuiDrawVert);
-		unsigned int offset = 0;
-		ctx->IASetInputLayout(g_pInputLayout);
-		ctx->IASetVertexBuffers(0, 1, &g_pvertexBuffer, &stride, &offset);
-		ctx->IASetIndexBuffer(g_pindexBuffer, sizeof(RgGuiDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
-		ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		ctx->VSSetShader(g_pVertexShader, NULL, 0);
-		ctx->PSSetShader(g_pPixelShader, NULL, 0);
-
-		const float blend_factor[4] = { 0.f, 0.f, 0.f, 0.f };
-		//ctx->OMSetBlendState(g_pBlendState, blend_factor, 0xffffffff);
-		ctx->OMSetDepthStencilState(g_pDepthStencilState, 0);
-		ctx->RSSetState(g_pRasterizerState);
-
-
-		ctx->DrawIndexed(3, 0, 0);
-
-		return true;
-
-	}
-
-
-	bool RgGUI_dx11_CreateDeviceObjects()
-	{
-		RgLogD() << "create device objects";
-
-		if (!g_pd3dDevice) return false;
-
-#pragma region shader
-		static const char* vertexShader = "cbuffer vertexBuffer : register(b0) \
-            {\
-            float4x4 ProjectionMatrix; \
-            };\
-            struct VS_INPUT\
-            {\
-            float2 pos : POSITION;\
-            float2 uv  : TEXCOORD0;\
-			float4 col : COLOR0; \
-            };\
-            \
-            struct PS_INPUT\
-            {\
-            float4 pos : SV_POSITION;\
-            float4 col : COLOR0;\
-            float2 uv  : TEXCOORD0;\
-            };\
-            \
-            PS_INPUT main(VS_INPUT input)\
-            {\
-            PS_INPUT output;\
-            output.pos = mul( ProjectionMatrix, float4(input.pos.xy, 0.f, 1.f));\
-			output.pos = float4(input.pos.xy,1,1.f);\
-            output.col = input.col;\
-            output.uv  = input.uv;\
-            return output;\
-            }";
-		static const char* pixelShader =
-			"struct PS_INPUT\
-            {\
-            float4 pos : SV_POSITION;\
-            float4 col : COLOR0;\
-            float2 uv  : TEXCOORD0;\
-            };\
-            sampler sampler0;\
-            Texture2D texture0;\
-            \
-            float4 main(PS_INPUT input) : SV_Target\
-            {\
-            float4 out_col = input.col * texture0.Sample(sampler0, input.uv); \
-            return float4(1,0,0,1); \
-            }";
-#pragma endregion
-		//compileshader
-		D3DCompile(vertexShader, strlen(vertexShader), NULL, NULL, NULL, "main", "vs_4_0", 0, 0, &g_pVertexShaderBlob, NULL);
-		if (g_pVertexShaderBlob == nullptr)
-		{
-			RgLogE() << "compile vertex shader error";
-			return false;
-		}
-		if (g_pd3dDevice->CreateVertexShader(g_pVertexShaderBlob->GetBufferPointer(), g_pVertexShaderBlob->GetBufferSize(), NULL, &g_pVertexShader) != S_OK)
-		{
-			RgLogE() << "create dx11 vertex shader error";
-			return false;
-		}
-
-		//input layout
-		D3D11_INPUT_ELEMENT_DESC layout[] = {
-			{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,(size_t)(&((RgGuiDrawVert*)0)->pos),D3D11_INPUT_PER_VERTEX_DATA,0},
-			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,(size_t)(&((RgGuiDrawVert*)0)->uv),D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "COLOR",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,(size_t)(&((RgGuiDrawVert*)0)->color),D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-
-		if (g_pd3dDevice->CreateInputLayout(layout, 3, g_pVertexShaderBlob->GetBufferPointer(), g_pVertexShaderBlob->GetBufferSize(), &g_pInputLayout) != S_OK)
-		{
-			RgLogE() << "create input layout error";
-			return false;
-		}
-
-		//const buffer
-
-		//pixel shader
-		D3DCompile(pixelShader, strlen(pixelShader), NULL, NULL, NULL, "main", "ps_4_0", 0, 0, &g_pPixelShaderBlob, NULL);
-		if (g_pPixelShaderBlob == nullptr)
-		{
-			RgLogE() << "compile pixel shader error!";
-			return false;
-		}
-
-		if (g_pd3dDevice->CreatePixelShader(g_pPixelShaderBlob->GetBufferPointer(), g_pPixelShaderBlob->GetBufferSize(), nullptr, &g_pPixelShader) != S_OK)
-		{
-			RgLogE() << "create pixel shader error";
-			return false;
-		}
-
-		//blending
-		{
-			D3D11_BLEND_DESC desc;
-			ZeroMemory(&desc, sizeof(D3D11_BLEND_DESC));
-			desc.AlphaToCoverageEnable = false;
-			desc.RenderTarget[0].BlendEnable = true;
-			desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-			desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-			desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-			desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-			desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-			desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-			desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-			g_pd3dDevice->CreateBlendState(&desc, &g_pBlendState);
-		}
-
-		//create the rasterizer state
-		{
-			D3D11_RASTERIZER_DESC desc;
-			ZeroMemory(&desc, sizeof(desc));
-			desc.FillMode = D3D11_FILL_SOLID;
-			desc.CullMode = D3D11_CULL_NONE;
-			desc.ScissorEnable = true;
-			desc.DepthClipEnable = true;
-			g_pd3dDevice->CreateRasterizerState(&desc, &g_pRasterizerState);
-		}
-
-		//viewport
-		D3D11_VIEWPORT viewport;
-		ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-		viewport.Width = (float)800;
-		viewport.Height = (float)600;
-		viewport.MaxDepth = 1.0f;
-		viewport.MinDepth = 0.0f;
-		viewport.TopLeftX = 0.0f;
-		viewport.TopLeftY = 20.0f;
-
-		g_pd3dDeviceContext->RSSetViewports(1, &viewport);
-
-		//depthe stencil state
-		{
-			D3D11_DEPTH_STENCIL_DESC desc;
-			ZeroMemory(&desc, sizeof(desc));
-			desc.DepthEnable = false;
-			desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-			desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
-			desc.StencilEnable = false;
-			desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-			desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-			desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-			desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-			desc.BackFace = desc.FrontFace;
-			g_pd3dDevice->CreateDepthStencilState(&desc, &g_pDepthStencilState);
-		}
-
-		//depth stencil buffer
-		D3D11_TEXTURE2D_DESC depthBufferDesc;
-		ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-		depthBufferDesc.Width = 800;
-		depthBufferDesc.Height = 600;
-		depthBufferDesc.MipLevels = 1;
-		depthBufferDesc.ArraySize = 1;
-		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthBufferDesc.SampleDesc.Count = 1;
-		depthBufferDesc.SampleDesc.Quality = 0;
-		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		depthBufferDesc.CPUAccessFlags = 0;
-		depthBufferDesc.MiscFlags = 0;
-
-		if (g_pd3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &g_pDepthStencilBuffer) != S_OK)
-		{
-			RgLogE() << "create depth buffe error";
-			return false;
-		}
-
-		//depth stencil view
-
-		return true;
-		
-	}
-
-	void RgGUI_dx11_DestroyDeviceObjects()
-	{
-		RgLogD() << "destroy device objects";
-
-		if (g_pvertexBuffer) g_pvertexBuffer->Release(); g_pvertexBuffer = nullptr;
-		if (g_pindexBuffer) g_pindexBuffer->Release(); g_pindexBuffer = nullptr;
-		if (g_pBlendState) g_pBlendState->Release(); g_pBlendState = nullptr;
-		if (g_pDepthStencilState)g_pDepthStencilState->Release(); g_pDepthStencilState = nullptr;
-		if (g_pRasterizerState) g_pRasterizerState->Release(); g_pRasterizerState = nullptr;
-		if (g_pPixelShader) g_pPixelShader->Release(); g_pPixelShader = nullptr;
-		if (g_pPixelShaderBlob) g_pPixelShaderBlob->Release(); g_pPixelShaderBlob = nullptr;
-		if (g_pInputLayout) g_pInputLayout->Release(); g_pindexBuffer = nullptr;
-		if (g_pVertexShader)g_pVertexShader->Release(); g_pVertexShader = nullptr;
-		if (g_pVertexShaderBlob) g_pVertexShaderBlob->Release(); g_pVertexShaderBlob = nullptr;
-
-	}
-
+	bool RgGUI_dx11_Draw(RgGuiDrawList *data);
 
 	bool RgGUI_dx11_Init(void * hwnd, ID3D11Device * device, ID3D11DeviceContext * context)
 	{
-		std::cout << "rggui init" << std::endl;
+		mhwnd =(HWND)hwnd;
+		dx_device = device;
+		dx_deviceContext = context;
 
-		g_hWnd = (HWND)hwnd;
-		g_pd3dDevice = device;
-		g_pd3dDeviceContext = context;
+		if (!RgGUI_dx11_createObjects())
+		{
+			RgLogE() << "dx11 create objects error";
+		}
 
-		//map key
-		RgGuiIO& io = GetIO();
-		io.KeyMap[RgGuiKey_Backspace] = VK_BACK;
-		io.KeyMap[RgGuiKey_LeftArrow] = VK_LEFT;
-		io.KeyMap[RgGuiKey_RightArrow] = VK_RIGHT;
-		io.KeyMap[RgGuiKey_DownArrow] = VK_DOWN;
-		io.KeyMap[RgGuiKey_UpArrow] = VK_UP;
-		io.KeyMap[RgGuiKey_Enter] = VK_RETURN;
-		io.KeyMap[RgGuiKey_Escape] = VK_ESCAPE;
-		io.KeyMap[RgGuiKey_PageUp] = VK_PRIOR;
-		io.KeyMap[RgGuiKey_PageDown] = VK_NEXT;
-
-		RgGuiContext& ctx = gui::GetContext();
-		ctx.RenderDrawListFunction = RgGUI_dx11_RenderDrawList;
-
-		RgGUI_dx11_CreateDeviceObjects();
-
-		gui::Init();
+		RgGuiContext& ctx = GetContext();
+		ctx.RenderDrawListFunction = RgGUI_dx11_Draw;
 
 		return true;
 	}
-
 	void RgGUI_dx11_Shutdown()
 	{
-		RgGUI_dx11_DestroyDeviceObjects();
-
-		g_hWnd = 0;
-		g_pd3dDevice = 0;
-		g_pd3dDeviceContext = 0;
-		g_pvertexBuffer = 0;
-		g_pindexBuffer = 0;
-
-		gui::ShutDown();
-
-		std::cout << "rggui shutdown" << std::endl;
 	}
-
 	void RgGUI_dx11_Frame()
 	{
-		gui::NewFrame();
 	}
-
 	LRESULT RgGUI_dx11_WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+
 		RgGuiIO& io = GetIO();
 		switch (msg)
 		{
@@ -409,6 +87,7 @@ namespace rg
 				if (wparam == 'Q')
 				{
 					PostQuitMessage(0);
+					
 				}
 			}
 			return true;
@@ -418,6 +97,142 @@ namespace rg
 			return true;
 		}
 		return 0;
+	}
+	bool RgGUI_dx11_createObjects()
+	{
+		HRESULT result;
+
+		auto ctx = dx_deviceContext;
+
+		//vertex
+		{
+			D3D11_BUFFER_DESC vbufferdesc;
+			vbufferdesc.ByteWidth = sizeof(RgGuiDrawVert) * 3;
+			vbufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			vbufferdesc.Usage = D3D11_USAGE_DEFAULT;
+			vbufferdesc.CPUAccessFlags = 0;
+			vbufferdesc.MiscFlags = 0;
+			vbufferdesc.StructureByteStride = 0;
+
+			m_vertexdata = new RgGuiDrawVert[3];
+
+			m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
+			m_vertexdata[0].uv = RgVec2(0, 0);
+			m_vertexdata[0].color = 0;
+
+			m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
+			m_vertexdata[1].uv = RgVec2(0, 0);
+			m_vertexdata[1].color = 0;
+
+			m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
+			m_vertexdata[2].uv = RgVec2(0, 0);
+			m_vertexdata[2].color = 0;
+
+			D3D11_SUBRESOURCE_DATA vertexdata;
+			vertexdata.pSysMem = m_vertexdata;
+			vertexdata.SysMemPitch = 0;
+			vertexdata.SysMemSlicePitch = 0;
+
+			result = dx_device->CreateBuffer(&vbufferdesc, &vertexdata, &m_vertexBuffer);
+		}
+
+		//index buffer
+		{
+			D3D11_BUFFER_DESC ibufferdesc;
+			ibufferdesc.Usage = D3D11_USAGE_DEFAULT;
+			ibufferdesc.ByteWidth = sizeof(unsigned int) * 3;
+			ibufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			ibufferdesc.MiscFlags = 0;
+			ibufferdesc.StructureByteStride = 0;
+			ibufferdesc.CPUAccessFlags = 0;
+
+			m_indexdata = new unsigned int[3]{ 0,2,1 };
+
+			D3D11_SUBRESOURCE_DATA indexdata;
+			indexdata.pSysMem = m_indexdata;
+			indexdata.SysMemPitch = 0;
+			indexdata.SysMemSlicePitch = 0;
+
+			result = dx_device->CreateBuffer(&ibufferdesc, &indexdata, &m_indexBuffer);
+		}
+
+		{
+			//shader
+			D3DCompileFromFile(L"F:\\_Proj_RgEngine\\SimpleDX\\SimpleDX\\vs.hlsl", nullptr, nullptr, "main", "vs_4_0", 0, 0, &m_vertexShaderBlob, nullptr);
+			if (m_vertexShaderBlob == nullptr)
+			{
+				return false;
+			}
+			if (dx_device->CreateVertexShader(m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), NULL, &m_vertexShader) != S_OK)
+			{
+				return false;
+			}
+
+			D3DCompileFromFile(L"F:\\_Proj_RgEngine\\SimpleDX\\SimpleDX\\ps.hlsl", nullptr, nullptr, "main", "ps_4_0", 0, 0, &m_pixleShaderBlob, NULL);
+			if (m_pixleShaderBlob == nullptr)
+			{
+				return false;
+			}
+
+			if (dx_device->CreatePixelShader(m_pixleShaderBlob->GetBufferPointer(), m_pixleShaderBlob->GetBufferSize(), nullptr, &m_pixelShader) != S_OK)
+			{
+				return false;
+			}
+		}
+
+		//input layout
+		{
+			D3D11_INPUT_ELEMENT_DESC layout[3];
+			layout[0].SemanticName = "POSITION";
+			layout[0].SemanticIndex = 0;
+			layout[0].Format = DXGI_FORMAT_R32G32_FLOAT;
+			layout[0].InputSlot = 0;
+			layout[0].AlignedByteOffset = 0;
+			layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			layout[0].InstanceDataStepRate = 0;
+
+			layout[1].SemanticName = "TEXCOORD";
+			layout[1].SemanticIndex = 0;
+			layout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+			layout[1].InputSlot = 0;
+			layout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+			layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			layout[1].InstanceDataStepRate = 0;
+
+			layout[2].SemanticName = "COLOR";
+			layout[2].SemanticIndex = 0;
+			layout[2].Format = DXGI_FORMAT_R32_UINT;
+			layout[2].InputSlot = 0;
+			layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+			layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			layout[2].InstanceDataStepRate = 0;
+
+			result = dx_device->CreateInputLayout(layout, 3, m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), &m_inputlayout);
+		}
+
+		return true;
+	}
+	bool RgGUI_dx11_Draw(RgGuiDrawList * data)
+	{
+
+		//dx_deviceContext->ClearRenderTargetView(g_pMainRenderTargetView, (float*)&mClearColor);
+
+		unsigned int stride = sizeof(RgGuiDrawVert);
+		unsigned int offset = 0;
+
+		dx_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+		dx_deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		dx_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		//dx_deviceContext->VSSetConstantBuffers(0, 1, &m_constbuffer);
+
+		dx_deviceContext->IASetInputLayout(m_inputlayout);
+		dx_deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+		dx_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+
+		dx_deviceContext->DrawIndexed(3, 0, 0);
+
+		return true;
 	}
 }
 
