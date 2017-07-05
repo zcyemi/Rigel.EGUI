@@ -1,6 +1,8 @@
 #include "RgGUIdx11.h"
 #include "rggui.h"
 
+#define DEFAULT_VERTEX_BUFFER_SIZE 256
+
 using namespace rg::gui;
 using namespace DirectX;
 
@@ -23,31 +25,40 @@ namespace rg
 	static ID3D11PixelShader * m_pixelShader;
 	static ID3D11InputLayout * m_inputlayout;
 
+	static bool m_inited = false;
+
 	bool RgGUI_dx11_createObjects();
 
 	bool RgGUI_dx11_Draw(RgGuiDrawList *data);
 
 	bool RgGUI_dx11_Init(void * hwnd, ID3D11Device * device, ID3D11DeviceContext * context)
 	{
+		m_inited = true;
+
 		mhwnd =(HWND)hwnd;
 		dx_device = device;
 		dx_deviceContext = context;
 
 		if (!RgGUI_dx11_createObjects())
 		{
-			RgLogE() << "dx11 create objects error";
+			m_inited = false;
+
+			RgLogE() << "dx11 create objects error ";
 		}
 
 		RgGuiContext& ctx = GetContext();
 		ctx.RenderDrawListFunction = RgGUI_dx11_Draw;
 
-		return true;
+		if (!m_inited) RgGUI_dx11_Shutdown();
+
+		return m_inited;
 	}
 	void RgGUI_dx11_Shutdown()
 	{
 	}
 	void RgGUI_dx11_Frame()
 	{
+		if (!m_inited) return;
 	}
 	LRESULT RgGUI_dx11_WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
@@ -107,10 +118,10 @@ namespace rg
 		//vertex
 		{
 			D3D11_BUFFER_DESC vbufferdesc;
-			vbufferdesc.ByteWidth = sizeof(RgGuiDrawVert) * 3;
+			vbufferdesc.ByteWidth = sizeof(RgGuiDrawVert) * DEFAULT_VERTEX_BUFFER_SIZE;
 			vbufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			vbufferdesc.Usage = D3D11_USAGE_DEFAULT;
-			vbufferdesc.CPUAccessFlags = 0;
+			vbufferdesc.Usage = D3D11_USAGE_DYNAMIC;
+			vbufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			vbufferdesc.MiscFlags = 0;
 			vbufferdesc.StructureByteStride = 0;
 
@@ -118,15 +129,15 @@ namespace rg
 
 			m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
 			m_vertexdata[0].uv = RgVec2(0, 0);
-			//m_vertexdata[0].color = 0;
+			m_vertexdata[0].color = (((255<<8) | 0) << 8)<<8 | 255;
 
 			m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
 			m_vertexdata[1].uv = RgVec2(0, 0);
-			//m_vertexdata[1].color = 0;
+			m_vertexdata[1].color = 0;
 
 			m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
 			m_vertexdata[2].uv = RgVec2(0, 0);
-			//m_vertexdata[2].color = 0;
+			m_vertexdata[2].color = 0;
 
 			D3D11_SUBRESOURCE_DATA vertexdata;
 			vertexdata.pSysMem = m_vertexdata;
@@ -134,20 +145,24 @@ namespace rg
 			vertexdata.SysMemSlicePitch = 0;
 
 			result = dx_device->CreateBuffer(&vbufferdesc, &vertexdata, &m_vertexBuffer);
-			if (result != S_OK) RgLogE() << "Create vertex buffer error";
+			if (result != S_OK)
+			{
+				RgLogE() << "Create vertex buffer error";
+				return false;
+			}
 		}
 
 		//index buffer
 		{
 			D3D11_BUFFER_DESC ibufferdesc;
-			ibufferdesc.Usage = D3D11_USAGE_DEFAULT;
-			ibufferdesc.ByteWidth = sizeof(unsigned int) * 3;
+			ibufferdesc.Usage = D3D11_USAGE_DYNAMIC;
+			ibufferdesc.ByteWidth = sizeof(RgGuiDrawIdx) * 3;
 			ibufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 			ibufferdesc.MiscFlags = 0;
 			ibufferdesc.StructureByteStride = 0;
-			ibufferdesc.CPUAccessFlags = 0;
+			ibufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-			m_indexdata = new unsigned int[3]{ 0,2,1 };
+			m_indexdata = new RgGuiDrawIdx[3]{ 0,2,1 };
 
 			D3D11_SUBRESOURCE_DATA indexdata;
 			indexdata.pSysMem = m_indexdata;
@@ -155,7 +170,11 @@ namespace rg
 			indexdata.SysMemSlicePitch = 0;
 
 			result = dx_device->CreateBuffer(&ibufferdesc, &indexdata, &m_indexBuffer);
-			if (result != S_OK) RgLogE() << "create index buffer error";
+			if (result != S_OK)
+			{
+				RgLogE() << "create index buffer error";
+				return false;
+			}
 		}
 
 		{
@@ -188,7 +207,7 @@ namespace rg
 
 		//input layout
 		{
-			D3D11_INPUT_ELEMENT_DESC layout[2];
+			D3D11_INPUT_ELEMENT_DESC layout[3];
 			layout[0].SemanticName = "POSITION";
 			layout[0].SemanticIndex = 0;
 			layout[0].Format = DXGI_FORMAT_R32G32_FLOAT;
@@ -205,27 +224,59 @@ namespace rg
 			layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			layout[1].InstanceDataStepRate = 0;
 
-			//layout[2].SemanticName = "COLOR";
-			//layout[2].SemanticIndex = 0;
-			//layout[2].Format = DXGI_FORMAT_R32_UINT;
-			//layout[2].InputSlot = 0;
-			//layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-			//layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			//layout[2].InstanceDataStepRate = 0;
+			layout[2].SemanticName = "COLOR";
+			layout[2].SemanticIndex = 0;
+			layout[2].Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			layout[2].InputSlot = 0;
+			layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+			layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			layout[2].InstanceDataStepRate = 0;
 
-			result = dx_device->CreateInputLayout(layout, 2, m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), &m_inputlayout);
+			result = dx_device->CreateInputLayout(layout, 3, m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize(), &m_inputlayout);
 
 			if (result != S_OK)
+			{
 				RgLogE() << "create input layout error";
+				return false;
+			}
+				
 		}
 
 		return true;
 	}
 	bool RgGUI_dx11_Draw(RgGuiDrawList * data)
 	{
+		if (!m_inited) return false;
+
+		HRESULT result;
 
 		unsigned int stride = sizeof(RgGuiDrawVert);
 		unsigned int offset = 0;
+
+		D3D11_MAPPED_SUBRESOURCE vertex_res, index_res;
+		//mapdata
+		{
+			result = dx_deviceContext->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertex_res);
+			if (result != S_OK)
+			{
+				RgLogE() << "map vertex data error";
+				return false;
+			}
+			RgGuiDrawVert * vertex_dataptr = (RgGuiDrawVert*)vertex_res.pData;
+			memcpy(vertex_dataptr, data->VertexBuffer.data(), sizeof(RgGuiDrawVert) * data->VertexCount);
+			dx_deviceContext->Unmap(m_vertexBuffer, 0);
+
+			result = dx_deviceContext->Map(m_indexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &index_res);
+			if (result != S_OK)
+			{
+				RgLogE() << "map index data error";
+				return false;
+			}
+			RgGuiDrawIdx * index_dataptr = (RgGuiDrawIdx*)index_res.pData;
+			memcpy(index_dataptr, data->IndicesBuffer.data(), sizeof(RgGuiDrawIdx)* data->IndicesIndex);
+			dx_deviceContext->Unmap(m_indexBuffer, 0);
+		}
+
 
 		dx_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 		dx_deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);

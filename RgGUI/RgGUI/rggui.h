@@ -83,6 +83,7 @@ namespace rg {
 		{
 			RgVec2 pos;
 			RgVec2 uv;
+			RgU32 color;
 			RgGuiDrawVert();
 			RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_);
 		};

@@ -9,6 +9,7 @@ struct VertexInput
 {
 	float2 position:POSITION;
 	float2 uv:TEXCOORD0;
+	float4 color:COLOR0;
 };
 
 struct PixelInput
@@ -23,6 +24,8 @@ PixelInput main(VertexInput v)
 	PixelInput o;
 
 	o.position = float4(v.position, 0.5, 1.0);
+
+	o.color = v.color;
 
 	//o.position = mul(v.position, worldMatrix);
 	//o.position = mul(o.position, viewMatrix);
