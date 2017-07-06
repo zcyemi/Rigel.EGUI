@@ -24,7 +24,6 @@
     <ClInclude Include="rggui.h" />
     <ClInclude Include="RgGUIdx11.h" />
     <ClInclude Include="RgGUIWindow.h" />
-    <ClInclude Include="rggui_vec.h" />
     <ClInclude Include="RgInclude.h" />
     <ClInclude Include="rglog.h" />
   </ItemGroup>

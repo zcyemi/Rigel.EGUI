@@ -71,6 +71,11 @@ int main()
 	window.Show();
 
 	bool done = false;
+	gui::InitRgGUI();
+
+	unsigned int w, h;
+	window.GetWindowSize(&w,&h);
+	gui::GetContext().SetScreenSize(w,h);
 	RgGUI_dx11_Init(window.getWindow(), dx11->getD3D11Device(), dx11->getD3D11DeviceContext());
 
 	MSG msg;

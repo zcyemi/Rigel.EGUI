@@ -1,8 +1,8 @@
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer:register(b0)
 {
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	float4x4 worldMatrix;
+	//matrix viewMatrix;
+	//matrix projectionMatrix;
 };
 
 struct VertexInput
@@ -23,11 +23,11 @@ PixelInput main(VertexInput v)
 {
 	PixelInput o;
 
-	o.position = float4(v.position, 0.5, 1.0);
+	//o.position = float4(v.position, 0.5, 1.0);
 
 	o.color = v.color;
 
-	//o.position = mul(v.position, worldMatrix);
+	o.position = mul(worldMatrix,float4(v.position.xy,0,1.0f));
 	//o.position = mul(o.position, viewMatrix);
 	//o.position = mul(o.position, projectionMatrix);
 

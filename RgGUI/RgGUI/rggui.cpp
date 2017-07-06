@@ -97,8 +97,9 @@ namespace rg
 			return window;
 		}
 
-		void Init()
+		void InitRgGUI()
 		{
+			RgLogD() << "init rggui";
 			RgGuiContext& ctx = GetContext();
 		}
 
@@ -165,15 +166,15 @@ namespace rg
 		void RgGuiDrawList::AddRect(const RgVec2 & lt, const RgVec2 & rb)
 		{
 			RgU32 col = 0xffffffff;
-			//RgGuiDrawVert v1(lt, RgVec2(), col);
-			//RgGuiDrawVert v2(RgVec2(rb.x,lt.y), RgVec2(), col);
-			//RgGuiDrawVert v3(rb, RgVec2(), col);
-			//RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), col);
+			RgGuiDrawVert v1(lt, RgVec2(), col);
+			RgGuiDrawVert v2(RgVec2(rb.x,lt.y), RgVec2(), col);
+			RgGuiDrawVert v3(rb, RgVec2(), col);
+			RgGuiDrawVert v4(RgVec2(lt.x,rb.y), RgVec2(), col);
 
-			RgGuiDrawVert v1(RgVec2(0.0f, -1.0f), RgVec2(), col);
-			RgGuiDrawVert v2(RgVec2(0.0f, 1.0f), RgVec2(), col);
-			RgGuiDrawVert v3(RgVec2(1.0f, 1.0f), RgVec2(), col);
-			RgGuiDrawVert v4(RgVec2(1.0f, -1.0f), RgVec2(), col);
+			//RgGuiDrawVert v1(RgVec2(20.0f, 10.0f), RgVec2(), col);
+			//RgGuiDrawVert v2(RgVec2(20.0f, 100.0f), RgVec2(), col);
+			//RgGuiDrawVert v3(RgVec2(50.0f, 100.0f), RgVec2(), col);
+			//RgGuiDrawVert v4(RgVec2(50.0f, 10.0f), RgVec2(), col);
 
 			VertexBuffer.push_back(v1);
 			VertexBuffer.push_back(v2);
@@ -220,6 +221,17 @@ namespace rg
 			Size = s;
 		}
 
+		void RgGuiWindow::SetPosition(RgVec2 & p)
+		{
+			Pos = p;
+		}
+
+		void RgGuiWindow::Move(RgVec2 & offset)
+		{
+			Pos.x += offset.x;
+			Pos.y += offset.y;
+		}
+
 		void * RgMemAlloc::Alloc(size_t sz) {
 			AllocsCount++;
 			return malloc(sz);
@@ -233,6 +245,14 @@ namespace rg
 		{
 			pos = pos_;
 			uv = uv_;
+		}
+
+		void RgGuiContext::SetScreenSize(RgU32 w, RgU32 h)
+		{
+			ScreenWidth = w;
+			ScreenHeight = h;
+
+			RgLogD() << "set screen size" << w << " " << h;
 		}
 
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include "RgInclude.h"
-#include "rggui_vec.h"
 namespace rg {
 	namespace gui
 	{
@@ -77,6 +76,8 @@ namespace rg {
 
 			void DrawSelf();
 			void SetSize(RgVec2& s);
+			void SetPosition(RgVec2& p);
+			void Move(RgVec2& offset);
 		};
 
 		struct RgGuiDrawVert
@@ -108,7 +109,11 @@ namespace rg {
 			RgGuiDrawList DrawList;
 			RgGuiIO IO;
 			RgVector<RgGuiWindow *> Windows;
+			RgU32 ScreenWidth, ScreenHeight;
 			bool(*RenderDrawListFunction)(RgGuiDrawList* data);
+			
+			void SetScreenSize(RgU32 w, RgU32 h);
+
 		};
 
 		struct RgMemAlloc
@@ -139,7 +144,7 @@ namespace rg {
 		RgGuiWindow *CreateGuiWindow(const char* name);
 
 
-		void Init();
+		void InitRgGUI();
 
 
 		bool Render();

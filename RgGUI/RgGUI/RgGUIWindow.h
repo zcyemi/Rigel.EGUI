@@ -24,6 +24,7 @@ namespace rg
 		~RgGUIWindow();
 
 		void Show();
+		void GetWindowSize(unsigned int* w, unsigned int* h);
 
 		void ShutDown();
 
@@ -32,6 +33,8 @@ namespace rg
 	private:
 		HWND mHwnd;
 		WNDCLASSEX mWc;
+
+		int mWidth, mHeight;
 	};
 
 

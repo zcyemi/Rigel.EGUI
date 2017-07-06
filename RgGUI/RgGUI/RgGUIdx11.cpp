@@ -25,6 +25,14 @@ namespace rg
 	static ID3D11PixelShader * m_pixelShader;
 	static ID3D11InputLayout * m_inputlayout;
 
+	struct DATA_CONST_BUFFER
+	{
+		float mvp[4][4];
+	};
+
+	static float m_mvp[4][4];
+
+
 	static bool m_inited = false;
 
 	bool RgGUI_dx11_createObjects();
@@ -175,6 +183,50 @@ namespace rg
 				RgLogE() << "create index buffer error";
 				return false;
 			}
+		}
+
+		//const buffer
+		{
+			D3D11_BUFFER_DESC cbufferdesc;
+			cbufferdesc.Usage = D3D11_USAGE_DYNAMIC;
+			cbufferdesc.ByteWidth = sizeof(DATA_CONST_BUFFER);
+			cbufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			cbufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			cbufferdesc.MiscFlags = 0;
+			result = dx_device->CreateBuffer(&cbufferdesc, NULL, &m_constBuffer);
+
+			if (result != S_OK)
+			{
+				RgLogE() << "create const buffer error";
+				return false;
+			}
+
+			RgGuiContext& guictx= gui::GetContext();
+			float R =(float) guictx.ScreenWidth;
+			float B =(float) guictx.ScreenHeight;
+			float L = 0.0f;
+			float T = 0.0f;
+
+			D3D11_MAPPED_SUBRESOURCE cbuffer_res;
+			result = dx_deviceContext->Map(m_constBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &cbuffer_res);
+			if (result != S_OK)
+			{
+				RgLogE() << "map const buffer error";
+				return false;
+			}
+			DATA_CONST_BUFFER *dataptr =(DATA_CONST_BUFFER*) cbuffer_res.pData;
+			float mtx[4][4] =
+			{
+				{ 2.0f / (R - L),   0.0f,           0.0f,       0.0f },
+				{ 0.0f,         2.0f / (T - B),     0.0f,       0.0f },
+				{ 0.0f,         0.0f,           0.5f,       0.0f },
+				{ (R + L) / (L - R),  (T + B) / (B - T),    0.5f,       1.0f },
+			};
+
+			memcpy(&dataptr->mvp, mtx, sizeof(mtx));
+			dx_deviceContext->Unmap(m_constBuffer, 0);
+
+			dx_deviceContext->VSSetConstantBuffers(0, 1, &m_constBuffer);
 		}
 
 		{

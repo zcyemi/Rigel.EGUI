@@ -30,9 +30,6 @@
     <ClInclude Include="rggui.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="rggui_vec.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="rglog.h">
       <Filter>头文件</Filter>
     </ClInclude>

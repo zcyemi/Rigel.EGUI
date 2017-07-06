@@ -22,7 +22,11 @@ namespace rg
 		RegisterClassEx(&mWc);
 		mHwnd = CreateWindowEx(WS_EX_APPWINDOW, desc.appName, desc.appName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU, desc.posx, desc.posy, desc.width, desc.height, NULL, NULL, desc.hInstance, NULL);
 
+
+		mWidth = desc.width;
+		mHeight = desc.height;
 	}
+
 
 	RgGUIWindow::~RgGUIWindow()
 	{
@@ -41,6 +45,12 @@ namespace rg
 	{
 		UnregisterClass(mWc.lpszClassName, mWc.hInstance);
 		CloseWindow(mHwnd);
+	}
+
+	void RgGUIWindow::GetWindowSize(unsigned int* w,unsigned int* h)
+	{
+		*w = mWidth;
+		*h = mHeight;
 	}
 
 	const HWND & RgGUIWindow::getWindow()
