@@ -125,26 +125,26 @@ namespace rg
 			vbufferdesc.MiscFlags = 0;
 			vbufferdesc.StructureByteStride = 0;
 
-			m_vertexdata = new RgGuiDrawVert[3];
+			//m_vertexdata = new RgGuiDrawVert[3];
 
-			m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
-			m_vertexdata[0].uv = RgVec2(0, 0);
-			m_vertexdata[0].color = (((255<<8) | 0) << 8)<<8 | 255;
+			//m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
+			//m_vertexdata[0].uv = RgVec2(0, 0);
+			//m_vertexdata[0].color = (((255<<8) | 0) << 8)<<8 | 255;
 
-			m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
-			m_vertexdata[1].uv = RgVec2(0, 0);
-			m_vertexdata[1].color = 0;
+			//m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
+			//m_vertexdata[1].uv = RgVec2(0, 0);
+			//m_vertexdata[1].color = 0;
 
-			m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
-			m_vertexdata[2].uv = RgVec2(0, 0);
-			m_vertexdata[2].color = 0;
+			//m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
+			//m_vertexdata[2].uv = RgVec2(0, 0);
+			//m_vertexdata[2].color = 0;
 
-			D3D11_SUBRESOURCE_DATA vertexdata;
-			vertexdata.pSysMem = m_vertexdata;
-			vertexdata.SysMemPitch = 0;
-			vertexdata.SysMemSlicePitch = 0;
+			//D3D11_SUBRESOURCE_DATA vertexdata;
+			//vertexdata.pSysMem = nullptr;
+			//vertexdata.SysMemPitch = 0;
+			//vertexdata.SysMemSlicePitch = 0;
 
-			result = dx_device->CreateBuffer(&vbufferdesc, &vertexdata, &m_vertexBuffer);
+			result = dx_device->CreateBuffer(&vbufferdesc, nullptr, &m_vertexBuffer);
 			if (result != S_OK)
 			{
 				RgLogE() << "Create vertex buffer error";
@@ -156,20 +156,20 @@ namespace rg
 		{
 			D3D11_BUFFER_DESC ibufferdesc;
 			ibufferdesc.Usage = D3D11_USAGE_DYNAMIC;
-			ibufferdesc.ByteWidth = sizeof(RgGuiDrawIdx) * 3;
+			ibufferdesc.ByteWidth = sizeof(RgGuiDrawIdx) * 256;
 			ibufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 			ibufferdesc.MiscFlags = 0;
 			ibufferdesc.StructureByteStride = 0;
 			ibufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-			m_indexdata = new RgGuiDrawIdx[3]{ 0,2,1 };
+			//m_indexdata = new RgGuiDrawIdx[3]{ 0,2,1 };
 
-			D3D11_SUBRESOURCE_DATA indexdata;
-			indexdata.pSysMem = m_indexdata;
-			indexdata.SysMemPitch = 0;
-			indexdata.SysMemSlicePitch = 0;
+			//D3D11_SUBRESOURCE_DATA indexdata;
+			//indexdata.pSysMem = m_indexdata;
+			//indexdata.SysMemPitch = 0;
+			//indexdata.SysMemSlicePitch = 0;
 
-			result = dx_device->CreateBuffer(&ibufferdesc, &indexdata, &m_indexBuffer);
+			result = dx_device->CreateBuffer(&ibufferdesc, nullptr, &m_indexBuffer);
 			if (result != S_OK)
 			{
 				RgLogE() << "create index buffer error";
@@ -288,7 +288,7 @@ namespace rg
 		dx_deviceContext->VSSetShader(m_vertexShader, NULL, 0);
 		dx_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 
-		dx_deviceContext->DrawIndexed(3, 0, 0);
+		dx_deviceContext->DrawIndexed(data->IndicesIndex, 0, 0);
 
 		return true;
 	}
