@@ -245,6 +245,7 @@ namespace rg
 		{
 			pos = pos_;
 			uv = uv_;
+			color = col_;
 		}
 
 		void RgGuiContext::SetScreenSize(RgU32 w, RgU32 h)
