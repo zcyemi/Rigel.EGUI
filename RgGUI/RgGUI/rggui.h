@@ -1,5 +1,5 @@
 #pragma once
-#include "RgInclude.h"
+#include "rg_include.h"
 namespace rg {
 	namespace gui
 	{

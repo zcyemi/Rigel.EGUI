@@ -1,4 +1,4 @@
-#include "RgGUIdx11.h"
+#include "rggui_dx11.h"
 #include "rggui.h"
 
 #define DEFAULT_VERTEX_BUFFER_SIZE 256

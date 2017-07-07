@@ -19,19 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Rgdx11.h" />
+    <ClInclude Include="rg_dx11.h" />
     <ClInclude Include="rggui.h" />
-    <ClInclude Include="RgGUIdx11.h" />
-    <ClInclude Include="RgGUIWindow.h" />
-    <ClInclude Include="RgInclude.h" />
+    <ClInclude Include="rggui_dx11.h" />
+    <ClInclude Include="rggui_window.h" />
+    <ClInclude Include="rg_include.h" />
     <ClInclude Include="rglog.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Rgdx11.cpp" />
+    <ClCompile Include="rg_dx11.cpp" />
     <ClCompile Include="rggui.cpp" />
-    <ClCompile Include="RgGUIdx11.cpp" />
-    <ClCompile Include="RgGUIWindow.cpp" />
+    <ClCompile Include="rggui_dx11.cpp" />
+    <ClCompile Include="rggui_window.cpp" />
     <ClCompile Include="rglog.cpp" />
   </ItemGroup>
   <ItemGroup>

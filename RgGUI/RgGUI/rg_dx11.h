@@ -1,5 +1,5 @@
 #pragma once
-#include "RgInclude.h"
+#include "rg_include.h"
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")

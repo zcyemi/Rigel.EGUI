@@ -1,6 +1,6 @@
-#include "../RgGUI/RgGUIWindow.h"
-#include "../RgGUI/Rgdx11.h"
-#include "../RgGUI/RgGUIdx11.h"
+#include "../RgGUI/rggui_window.h"
+#include "../RgGUI/rg_dx11.h"
+#include "../RgGUI/rggui_dx11.h"
 #include "../RgGUI/rggui.h"
 
 #include "../RgGUI/rglog.h"

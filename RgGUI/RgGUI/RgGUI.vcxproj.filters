@@ -13,45 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\rg">
+      <UniqueIdentifier>{e2aa52cf-d7af-4ec0-944b-69a98522efe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\rg">
+      <UniqueIdentifier>{52f6787a-8942-4f65-9cc2-a91e80a72fe8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RgInclude.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RgGUIWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RgGUIdx11.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Rgdx11.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="rggui.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="rglog.h">
+    <ClInclude Include="rggui_dx11.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="rggui_window.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rg_include.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
+    <ClInclude Include="rglog.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
+    <ClInclude Include="rg_dx11.h">
+      <Filter>头文件\rg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RgGUIWindow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RgGUIdx11.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Rgdx11.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="rglog.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="rggui.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_dx11.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_window.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_dx11.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rglog.cpp">
+      <Filter>源文件\rg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

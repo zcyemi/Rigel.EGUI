@@ -1,4 +1,4 @@
-#include "RgGUIWindow.h"
+#include "rggui_window.h"
 
 namespace rg
 {
