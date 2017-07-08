@@ -16,12 +16,20 @@ namespace rg
 			ID = RgHash(name, 0);
 			//TODO:
 			this->DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
+			Style = RgGuiWindowStyle_Default;
 		}
 
 		void RgGuiWindow::DrawSelf()
 		{
 			DrawList->SetColor(0xffffffff);
+			//background
 			DrawList->AddRect(Pos, Pos + Size);
+
+			if ((Style & RgGuiWindowStyle_Header) > 0)
+			{
+				DrawList->SetColor(0xff999999);
+				DrawList->AddRect(Pos, Pos + RgVec2(Size.x,18));
+			}
 		}
 
 		void RgGuiWindow::SetSize(RgVec2 & s)
@@ -32,6 +40,11 @@ namespace rg
 		void RgGuiWindow::SetPosition(RgVec2 & p)
 		{
 			Pos = p;
+		}
+
+		void RgGuiWindow::SetStyle(RgGuiDrawWindowStyle style)
+		{
+			Style = style;
 		}
 
 		void RgGuiWindow::Move(RgVec2 & offset)

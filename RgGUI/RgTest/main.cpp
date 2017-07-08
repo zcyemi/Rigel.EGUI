@@ -1,6 +1,7 @@
 #include "../RgGUI/rggui_window.h"
 #include "../RgGUI/rg_dx11.h"
 #include "../RgGUI/rggui_dx11.h"
+#include "../RgGUI/rggui_enum.h"
 #include "../RgGUI/rggui.h"
 
 #include "../RgGUI/rg_log.h"
@@ -128,11 +129,8 @@ void update()
 	gui::Begin("testwindow");
 
 	auto win = gui::GetCurrentWindow();
+	win->SetStyle(gui::RgGuiWindowStyle_Caption | gui::RgGuiWindowStyle_Header);
 	win->SetSize(RgVec2(200, 100));
-
-	gui::DrawRect(RgVec4(50,50,100,100), 0x0033cc55);
-
-	gui::DrawRect(RgVec4(120, 70, 100, 100), 0xff000033);
 
 	gui::Text("test text");
 	if (gui::Button("click me"))
@@ -140,4 +138,5 @@ void update()
 		std::cout << "you click the button" << std::endl;
 	}
 	gui::End();
+
 }

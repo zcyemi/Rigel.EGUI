@@ -8,6 +8,7 @@ namespace rg
 	{
 		typedef unsigned int RgGuiDrawIdx;
 		typedef unsigned int RgU32;
+		typedef unsigned int RgGuiDrawWindowStyle;
 
 		struct RgGuiDrawList;
 
@@ -44,12 +45,16 @@ namespace rg
 			RgVec2 Size;
 
 			RgGuiDrawList * DrawList;
+			RgGuiDrawWindowStyle Style;
 
 			RgGuiWindow(const char * name);
 
 			void DrawSelf();
+
 			void SetSize(RgVec2& s);
 			void SetPosition(RgVec2& p);
+			void SetStyle(RgGuiDrawWindowStyle s);
+
 			void Move(RgVec2& offset);
 
 			void Begin();

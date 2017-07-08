@@ -23,5 +23,13 @@ namespace rg
 		};
 
 
+		enum  RgGuiWindowStyle
+		{
+			RgGuiWindowStyle_Default = 1,
+			RgGuiWindowStyle_Header = 1 << 1,
+			RgGuiWindowStyle_Caption = 1 << 2,
+			RgGuiWindowStyle_Callapse = 1 << 3,
+		};
+
 	}
 }
