@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="rggui_defines.h" />
     <ClInclude Include="rggui_enum.h" />
+    <ClInclude Include="rggui_skin.h" />
     <ClInclude Include="rg_dx11.h" />
     <ClInclude Include="rggui.h" />
     <ClInclude Include="rggui_dx11.h" />
@@ -34,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui_defines.cpp" />
+    <ClCompile Include="rggui_skin.cpp" />
     <ClCompile Include="rg_dx11.cpp" />
     <ClCompile Include="rggui.cpp" />
     <ClCompile Include="rggui_dx11.cpp" />

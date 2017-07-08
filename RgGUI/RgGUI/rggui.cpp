@@ -41,23 +41,26 @@ namespace rg
 			return nullptr;
 		}
 
-		RgGuiWindow * CreateGuiWindow(const char * name)
+		RgGuiWindow * CreateGuiWindow(const char * name, RgGuiDrawWindowStyle style, RgGuiWindowSkin * skin)
 		{
 			RgGuiContext& g = GetContext();
 
 			RgGuiWindow * window = (RgGuiWindow*)g_RgGuiMemAlloc.Alloc(sizeof(RgGuiWindow));
-			new(window) RgGuiWindow(name);
+			new(window) RgGuiWindow(name,style,skin);
 
 			g.Windows.push_back(window);
 
 			return window;
 		}
 
-		void InitRgGUI()
+
+		void InitRgGUI(RgGuiSkin & skin)
 		{
-			RgLogD() << "init rggui";
+			RgLogD() << "init rggui ";
 			RgGuiContext& ctx = GetContext();
+			ctx.SetSkin(skin);
 		}
+
 
 		bool Render()
 		{
@@ -82,21 +85,19 @@ namespace rg
 			RgLogW() << "RgGUI memAlloc cout:" << g_RgGuiMemAlloc.AllocsCount;
 		}
 
-
-		void Begin(const char * name)
+		void Begin(const char * name, RgGuiDrawWindowStyle style, RgGuiWindowSkin * skin)
 		{
 			static unsigned int id = 0;
 			RgGuiContext& g = *GRgGui;
 			RgGuiWindow* win = GetWindow(name);
 			if (win == nullptr)
 			{
-				win = CreateGuiWindow(name);
+				win = CreateGuiWindow(name,style,skin);
 			}
 
 			g.CurrentWindow = win;
 
 			win->Begin();
-
 		}
 
 		void End()

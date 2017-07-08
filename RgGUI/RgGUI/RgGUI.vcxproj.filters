@@ -57,6 +57,9 @@
     <ClInclude Include="rg_log.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
+    <ClInclude Include="rggui_skin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="rg_log.cpp">
       <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_skin.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 #include "rg_include.h"
 #include "rggui_enum.h"
 #include "rg_memalloc.h"
+#include "rggui_skin.h"
 namespace rg
 {
 	namespace gui
@@ -45,15 +46,18 @@ namespace rg
 			RgVec2 Size;
 
 			RgGuiDrawList * DrawList;
-			RgGuiDrawWindowStyle Style;
 
-			RgGuiWindow(const char * name);
+			RgGuiDrawWindowStyle Style;
+			RgGuiWindowSkin Skin;
+
+			RgGuiWindow(const char * name, RgGuiDrawWindowStyle style = (unsigned int)RgGuiWindowStyle_Default, RgGuiWindowSkin* skin = nullptr);
 
 			void DrawSelf();
 
 			void SetSize(RgVec2& s);
 			void SetPosition(RgVec2& p);
 			void SetStyle(RgGuiDrawWindowStyle s);
+			void SetSkin(RgGuiWindowSkin* skin);
 
 			void Move(RgVec2& offset);
 
@@ -102,9 +106,11 @@ namespace rg
 			RgGuiIO IO;
 			RgVector<RgGuiWindow *> Windows;
 			RgU32 ScreenWidth, ScreenHeight;
+			RgGuiSkin Skin;
 			bool(*RenderDrawListFunction)(RgGuiDrawList* data);
 
 			void SetScreenSize(RgU32 w, RgU32 h);
+			void SetSkin(RgGuiSkin skin);
 
 		};
 

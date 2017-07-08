@@ -11,12 +11,14 @@ namespace rg
 		RgGuiContext *GRgGui = &g_RgGuiContext;
 
 #pragma region RgGuiWindow
-		RgGuiWindow::RgGuiWindow(const char * name) :Name(name)
+		RgGuiWindow::RgGuiWindow(const char * name, RgGuiDrawWindowStyle style, RgGuiWindowSkin * skin)
 		{
 			ID = RgHash(name, 0);
 			//TODO:
 			this->DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
-			Style = RgGuiWindowStyle_Default;
+
+			SetStyle(style);
+			SetSkin(skin);
 		}
 
 		void RgGuiWindow::DrawSelf()
@@ -45,6 +47,19 @@ namespace rg
 		void RgGuiWindow::SetStyle(RgGuiDrawWindowStyle style)
 		{
 			Style = style;
+		}
+
+		void RgGuiWindow::SetSkin(RgGuiWindowSkin * skin)
+		{
+			if (skin == nullptr)
+			{
+				Skin = RgGuiWindowSkin(GRgGui->Skin.WindowSkin);
+				RgLogD() << "use default skin";
+			}
+			else
+			{
+				Skin = RgGuiWindowSkin(*skin);
+			}
 		}
 
 		void RgGuiWindow::Move(RgVec2 & offset)
@@ -102,6 +117,10 @@ namespace rg
 			ScreenHeight = h;
 
 			RgLogD() << "set screen size" << w << " " << h;
+		}
+		void RgGuiContext::SetSkin(RgGuiSkin skin)
+		{
+			Skin = skin;
 		}
 #pragma endregion
 

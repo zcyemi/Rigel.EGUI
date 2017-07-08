@@ -13,17 +13,18 @@ namespace rg {
 		RgGuiIO& GetIO();
 
 		RgGuiWindow *GetWindow(const char * name);
-		RgGuiWindow *CreateGuiWindow(const char* name);
+		RgGuiWindow *CreateGuiWindow(const char* name,RgGuiDrawWindowStyle style, RgGuiWindowSkin *skin);
 
 
-		void InitRgGUI();
+		void InitRgGUI(RgGuiSkin& skin = RGGUI_SKIN_DEFAULT);
 
 
 		bool Render();
 		void NewFrame();
 		void ShutDown();
 
-		void Begin(const char * name);
+		void Begin(const char * name, RgGuiDrawWindowStyle style = (int) RgGuiWindowStyle_Default, RgGuiWindowSkin *skin = NULL);
+
 		void End();
 
 
