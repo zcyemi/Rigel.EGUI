@@ -9,21 +9,20 @@ namespace rg {
 		struct RgGuiDrawList;
 		struct RgVec2;
 		struct RgVec4;
-		
-#define RgVector std::vector
 
 		struct RgVec2
 		{
 			float x, y;
 			RgVec2() { x = y = 0.0f; }
 			RgVec2(float _x, float _y) { x = _x; y = _y; }
+			RgVec2(float v) { x = y = v; }
 		};
 
 		struct RgVec4
 		{
 			float x, y, z, w;
 			RgVec4() { x = y = z = w = 0.0f; }
-			RgVec4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; }
+			RgVec4(float _x, float _y, float _z, float _w):x(_x),y(_y),z(_z),w(_w){}
 		};
 
 		RgVec2 operator +(RgVec2& v1, RgVec2& v2);
@@ -78,6 +77,9 @@ namespace rg {
 			void SetSize(RgVec2& s);
 			void SetPosition(RgVec2& p);
 			void Move(RgVec2& offset);
+
+			void Begin();
+			void End();
 		};
 
 		struct RgGuiDrawVert
@@ -87,6 +89,7 @@ namespace rg {
 			RgU32 color;
 			RgGuiDrawVert();
 			RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_);
+			RgGuiDrawVert(RgVec2 pos_);
 		};
 
 		struct RgGuiDrawList
@@ -98,9 +101,10 @@ namespace rg {
 			RgU32 VertexCount = 0;
 
 			void AddRect(const RgVec2& lb, const RgVec2& rt);
+			void AddRect(float x, float y, float w, float h);
 			RgGuiDrawList();
 
-			void ClearData();
+			void Reset();
 		};
 
 		struct RgGuiContext
@@ -157,6 +161,9 @@ namespace rg {
 
 		void Text(const char *t);
 		bool Button(const char *t);
+
+		//x,y,w,z
+		void DrawRect(RgVec4& rect);
 
 
 		template<class T>

@@ -39,6 +39,9 @@
     <ClInclude Include="rg_dx11.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
+    <ClInclude Include="rg_vector.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">

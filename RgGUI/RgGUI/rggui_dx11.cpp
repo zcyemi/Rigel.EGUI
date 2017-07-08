@@ -315,7 +315,7 @@ namespace rg
 				return false;
 			}
 			RgGuiDrawVert * vertex_dataptr = (RgGuiDrawVert*)vertex_res.pData;
-			memcpy(vertex_dataptr, data->VertexBuffer.data(), sizeof(RgGuiDrawVert) * data->VertexCount);
+			memcpy(vertex_dataptr, data->VertexBuffer.Data, sizeof(RgGuiDrawVert) * data->VertexCount);
 			dx_deviceContext->Unmap(m_vertexBuffer, 0);
 
 			result = dx_deviceContext->Map(m_indexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &index_res);
@@ -325,7 +325,7 @@ namespace rg
 				return false;
 			}
 			RgGuiDrawIdx * index_dataptr = (RgGuiDrawIdx*)index_res.pData;
-			memcpy(index_dataptr, data->IndicesBuffer.data(), sizeof(RgGuiDrawIdx)* data->IndicesIndex);
+			memcpy(index_dataptr, data->IndicesBuffer.Data, sizeof(RgGuiDrawIdx)* data->IndicesIndex);
 			dx_deviceContext->Unmap(m_indexBuffer, 0);
 		}
 
