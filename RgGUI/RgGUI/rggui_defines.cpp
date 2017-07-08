@@ -39,8 +39,12 @@ namespace rg
 			if ((Style & RgGuiWindowStyle_Header) > 0)
 			{
 				DrawList->SetColor(0xff999999);
-				DrawList->AddRect(Pos, Pos + RgVec2(Size.x,18));
+				DrawList->AddRect(Pos, Pos + RgVec2(Size.x,Skin.HEADER_HEIGHT));
 			}
+
+			//finish draw header
+			temp_layoutOffset.y += Skin.HEADER_HEIGHT;
+			temp_layoutOffset += Skin.CONTEXT_OFFSET;
 		}
 
 		void RgGuiWindow::SetSize(RgVec2 & s)
@@ -79,6 +83,8 @@ namespace rg
 
 		void RgGuiWindow::Begin()
 		{
+			temp_layoutOffset.x = temp_layoutOffset.y = 0;
+
 			DrawList->Reset();
 			DrawSelf();
 		}

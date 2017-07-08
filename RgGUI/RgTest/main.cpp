@@ -133,6 +133,9 @@ void update()
 
 	auto win = GetCurrentWindow();
 
+	gui::Rectangle();
+	gui::Rectangle();
+
 	Text("test text");
 	if (Button("click me"))
 	{

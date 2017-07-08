@@ -117,16 +117,24 @@ namespace rg
 			return false;
 		}
 
-		void DrawRect(RgVec4 & rect, RgU32 color)
+		void DrawRectangle(RgVec4 & rect, RgU32 color)
 		{
 			RgGuiWindow * win = GetCurrentWindow();
 			win->DrawList->SetColor(color);
 			win->DrawList->AddRect(RgVec2(rect.x,rect.y),RgVec2(rect.x + rect.z,rect.y+rect.w));
 		}
 
-		void DrawRect(RgVec4 & rect)
+		void Rectangle(const RgVec2 size)
 		{
 			RgGuiWindow * win = GetCurrentWindow();
+			win->DrawList->AddRect(win->temp_layoutOffset, win->temp_layoutOffset + size);
+			win->temp_layoutOffset.y += size.y;
+			win->temp_layoutOffset.y += win->Skin.LINE_OFFSET;
+		}
+
+		void Rectangle()
+		{
+			Rectangle(SKIN_BUTTON_SIZE);
 		}
 
 }

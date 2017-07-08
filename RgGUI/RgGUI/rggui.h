@@ -32,8 +32,9 @@ namespace rg {
 		bool Button(const char *t);
 
 		//x,y,w,z
-		void DrawRect(RgVec4& rect,RgU32 color);
-		
+		void DrawRectangle(RgVec4& rect,RgU32 color);
+		void Rectangle(const RgVec2 size);
+		void Rectangle();
 
 
 		

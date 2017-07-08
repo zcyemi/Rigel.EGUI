@@ -61,6 +61,8 @@ namespace rg
 			RgGuiDrawWindowStyle Style;
 			RgGuiWindowSkin Skin;
 
+			RgVec2 temp_layoutOffset;
+
 			RgGuiWindow(const char * name, RgGuiWindowDesc* desc);
 
 			void DrawSelf();

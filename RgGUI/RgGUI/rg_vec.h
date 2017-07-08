@@ -9,6 +9,12 @@ namespace rg
 		RgVec2(float _x, float _y) { x = _x; y = _y; }
 		RgVec2(float v) { x = y = v; }
 
+		inline RgVec2& operator +=(const RgVec2& v)
+		{
+			x += v.x;
+			y += v.y;
+			return *this;
+		}
 	};
 
 	struct RgVec4
@@ -18,6 +24,6 @@ namespace rg
 		RgVec4(float _x, float _y, float _z, float _w) :x(_x), y(_y), z(_z), w(_w) {}
 	};
 
-	RgVec2 operator +(RgVec2& v1, RgVec2& v2);
+	RgVec2 operator +(const RgVec2& v1, const RgVec2& v2);
 }
 
