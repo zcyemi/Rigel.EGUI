@@ -9,7 +9,7 @@
 #include <assert.h>
 #define RG_ASSERT(expr) assert(expr)
 
-#include "rglog.h"
+#include "rg_log.h"
 #include "rg_vec.h"
 #include "rg_vector.h"
 #include "rg_hash.h"

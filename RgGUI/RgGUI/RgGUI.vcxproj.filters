@@ -33,9 +33,6 @@
     <ClInclude Include="rg_include.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
-    <ClInclude Include="rglog.h">
-      <Filter>头文件\rg</Filter>
-    </ClInclude>
     <ClInclude Include="rg_dx11.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
@@ -57,6 +54,9 @@
     <ClInclude Include="rg_vec.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
+    <ClInclude Include="rg_log.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -71,9 +71,6 @@
     <ClCompile Include="rg_dx11.cpp">
       <Filter>源文件\rg</Filter>
     </ClCompile>
-    <ClCompile Include="rglog.cpp">
-      <Filter>源文件\rg</Filter>
-    </ClCompile>
     <ClCompile Include="rg_memalloc.cpp">
       <Filter>源文件\rg</Filter>
     </ClCompile>
@@ -85,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="rggui_defines.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_log.cpp">
+      <Filter>源文件\rg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

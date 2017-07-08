@@ -3,7 +3,7 @@
 #include "../RgGUI/rggui_dx11.h"
 #include "../RgGUI/rggui.h"
 
-#include "../RgGUI/rglog.h"
+#include "../RgGUI/rg_log.h"
 
 #pragma comment(lib,"RgGUI.lib")
 

@@ -1,4 +1,4 @@
-#include "rglog.h"
+#include "rg_log.h"
 
 namespace rg
 {
