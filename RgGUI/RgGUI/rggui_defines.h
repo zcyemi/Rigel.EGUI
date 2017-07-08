@@ -38,6 +38,17 @@ namespace rg
 			bool KeyDown[512];
 		};
 
+		struct RgGuiWindowDesc
+		{
+			RgVec2 Size = SKIN_WINDOW_DEFAULT_SIZE;
+			RgVec2 Position = SKIN_WINDOW_DEFUALT_POSISION;
+			RgGuiDrawWindowStyle Style = RgGuiWindowStyle_Default;
+			RgGuiWindowSkin * Skin = 0;
+
+			RgGuiWindowDesc(RgVec2 pos,RgVec2 size = SKIN_WINDOW_DEFAULT_SIZE , RgGuiDrawWindowStyle style = RgGuiWindowStyle_Default, RgGuiWindowSkin * skin = 0);
+			RgGuiWindowDesc();
+		};
+
 		struct RgGuiWindow
 		{
 			const char * Name;
@@ -50,7 +61,7 @@ namespace rg
 			RgGuiDrawWindowStyle Style;
 			RgGuiWindowSkin Skin;
 
-			RgGuiWindow(const char * name, RgGuiDrawWindowStyle style = (unsigned int)RgGuiWindowStyle_Default, RgGuiWindowSkin* skin = nullptr);
+			RgGuiWindow(const char * name, RgGuiWindowDesc* desc);
 
 			void DrawSelf();
 

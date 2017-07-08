@@ -13,7 +13,7 @@ namespace rg {
 		RgGuiIO& GetIO();
 
 		RgGuiWindow *GetWindow(const char * name);
-		RgGuiWindow *CreateGuiWindow(const char* name,RgGuiDrawWindowStyle style, RgGuiWindowSkin *skin);
+		RgGuiWindow *CreateGuiWindow(const char*name, RgGuiWindowDesc * desc);
 
 
 		void InitRgGUI(RgGuiSkin& skin = RGGUI_SKIN_DEFAULT);
@@ -23,7 +23,7 @@ namespace rg {
 		void NewFrame();
 		void ShutDown();
 
-		void Begin(const char * name, RgGuiDrawWindowStyle style = (int) RgGuiWindowStyle_Default, RgGuiWindowSkin *skin = NULL);
+		void Begin(const char* name, RgGuiWindowDesc * desc = nullptr);
 
 		void End();
 

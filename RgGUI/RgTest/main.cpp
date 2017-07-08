@@ -9,7 +9,7 @@
 #pragma comment(lib,"RgGUI.lib")
 
 using namespace rg;
-
+using namespace rg::gui;
 
 RgDX11 *dx11;
 
@@ -126,17 +126,18 @@ void update()
 {
 	//do draw
 
-	gui::Begin("testwindow");
 
-	auto win = gui::GetCurrentWindow();
-	win->SetStyle(gui::RgGuiWindowStyle_Caption | gui::RgGuiWindowStyle_Header);
-	win->SetSize(RgVec2(200, 100));
+	static RgGuiWindowDesc desc = RgGuiWindowDesc(RgVec2(0),RgVec2(200,100),RgGuiWindowStyle_Header);
 
-	gui::Text("test text");
-	if (gui::Button("click me"))
+	Begin("testwindow", &desc);
+
+	auto win = GetCurrentWindow();
+
+	Text("test text");
+	if (Button("click me"))
 	{
 		std::cout << "you click the button" << std::endl;
 	}
-	gui::End();
+	End();
 
 }

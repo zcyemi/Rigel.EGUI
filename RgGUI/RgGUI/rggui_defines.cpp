@@ -11,14 +11,23 @@ namespace rg
 		RgGuiContext *GRgGui = &g_RgGuiContext;
 
 #pragma region RgGuiWindow
-		RgGuiWindow::RgGuiWindow(const char * name, RgGuiDrawWindowStyle style, RgGuiWindowSkin * skin)
+
+		RgGuiWindow::RgGuiWindow(const char * name, RgGuiWindowDesc * desc)
 		{
 			ID = RgHash(name, 0);
 			//TODO:
 			this->DrawList = g_RgGuiMemAlloc.New<RgGuiDrawList>();
 
-			SetStyle(style);
-			SetSkin(skin);
+			if (desc == nullptr)
+			{
+				desc = &RgGuiWindowDesc();
+			}
+
+			SetStyle(desc->Style);
+			SetSkin(desc->Skin);
+			SetPosition(desc->Position);
+			SetSize(desc->Size);
+
 		}
 
 		void RgGuiWindow::DrawSelf()
@@ -188,6 +197,16 @@ namespace rg
 		}
 #pragma endregion
 
-	}
+
+		RgGuiWindowDesc::RgGuiWindowDesc(RgVec2 pos,RgVec2 size, RgGuiDrawWindowStyle style, RgGuiWindowSkin * skin):
+			Size(size), Position(pos),Style(style),Skin(skin)
+		{
+		}
+
+		RgGuiWindowDesc::RgGuiWindowDesc()
+		{
+		}
+
+}
 }
 
