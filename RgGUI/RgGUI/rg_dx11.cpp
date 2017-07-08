@@ -151,6 +151,10 @@ namespace rg
 			viewport.TopLeftY = 0.0f;
 			g_pD3D11Context->RSSetViewports(1, &viewport);
 		}
+
+
+		//test set depthstencil state
+
 	}
 	void RgDX11::CleanupRenderTarget()
 	{

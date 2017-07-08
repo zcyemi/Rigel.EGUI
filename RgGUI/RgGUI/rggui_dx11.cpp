@@ -25,6 +25,8 @@ namespace rg
 	static ID3D11PixelShader * m_pixelShader;
 	static ID3D11InputLayout * m_inputlayout;
 
+	static ID3D11DepthStencilState *m_depthStencilState;
+
 	struct DATA_CONST_BUFFER
 	{
 		float mvp[4][4];
@@ -273,6 +275,37 @@ namespace rg
 				return false;
 			}
 				
+		}
+
+		{
+			//depth stencil state
+			D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+			ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+			depthStencilDesc.DepthEnable = false;
+			depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+			depthStencilDesc.StencilEnable = true;
+			depthStencilDesc.StencilReadMask = 0xFF;
+			depthStencilDesc.StencilWriteMask = 0xFF;
+
+			depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+			depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+			depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+			depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+			result = dx_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+			if (result != S_OK)
+			{
+				RgLogE() << "create depthstencilstate error";
+				return false;
+			}
+			dx_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 		}
 
 		return true;
