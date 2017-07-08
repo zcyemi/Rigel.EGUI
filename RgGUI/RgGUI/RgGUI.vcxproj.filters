@@ -42,6 +42,21 @@
     <ClInclude Include="rg_vector.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
+    <ClInclude Include="rggui_enum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rggui_defines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rg_memalloc.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
+    <ClInclude Include="rg_hash.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
+    <ClInclude Include="rg_vec.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -58,6 +73,18 @@
     </ClCompile>
     <ClCompile Include="rglog.cpp">
       <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_memalloc.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_hash.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_vec.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_defines.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

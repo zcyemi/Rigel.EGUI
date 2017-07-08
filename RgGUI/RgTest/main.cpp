@@ -128,7 +128,7 @@ void update()
 	gui::Begin("testwindow");
 
 	auto win = gui::GetCurrentWindow();
-	win->SetSize(gui::RgVec2(20, 30));
+	win->SetSize(RgVec2(20, 30));
 	gui::Text("test text");
 	if (gui::Button("click me"))
 	{
