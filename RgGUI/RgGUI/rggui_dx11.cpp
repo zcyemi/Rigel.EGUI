@@ -133,25 +133,6 @@ namespace rg
 			vbufferdesc.MiscFlags = 0;
 			vbufferdesc.StructureByteStride = 0;
 
-			//m_vertexdata = new RgGuiDrawVert[3];
-
-			//m_vertexdata[0].pos = RgVec2(-1.0f, -1.0f);
-			//m_vertexdata[0].uv = RgVec2(0, 0);
-			//m_vertexdata[0].color = (((255<<8) | 0) << 8)<<8 | 255;
-
-			//m_vertexdata[1].pos = RgVec2(0.0f, 1.0f);
-			//m_vertexdata[1].uv = RgVec2(0, 0);
-			//m_vertexdata[1].color = 0;
-
-			//m_vertexdata[2].pos = RgVec2(1.0f, -1.0f);
-			//m_vertexdata[2].uv = RgVec2(0, 0);
-			//m_vertexdata[2].color = 0;
-
-			//D3D11_SUBRESOURCE_DATA vertexdata;
-			//vertexdata.pSysMem = nullptr;
-			//vertexdata.SysMemPitch = 0;
-			//vertexdata.SysMemSlicePitch = 0;
-
 			result = dx_device->CreateBuffer(&vbufferdesc, nullptr, &m_vertexBuffer);
 			if (result != S_OK)
 			{
@@ -325,7 +306,7 @@ namespace rg
 				return false;
 			}
 			RgGuiDrawIdx * index_dataptr = (RgGuiDrawIdx*)index_res.pData;
-			memcpy(index_dataptr, data->IndicesBuffer.Data, sizeof(RgGuiDrawIdx)* data->IndicesIndex);
+			memcpy(index_dataptr, data->IndicesBuffer.Data, sizeof(RgGuiDrawIdx)* data->IndicesBuffer.Size);
 			dx_deviceContext->Unmap(m_indexBuffer, 0);
 		}
 
@@ -340,7 +321,7 @@ namespace rg
 		dx_deviceContext->VSSetShader(m_vertexShader, NULL, 0);
 		dx_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 
-		dx_deviceContext->DrawIndexed(data->IndicesIndex, 0, 0);
+		dx_deviceContext->DrawIndexed(data->IndicesBuffer.Size, 0, 0);
 
 		return true;
 	}

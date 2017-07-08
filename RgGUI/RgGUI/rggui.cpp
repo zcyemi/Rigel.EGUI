@@ -116,6 +116,13 @@ namespace rg
 			return false;
 		}
 
+		void DrawRect(RgVec4 & rect, RgU32 color)
+		{
+			RgGuiWindow * win = GetCurrentWindow();
+			win->DrawList->SetColor(color);
+			win->DrawList->AddRect(RgVec2(rect.x,rect.y),RgVec2(rect.x + rect.z,rect.y+rect.w));
+		}
+
 		void DrawRect(RgVec4 & rect)
 		{
 			RgGuiWindow * win = GetCurrentWindow();

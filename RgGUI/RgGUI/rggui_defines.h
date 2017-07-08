@@ -11,6 +11,14 @@ namespace rg
 
 		struct RgGuiDrawList;
 
+
+#pragma region static
+		
+#pragma endregion
+
+
+
+
 		struct RgGuiIO
 		{
 			int KeyMap[RgGuiKey_COUNT];
@@ -56,6 +64,9 @@ namespace rg
 			RgGuiDrawVert();
 			RgGuiDrawVert(RgVec2 pos_, RgVec2 uv_, RgU32 col_);
 			RgGuiDrawVert(RgVec2 pos_);
+			RgGuiDrawVert(RgVec2 pos_,RgU32 col_);
+			RgGuiDrawVert(float x, float y);
+			RgGuiDrawVert(float x, float y, RgU32 col_);
 		};
 
 		struct RgGuiDrawList
@@ -66,9 +77,15 @@ namespace rg
 			RgU32 IndicesIndex = 0;
 			RgU32 VertexCount = 0;
 
-			void AddRect(const RgVec2& lb, const RgVec2& rt);
-			void AddRect(float x, float y, float w, float h);
 			RgGuiDrawList();
+
+			void AddRect(const RgVec2& lt, const RgVec2& rb);
+			void AddRect(float x, float y, float w, float h);
+			void AddRect(const RgVec4& r);
+			
+			void SetColor(RgU32 col);
+			void SetColor(byte r, byte g, byte b, byte a);
+
 
 			void Reset();
 		};
