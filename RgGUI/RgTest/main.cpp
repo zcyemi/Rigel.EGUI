@@ -1,10 +1,8 @@
-#include "../RgGUI/rggui_window.h"
-#include "../RgGUI/rg_dx11.h"
-#include "../RgGUI/rggui_dx11.h"
-#include "../RgGUI/rggui_enum.h"
-#include "../RgGUI/rggui.h"
-
-#include "../RgGUI/rg_log.h"
+#include <rggui_window.h>
+#include <rg_dx11.h>
+#include <rggui_dx11.h>
+#include <rggui.h>
+#include <rg_log.h>
 
 #pragma comment(lib,"RgGUI.lib")
 

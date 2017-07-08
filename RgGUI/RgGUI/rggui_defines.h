@@ -3,6 +3,7 @@
 #include "rggui_enum.h"
 #include "rg_memalloc.h"
 #include "rggui_skin.h"
+#include "rg_font.h"
 namespace rg
 {
 	namespace gui
@@ -112,6 +113,14 @@ namespace rg
 			void Reset();
 		};
 
+		struct RgGuiFont
+		{
+			const char * FontFilePath;
+			RgGuiFont();
+			RgGuiFont(const char* fontpath);
+			bool LoadFont(const char* fontpath);
+		};
+
 		struct RgGuiContext
 		{
 			RgGuiWindow* CurrentWindow;
@@ -120,6 +129,7 @@ namespace rg
 			RgVector<RgGuiWindow *> Windows;
 			RgU32 ScreenWidth, ScreenHeight;
 			RgGuiSkin Skin;
+			RgGuiFont Font;
 			bool(*RenderDrawListFunction)(RgGuiDrawList* data);
 
 			void SetScreenSize(RgU32 w, RgU32 h);

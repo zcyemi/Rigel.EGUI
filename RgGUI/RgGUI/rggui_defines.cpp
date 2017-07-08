@@ -213,6 +213,22 @@ namespace rg
 		{
 		}
 
+		RgGuiFont::RgGuiFont()
+		{
+		}
+
+		RgGuiFont::RgGuiFont(const char * fontpath)
+		{
+
+		}
+
+		bool RgGuiFont::LoadFont(const char * fontpath)
+		{
+
+
+			return false;
+		}
+
 }
 }
 

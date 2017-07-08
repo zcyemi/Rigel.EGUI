@@ -19,6 +19,9 @@
     <Filter Include="源文件\rg">
       <UniqueIdentifier>{52f6787a-8942-4f65-9cc2-a91e80a72fe8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\rg_font">
+      <UniqueIdentifier>{83ec6a05-f194-487a-a72a-b15d4c3dbada}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rggui.h">
@@ -60,6 +63,12 @@
     <ClInclude Include="rggui_skin.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="rg_font.h">
+      <Filter>头文件\rg_font</Filter>
+    </ClInclude>
+    <ClInclude Include="rggui_font.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -90,6 +99,9 @@
       <Filter>源文件\rg</Filter>
     </ClCompile>
     <ClCompile Include="rggui_skin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

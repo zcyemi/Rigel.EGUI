@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClInclude Include="rggui_defines.h" />
     <ClInclude Include="rggui_enum.h" />
+    <ClInclude Include="rggui_font.h" />
     <ClInclude Include="rggui_skin.h" />
     <ClInclude Include="rg_dx11.h" />
     <ClInclude Include="rggui.h" />
     <ClInclude Include="rggui_dx11.h" />
     <ClInclude Include="rggui_window.h" />
+    <ClInclude Include="rg_font.h" />
     <ClInclude Include="rg_hash.h" />
     <ClInclude Include="rg_include.h" />
     <ClInclude Include="rg_log.h" />
@@ -40,6 +42,7 @@
     <ClCompile Include="rggui.cpp" />
     <ClCompile Include="rggui_dx11.cpp" />
     <ClCompile Include="rggui_window.cpp" />
+    <ClCompile Include="rg_font.cpp" />
     <ClCompile Include="rg_log.cpp" />
     <ClCompile Include="rg_hash.cpp" />
     <ClCompile Include="rg_memalloc.cpp" />
@@ -110,7 +113,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(SolutionDir)..\ThirdPart\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\ThirdPart\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(SolutionDir)..\ThirdPart\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\ThirdPart\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>

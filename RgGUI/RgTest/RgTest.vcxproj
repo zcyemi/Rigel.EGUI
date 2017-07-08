@@ -72,18 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)Debug\;$(LibraryPath)</LibraryPath>
+    <IncludePath>G:\RgGUI\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)x64\Debug\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)x64\Debug\;$(LibraryPath);G:\RgGUI\ThirdPart\Lib\x64</LibraryPath>
+    <IncludePath>G:\RgGUI\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)Release\;$(LibraryPath)</LibraryPath>
+    <IncludePath>G:\RgGUI\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)x64\Release\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)x64\Release\;$(LibraryPath);G:\RgGUI\ThirdPart\Lib\x64</LibraryPath>
+    <IncludePath>G:\RgGUI\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
