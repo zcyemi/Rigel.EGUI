@@ -117,7 +117,7 @@ int main()
 	RgLogD() << "shutdown window";
 	window.ShutDown();
 
-
+	getchar();
 
 	return 0;
 }
@@ -127,7 +127,7 @@ void update()
 	//do draw
 
 
-	static RgGuiWindowDesc desc = RgGuiWindowDesc(RgVec2(0),RgVec2(200,100),RgGuiWindowStyle_Header);
+	static RgGuiWindowDesc desc = RgGuiWindowDesc(RgVec2(0),RgVec2(200,300),RgGuiWindowStyle_Header);
 
 	Begin("testwindow", &desc);
 
@@ -135,6 +135,7 @@ void update()
 
 	gui::Rectangle();
 	gui::Rectangle();
+	gui::Rectangle(RgVec2(100,100));
 
 	Text("test text");
 	if (Button("click me"))

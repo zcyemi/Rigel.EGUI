@@ -2,6 +2,10 @@
 #include "rggui.h"
 
 #define DEFAULT_VERTEX_BUFFER_SIZE 256
+#define RELEASE_DX(x) if(x){		\
+		x->Release();				\
+		x = nullptr;				\
+	}
 
 using namespace rg::gui;
 using namespace DirectX;
@@ -61,10 +65,28 @@ namespace rg
 
 		if (!m_inited) RgGUI_dx11_Shutdown();
 
+		
+
 		return m_inited;
 	}
 	void RgGUI_dx11_Shutdown()
 	{
+		RgLogW() << "release rggui dx";
+		m_inited = false;
+		RELEASE_DX(m_depthStencilState);
+		RELEASE_DX(m_vertexShader);
+		RELEASE_DX(m_pixelShader);
+		RELEASE_DX(m_inputlayout);
+		RELEASE_DX(m_vertexShaderBlob);
+		RELEASE_DX(m_pixleShaderBlob);
+		RELEASE_DX(m_indexBuffer);
+		RELEASE_DX(m_vertexBuffer);
+		RELEASE_DX(m_constBuffer);
+
+		delete m_vertexdata;
+		m_vertexdata = nullptr;
+		delete m_indexdata;
+		m_indexdata = nullptr;
 	}
 	void RgGUI_dx11_Frame()
 	{
@@ -108,7 +130,6 @@ namespace rg
 				if (wparam == 'Q')
 				{
 					PostQuitMessage(0);
-					
 				}
 			}
 			return true;

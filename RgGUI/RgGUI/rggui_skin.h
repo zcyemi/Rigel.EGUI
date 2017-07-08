@@ -6,12 +6,12 @@ namespace rg
 	{
 		const RgVec2 SKIN_WINDOW_DEFAULT_SIZE = RgVec2(200, 100);
 		const RgVec2 SKIN_WINDOW_DEFUALT_POSISION = RgVec2(10, 10);
-		const RgVec2 SKIN_BUTTON_SIZE = RgVec2(40, 18);
+		const RgVec2 SKIN_BUTTON_SIZE = RgVec2(70, 18);
 
 		struct RgGuiWindowSkin
 		{
 			float HEADER_HEIGHT = 18;
-			RgVec2 CONTEXT_OFFSET = RgVec2(20, 5);
+			RgVec2 CONTEXT_OFFSET = RgVec2(8, 5);
 
 			float LINE_OFFSET = 3;
 		};
