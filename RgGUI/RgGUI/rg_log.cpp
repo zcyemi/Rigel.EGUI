@@ -9,7 +9,7 @@ namespace rg
 
 	RgLogger::~RgLogger()
 	{
-		std::cout << m_sstream.str()<<"       "<<m_file <<' '<<m_func <<" line: "<<m_line << std::endl;
+		std::wcout << m_sstream.str()<<"       "<<m_file <<' '<<m_func <<" line: "<<m_line << std::endl;
 		SetConsoleTextAttribute(m_Stdout, FOREGROUND_INTENSITY);
 	}
 

@@ -30,6 +30,23 @@ namespace rg
 			m_sstream << v;
 			return space();
 		}
+		inline RgLogger & operator <<(std::string v)
+		{
+			std::wstring wstr(v.length(),L' ');
+			std::copy(v.begin(), v.end(), wstr.begin());
+			m_sstream << wstr;
+			return space();
+		}
+		inline RgLogger& operator <<(const WCHAR* v)
+		{
+			m_sstream << v;
+			return space();
+		}
+		inline RgLogger& operator <<(std::wstring v)
+		{
+			m_sstream << v;
+			return space();
+		}
 		inline RgLogger& operator <<(int v)
 		{
 			m_sstream << v;
@@ -58,7 +75,7 @@ namespace rg
 		}
 
 	private:
-		std::stringstream m_sstream;
+		std::wstringstream m_sstream;
 		const char * m_file;
 		const char * m_func;
 		int m_line;
