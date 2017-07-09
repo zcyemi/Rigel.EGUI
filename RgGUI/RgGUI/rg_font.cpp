@@ -7,14 +7,17 @@ namespace rg
 
 		void RgFont_FreeType_Init()
 		{
+			if (s_ftInited) return;
 			FT_Error err;
 			err = FT_Init_FreeType(&s_ftLibrary);
+
 			if (err)
 			{
 				RgLogE() << "FreeType init error:" << err;
 				return;
 			}
-
+			RgLogD() << "FreeType init done!" << err;
+			s_ftInited = true;
 
 		}
 
@@ -39,9 +42,18 @@ namespace rg
 			return true;
 		}
 
+		RgFontFreeType::~RgFontFreeType()
+		{
+			Release();
+		}
+
 		RgFontFreeType::RgFontFreeType(FT_Face * face)
 		{
 			m_pFtFace = face;
+		}
+
+		void RgFontFreeType::Release()
+		{
 		}
 
 	}

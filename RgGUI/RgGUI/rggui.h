@@ -7,6 +7,7 @@ namespace rg {
 	{
 		bool IsKeyDown(char key);
 
+		std::wstring GetDataPath(const WCHAR* filename);
 
 		RgGuiWindow * GetCurrentWindow();
 		RgGuiContext& GetContext();

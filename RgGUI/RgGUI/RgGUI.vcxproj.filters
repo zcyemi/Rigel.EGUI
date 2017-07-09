@@ -22,6 +22,9 @@
     <Filter Include="头文件\rg_font">
       <UniqueIdentifier>{83ec6a05-f194-487a-a72a-b15d4c3dbada}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\Data">
+      <UniqueIdentifier>{6cd6728e-db2d-45c0-8217-aced02434c3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rggui.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="rggui_font.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="rg_utility.h">
+      <Filter>头文件\rg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -104,6 +110,9 @@
     <ClCompile Include="rg_font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="rg_utility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vs.hlsl">
@@ -112,5 +121,10 @@
     <FxCompile Include="ps.hlsl">
       <Filter>资源文件</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Data\arial.ttf">
+      <Filter>资源文件\Data</Filter>
+    </Font>
   </ItemGroup>
 </Project>

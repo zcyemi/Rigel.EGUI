@@ -115,10 +115,16 @@ namespace rg
 
 		struct RgGuiFont
 		{
+			font::RgFontFreeType *FontType;
+
 			const char * FontFilePath;
 			RgGuiFont();
+			~RgGuiFont();
 			RgGuiFont(const char* fontpath);
+
+
 			bool LoadFont(const char* fontpath);
+			void Release();
 		};
 
 		struct RgGuiContext

@@ -20,6 +20,7 @@ namespace rg
 		struct RgGuiSkin
 		{
 			RgGuiWindowSkin WindowSkin;
+			const char * FONT_TYPE;
 
 			RgGuiSkin();
 		};

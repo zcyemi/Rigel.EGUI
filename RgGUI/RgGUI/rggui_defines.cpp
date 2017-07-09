@@ -136,6 +136,8 @@ namespace rg
 		void RgGuiContext::SetSkin(RgGuiSkin skin)
 		{
 			Skin = skin;
+			bool result = Font.LoadFont(Skin.FONT_TYPE);
+			if (!result) RgLogE() << "load font failed";
 		}
 #pragma endregion
 
@@ -215,18 +217,35 @@ namespace rg
 
 		RgGuiFont::RgGuiFont()
 		{
+			font::RgFont_FreeType_Init();
+		}
+
+		RgGuiFont::~RgGuiFont()
+		{
+			Release();
+
+			
 		}
 
 		RgGuiFont::RgGuiFont(const char * fontpath)
 		{
-
+			LoadFont(fontpath);
 		}
 
 		bool RgGuiFont::LoadFont(const char * fontpath)
 		{
+			font::RgFont_FreeType_Init();
+			return font::RgFontFreeType::LoadFont(fontpath, FontType);
+		}
 
-
-			return false;
+		void RgGuiFont::Release()
+		{
+			if (FontType)
+			{
+				delete FontType;
+				FontType = nullptr;
+				RgLogD() << "release rggui font";
+			}
 		}
 
 }

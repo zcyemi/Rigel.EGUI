@@ -32,6 +32,7 @@
     <ClInclude Include="rg_include.h" />
     <ClInclude Include="rg_log.h" />
     <ClInclude Include="rg_memalloc.h" />
+    <ClInclude Include="rg_utility.h" />
     <ClInclude Include="rg_vec.h" />
     <ClInclude Include="rg_vector.h" />
   </ItemGroup>
@@ -46,6 +47,7 @@
     <ClCompile Include="rg_log.cpp" />
     <ClCompile Include="rg_hash.cpp" />
     <ClCompile Include="rg_memalloc.cpp" />
+    <ClCompile Include="rg_utility.cpp" />
     <ClCompile Include="rg_vec.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +63,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Data\arial.ttf">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Font>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D3A30A80-D375-4446-BA79-25CB0DD610F7}</ProjectGuid>

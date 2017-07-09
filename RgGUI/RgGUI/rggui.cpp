@@ -11,7 +11,14 @@ namespace rg
 		{
 			RgGuiIO& io = GetIO();
 			return io.KeyDown[key];
-		};
+		}
+		std::wstring GetDataPath(const WCHAR * filename)
+		{
+			std::wstring path = util::GetWorkDirectory();
+			path = path.append(L"\\Data\\").append(filename);
+
+			return path;
+		}
 
 
 		RgGuiWindow * GetCurrentWindow()

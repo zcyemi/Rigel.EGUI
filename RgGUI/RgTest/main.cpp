@@ -13,8 +13,6 @@ RgDX11 *dx11;
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-
-
 	//imgui
 	if (RgGUI_dx11_WndProc(hwnd, msg, wparam, lparam))
 		return true;

@@ -13,3 +13,4 @@
 #include "rg_vec.h"
 #include "rg_vector.h"
 #include "rg_hash.h"
+#include "rg_utility.h"

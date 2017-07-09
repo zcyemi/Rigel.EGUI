@@ -7,6 +7,9 @@
 		x = nullptr;				\
 	}
 
+#define SHADER_VS L"vs.hlsl"
+#define SHADER_PS L"ps.hlsl"
+
 using namespace rg::gui;
 using namespace DirectX;
 
@@ -235,7 +238,7 @@ namespace rg
 
 		{
 			//shader
-			D3DCompileFromFile(L"../RgGUI/vs.hlsl", nullptr, nullptr, "main", "vs_4_0", 0, 0, &m_vertexShaderBlob, nullptr);
+			D3DCompileFromFile(GetDataPath(SHADER_VS).c_str(), nullptr, nullptr, "main", "vs_4_0", 0, 0, &m_vertexShaderBlob, nullptr);
 			if (m_vertexShaderBlob == nullptr)
 			{
 				RgLogE() << "compile vertex shader error";
@@ -247,7 +250,7 @@ namespace rg
 				return false;
 			}
 
-			D3DCompileFromFile(L"../RgGUI/ps.hlsl", nullptr, nullptr, "main", "ps_4_0", 0, 0, &m_pixleShaderBlob, NULL);
+			D3DCompileFromFile(GetDataPath(SHADER_PS).c_str(), nullptr, nullptr, "main", "ps_4_0", 0, 0, &m_pixleShaderBlob, NULL);
 			if (m_pixleShaderBlob == nullptr)
 			{
 				RgLogE() << "compile pixel shader error";
