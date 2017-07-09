@@ -21,6 +21,7 @@ namespace rg
 		{
 			RgGuiWindowSkin WindowSkin;
 			const char * FONT_TYPE;
+			const char * ICON_TEXTURE_NAME;
 
 			RgGuiSkin();
 		};

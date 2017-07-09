@@ -11,6 +11,13 @@ namespace rg
 	{
 	public:
 		void SetData(int width, int height, unsigned char* data);
+
+		int Width();
+		int Height();
+		unsigned char* Data();
+
+		void Release();
+		~RgImage();
 	private:
 		int m_width;
 		int m_height;

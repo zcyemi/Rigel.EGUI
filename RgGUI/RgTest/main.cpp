@@ -66,9 +66,6 @@ int main()
 	delete font;
 	font = 0;
 
-	RgImage * img;
-	RgImageLoad(GetDataPath(L"texture.tga"), &img, RgImageType_Targa);
-
 
 	WindowDesc desc;
 	desc.appName = L"App Test";

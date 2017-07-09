@@ -124,16 +124,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vs.hlsl">
-      <Filter>资源文件</Filter>
-    </FxCompile>
-    <FxCompile Include="ps.hlsl">
-      <Filter>资源文件</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Font Include="Data\arial.ttf">
       <Filter>资源文件\Data</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Data\ps.hlsl">
+      <Filter>资源文件\Data</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\vs.hlsl">
+      <Filter>资源文件\Data</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

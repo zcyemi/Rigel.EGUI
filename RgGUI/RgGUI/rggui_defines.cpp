@@ -163,6 +163,11 @@ namespace rg
 			RgGuiDrawVert v3(x+w,y+h, s_tempColor);
 			RgGuiDrawVert v4(x,y+h, s_tempColor);
 
+			v1.uv = RgVec2(0.001, 0.001);
+			v2.uv = RgVec2(0, 0.001);
+			v3.uv = RgVec2(0.001, 0);
+			v4.uv = RgVec2(0, 0);
+
 			VertexBuffer.push_back(v1);
 			VertexBuffer.push_back(v2);
 			VertexBuffer.push_back(v3);

@@ -120,5 +120,33 @@ namespace rg
 		m_data = data;
 	}
 
+	int RgImage::Width()
+	{
+		return m_width;
+	}
+
+	int RgImage::Height()
+	{
+		return  m_height;
+	}
+
+	unsigned char* RgImage::Data()
+	{
+		return m_data;
+	}
+
+	void RgImage::Release()
+	{
+		delete[] m_data;
+		m_data = nullptr;
+		m_width = 0;
+		m_height = 0;
+	}
+
+	RgImage::~RgImage()
+	{
+		Release();
+	}
+
 }
 

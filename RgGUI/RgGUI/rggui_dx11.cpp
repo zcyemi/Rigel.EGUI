@@ -1,5 +1,6 @@
 #include "rggui_dx11.h"
 #include "rggui.h"
+#include "rg_image.h"
 
 #define DEFAULT_VERTEX_BUFFER_SIZE 256
 #define RELEASE_DX(x) if(x){		\
@@ -33,6 +34,14 @@ namespace rg
 	static ID3D11InputLayout * m_inputlayout;
 
 	static ID3D11DepthStencilState *m_depthStencilState;
+
+	//texture
+	static ID3D11Texture2D *m_textureIcon;
+	static ID3D11Texture2D *m_textureFont;
+	static ID3D11ShaderResourceView * m_textureIconSRV;
+	static ID3D11ShaderResourceView * m_textureFontSRV;
+
+	static ID3D11SamplerState * m_samplerState;
 
 	struct DATA_CONST_BUFFER
 	{
@@ -76,6 +85,13 @@ namespace rg
 	{
 		RgLogW() << "release rggui dx";
 		m_inited = false;
+		
+		RELEASE_DX(m_samplerState);
+		RELEASE_DX(m_textureIconSRV);
+		RELEASE_DX(m_textureIcon);
+		RELEASE_DX(m_textureFontSRV);
+		RELEASE_DX(m_textureFont);
+
 		RELEASE_DX(m_depthStencilState);
 		RELEASE_DX(m_vertexShader);
 		RELEASE_DX(m_pixelShader);
@@ -332,6 +348,83 @@ namespace rg
 			dx_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 		}
 
+		{
+			//texture icon;
+			D3D11_TEXTURE2D_DESC textureDesc;
+			RgImage * img;
+			if (!RgImageLoad(GetDataPath(L"texture.tga"), &img, RgImageType_Targa))
+			{
+				RgLogE() << "load icon texture error";
+				return false;
+			}
+
+			textureDesc.Height = img->Height();
+			textureDesc.Width = img->Width();
+			textureDesc.MipLevels = 0;
+			textureDesc.ArraySize = 1;
+			textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			textureDesc.SampleDesc.Count = 1;
+			textureDesc.SampleDesc.Quality = 0;
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+			textureDesc.CPUAccessFlags = 0;
+			textureDesc.MiscFlags = 0;
+
+			result = dx_device->CreateTexture2D(&textureDesc, NULL, &m_textureIcon);
+			if (result != S_OK)
+			{
+				RgLogE() << "create icon texture error";
+				return false;
+			}
+
+			unsigned int rowPitch;
+			rowPitch = img->Width() * 4 * sizeof(unsigned char);
+			dx_deviceContext->UpdateSubresource(m_textureIcon, 0, NULL, img->Data(), rowPitch,0);
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+			srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.MipLevels = -1;
+
+			result = dx_device->CreateShaderResourceView(m_textureIcon, &srvDesc, &m_textureIconSRV);
+			if (result != S_OK)
+			{
+				RgLogE() << "create srv error";
+				return false;
+			}
+
+			//dx_deviceContext->GenerateMips(m_textureIconSRV);
+
+			img->Release();
+			delete img;
+		}
+
+		{
+			//sampler state
+			D3D11_SAMPLER_DESC samplerDesc;
+			samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+			samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.MipLODBias = 0.0F;
+			samplerDesc.MaxAnisotropy = 1;
+			samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+			samplerDesc.BorderColor[0] = 0;
+			samplerDesc.BorderColor[1] = 0;
+			samplerDesc.BorderColor[2] = 0;
+			samplerDesc.BorderColor[3] = 0;
+			samplerDesc.MinLOD = 0;
+			samplerDesc.MaxLOD = 0;
+
+			result = dx_device->CreateSamplerState(&samplerDesc, &m_samplerState);
+			if (result != S_OK)
+			{
+				RgLogE() << "create samplerState Error";
+				return false;
+			}
+		}
+
 		return true;
 	}
 	bool RgGUI_dx11_Draw(RgGuiDrawList * data)
@@ -378,6 +471,8 @@ namespace rg
 		dx_deviceContext->VSSetShader(m_vertexShader, NULL, 0);
 		dx_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 
+		dx_deviceContext->PSSetShaderResources(0, 1, &(m_textureIconSRV));
+		dx_deviceContext->PSSetSamplers(0, 1, &m_samplerState);
 		dx_deviceContext->DrawIndexed(data->IndicesBuffer.Size, 0, 0);
 
 		return true;
