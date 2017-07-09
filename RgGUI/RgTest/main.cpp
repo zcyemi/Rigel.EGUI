@@ -9,6 +9,8 @@
 
 #pragma comment(lib,"RgGUI.lib")
 
+#include "test.h"
+
 using namespace rg;
 using namespace rg::gui;
 
@@ -47,6 +49,8 @@ void update();
 
 int main()
 {
+	Test();
+
 	font::RgFontFreeType * font;
 	font::RgFontFreeType::LoadFont("arial.ttf", font);
 	font->SetPixelSize(0, 16);
@@ -145,7 +149,7 @@ void update()
 	//do draw
 
 
-	static RgGuiWindowDesc desc = RgGuiWindowDesc(RgVec2(0),RgVec2(200,300),RgGuiWindowStyle_Header);
+	static RgGuiWindowDesc desc = RgGuiWindowDesc(RgVec2(0),RgVec2(200,500),RgGuiWindowStyle_Header);
 
 	Begin("testwindow", &desc);
 
@@ -154,6 +158,11 @@ void update()
 	gui::Rectangle();
 	gui::Rectangle();
 	gui::Rectangle(RgVec2(100,100));
+
+	for (int i = 0; i < 10; i++)
+	{
+		gui::Icon((ICON::RgGuiIcon) (481+ i));
+	}
 
 	Text("test text");
 	if (Button("click me"))

@@ -163,9 +163,9 @@ namespace rg
 			RgGuiDrawVert v3(x+w,y+h, s_tempColor);
 			RgGuiDrawVert v4(x,y+h, s_tempColor);
 
-			v1.uv = RgVec2(0.001, 0.001);
-			v2.uv = RgVec2(0, 0.001);
-			v3.uv = RgVec2(0.001, 0);
+			v1.uv = RgVec2(0.001f, 0.001f);
+			v2.uv = RgVec2(0, 0.001f);
+			v3.uv = RgVec2(0.001f, 0);
 			v4.uv = RgVec2(0, 0);
 
 			VertexBuffer.push_back(v1);
@@ -187,6 +187,17 @@ namespace rg
 		void RgGuiDrawList::AddRect(const RgVec4 & r)
 		{
 			AddRect(r.x, r.y, r.z, r.w);
+		}
+
+		void RgGuiDrawList::SetLastRectUV(const RgVec2 & lt, const RgVec2 & rb)
+		{
+			if (VertexCount < 4)return;
+			VertexBuffer[VertexCount - 4].uv = lt;
+			VertexBuffer[VertexCount - 3].uv = RgVec2(rb.x,lt.y);
+			VertexBuffer[VertexCount - 2].uv = rb;
+			VertexBuffer[VertexCount - 1].uv = RgVec2(lt.x, rb.y);
+
+			//RgLogD() << "set uv" << lt.x << lt.y << rb.x << rb.y;
 		}
 
 		void RgGuiDrawList::SetColor(RgU32 col)

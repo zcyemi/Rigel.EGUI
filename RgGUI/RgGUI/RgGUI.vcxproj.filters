@@ -81,6 +81,9 @@
     <ClInclude Include="rg_image.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
+    <ClInclude Include="rggui_iconset.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui.cpp">
@@ -120,6 +123,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="rg_image.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_iconset.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

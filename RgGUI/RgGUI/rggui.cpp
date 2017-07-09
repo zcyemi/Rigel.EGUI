@@ -119,7 +119,7 @@ namespace rg
 		{
 		}
 
-		bool Button(const char * t)
+		bool Button(const char * t, PARAM_ICON_F)
 		{
 			return false;
 		}
@@ -142,6 +142,24 @@ namespace rg
 		void Rectangle()
 		{
 			Rectangle(SKIN_BUTTON_SIZE);
+		}
+
+		void Icon(PARAM_ICON_F)
+		{
+			RgGuiWindow * win = GetCurrentWindow();
+			RgVec2 off = win->temp_layoutOffset + SKIN_ICON_OFFSET;
+
+			win->DrawList->SetColor(0xffffffff);
+			win->DrawList->AddRect(off, off+ SKIN_ICON_SIZE);
+			RgVec2 icon_lt(0);
+			RgGui_IconGetUV(icon,&icon_lt);
+			RgVec2 icon_rb = icon_lt + RgGui_IconGetUVsize();
+
+			win->DrawList->SetLastRectUV(icon_lt, icon_rb);
+
+			win->temp_layoutOffset.y += SKIN_ICON_FULLSIZE.y;
+			win->temp_layoutOffset.y += win->Skin.LINE_OFFSET;
+
 		}
 
 }

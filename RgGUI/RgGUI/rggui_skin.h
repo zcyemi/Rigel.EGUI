@@ -8,6 +8,10 @@ namespace rg
 		const RgVec2 SKIN_WINDOW_DEFUALT_POSISION = RgVec2(10, 10);
 		const RgVec2 SKIN_BUTTON_SIZE = RgVec2(70, 18);
 
+		const RgVec2 SKIN_ICON_OFFSET = RgVec2(1);
+		const RgVec2 SKIN_ICON_SIZE = RgVec2(16);
+		const RgVec2 SKIN_ICON_FULLSIZE = RgVec2(18);
+
 		struct RgGuiWindowSkin
 		{
 			float HEADER_HEIGHT = 18;

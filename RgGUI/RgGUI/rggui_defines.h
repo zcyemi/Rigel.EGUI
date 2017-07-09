@@ -4,6 +4,7 @@
 #include "rg_memalloc.h"
 #include "rggui_skin.h"
 #include "rg_font.h"
+#include "rggui_iconset.h"
 namespace rg
 {
 	namespace gui
@@ -15,10 +16,9 @@ namespace rg
 		struct RgGuiDrawList;
 		class RgGuiTextRender;
 
-#pragma region static
-		
-#pragma endregion
 
+#define COLOR_WHITE = 0xffffffff;
+#define COLOR_BLACK = 0xff000000;
 
 
 
@@ -105,6 +105,8 @@ namespace rg
 			void AddRect(const RgVec2& lt, const RgVec2& rb);
 			void AddRect(float x, float y, float w, float h);
 			void AddRect(const RgVec4& r);
+
+			void SetLastRectUV(const RgVec2& lt, const RgVec2& rb);
 			
 			void SetColor(RgU32 col);
 			void SetColor(byte r, byte g, byte b, byte a);

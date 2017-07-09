@@ -22,6 +22,7 @@
     <ClInclude Include="rggui_defines.h" />
     <ClInclude Include="rggui_enum.h" />
     <ClInclude Include="rggui_font.h" />
+    <ClInclude Include="rggui_iconset.h" />
     <ClInclude Include="rggui_skin.h" />
     <ClInclude Include="rggui_textrender.h" />
     <ClInclude Include="rg_dx11.h" />
@@ -40,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rggui_defines.cpp" />
+    <ClCompile Include="rggui_iconset.cpp" />
     <ClCompile Include="rggui_skin.cpp" />
     <ClCompile Include="rg_dx11.cpp" />
     <ClCompile Include="rggui.cpp" />

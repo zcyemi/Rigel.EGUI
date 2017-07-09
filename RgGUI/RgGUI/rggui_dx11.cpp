@@ -352,7 +352,7 @@ namespace rg
 			//texture icon;
 			D3D11_TEXTURE2D_DESC textureDesc;
 			RgImage * img;
-			if (!RgImageLoad(GetDataPath(L"texture.tga"), &img, RgImageType_Targa))
+			if (!RgImageLoad(GetDataPath(L"iconset.tga"), &img, RgImageType_Targa))
 			{
 				RgLogE() << "load icon texture error";
 				return false;
@@ -395,6 +395,8 @@ namespace rg
 			}
 
 			//dx_deviceContext->GenerateMips(m_textureIconSRV);
+
+			RgGui_IconSetTextureSize(img->Width());
 
 			img->Release();
 			delete img;

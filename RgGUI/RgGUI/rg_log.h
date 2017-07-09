@@ -72,6 +72,16 @@ namespace rg
 			m_sstream << t;
 			return space();
 		}
+		inline RgLogger& operator<<(float t)
+		{
+			m_sstream << t;
+			return space();
+		}
+		inline RgLogger& operator<<(double t)
+		{
+			m_sstream << t;
+			return space();
+		}
 		inline RgLogger& operator<<(unsigned long t)
 		{
 			m_sstream << t;

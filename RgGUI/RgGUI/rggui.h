@@ -5,6 +5,10 @@
 namespace rg {
 	namespace gui
 	{
+
+#define PARAM_ICON ICON::RgGuiIcon icon = ICON::ICON_NONE
+#define PARAM_ICON_F ICON::RgGuiIcon icon
+
 		bool IsKeyDown(char key);
 
 		std::wstring GetDataPath(const WCHAR* filename);
@@ -30,13 +34,15 @@ namespace rg {
 
 
 		void Text(const char *t);
-		bool Button(const char *t);
+		bool Button(const char *t, PARAM_ICON);
 
 		//x,y,w,z
 		void DrawRectangle(RgVec4& rect,RgU32 color);
 		void Rectangle(const RgVec2 size);
 		void Rectangle();
 
+
+		void Icon(PARAM_ICON);
 
 		
 
