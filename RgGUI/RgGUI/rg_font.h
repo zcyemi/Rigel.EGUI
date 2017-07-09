@@ -18,7 +18,7 @@ namespace rg
 		class RgFontFreeType
 		{
 		public:
-			static bool LoadFont(LPCSTR fontpath, RgFontFreeType* font);
+			static bool LoadFont(LPCSTR fontpath, RgFontFreeType*& font);
 
 			void SetPixelSize(unsigned int width, unsigned int height);
 			unsigned int GetCharIndex(unsigned long charcode);
@@ -27,6 +27,8 @@ namespace rg
 			bool LoadChar(unsigned long charcode, FT_Render_Mode rendermode = FT_RENDER_MODE_NORMAL);
 
 			~RgFontFreeType();
+		public:
+			FT_GlyphSlot Glyph = 0;
 		private:
 			FT_Face m_pFtFace;
 			RgFontFreeType(FT_Face face);

@@ -26,7 +26,7 @@ namespace rg
 
 		}
 
-		bool RgFontFreeType::LoadFont(LPCSTR fontpath, RgFontFreeType * font)
+		bool RgFontFreeType::LoadFont(LPCSTR fontpath, RgFontFreeType *& font)
 		{
 			if (!s_ftInited) return false;
 			FT_Error err;
@@ -75,6 +75,7 @@ namespace rg
 				RgLogE() << "freetype render glyph error";
 				return false;
 			}
+			Glyph = m_pFtFace->glyph;
 			return true;
 		}
 
@@ -86,6 +87,8 @@ namespace rg
 				RgLogE() << "freetype load char error:" << err;
 				return false;
 			}
+
+			Glyph = m_pFtFace->glyph;
 			return true;
 		}
 
@@ -101,6 +104,9 @@ namespace rg
 
 		void RgFontFreeType::Release()
 		{
+			delete m_pFtFace;
+			m_pFtFace = nullptr;
+			Glyph = nullptr;
 		}
 
 	}

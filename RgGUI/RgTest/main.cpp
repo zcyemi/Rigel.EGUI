@@ -4,6 +4,8 @@
 #include <rggui.h>
 #include <rg_log.h>
 
+#include <rg_font.h>
+
 #pragma comment(lib,"RgGUI.lib")
 
 using namespace rg;
@@ -44,6 +46,18 @@ void update();
 
 int main()
 {
+	font::RgFontFreeType * font;
+	font::RgFontFreeType::LoadFont("arial.ttf", font);
+	font->SetPixelSize(0, 16);
+	font->LoadChar(0x0077);
+	RgLogD()<< font->Glyph->advance.x;
+	RgLogD() << font->Glyph->bitmap.width;
+	RgLogD() << font->Glyph->bitmap.rows;
+
+
+	delete font;
+	font = 0;
+
 
 	WindowDesc desc;
 	desc.appName = L"App Test";
