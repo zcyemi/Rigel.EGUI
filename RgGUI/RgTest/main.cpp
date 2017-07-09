@@ -5,6 +5,7 @@
 #include <rg_log.h>
 
 #include <rg_font.h>
+#include <rg_image.h>
 
 #pragma comment(lib,"RgGUI.lib")
 
@@ -49,7 +50,14 @@ int main()
 	font::RgFontFreeType * font;
 	font::RgFontFreeType::LoadFont("arial.ttf", font);
 	font->SetPixelSize(0, 16);
-	font->LoadChar(0x0077);
+	//font->LoadChar(0x0077);
+
+	RgU32 index= font->GetCharIndex(0x0077L);
+	RgLogD() << "index" << index;
+	font->LoadGlyph(index);
+	font->RenderGlyph(FT_RENDER_MODE_NORMAL);
+
+	FT_GlyphSlotRec_ r = *font->Glyph;
 	RgLogD()<< font->Glyph->advance.x;
 	RgLogD() << font->Glyph->bitmap.width;
 	RgLogD() << font->Glyph->bitmap.rows;
@@ -57,6 +65,9 @@ int main()
 
 	delete font;
 	font = 0;
+
+	RgImage * img;
+	RgImageLoad(GetDataPath(L"texture.tga"), &img, RgImageType_Targa);
 
 
 	WindowDesc desc;

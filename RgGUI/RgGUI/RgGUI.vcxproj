@@ -23,12 +23,14 @@
     <ClInclude Include="rggui_enum.h" />
     <ClInclude Include="rggui_font.h" />
     <ClInclude Include="rggui_skin.h" />
+    <ClInclude Include="rggui_textrender.h" />
     <ClInclude Include="rg_dx11.h" />
     <ClInclude Include="rggui.h" />
     <ClInclude Include="rggui_dx11.h" />
     <ClInclude Include="rggui_window.h" />
     <ClInclude Include="rg_font.h" />
     <ClInclude Include="rg_hash.h" />
+    <ClInclude Include="rg_image.h" />
     <ClInclude Include="rg_include.h" />
     <ClInclude Include="rg_log.h" />
     <ClInclude Include="rg_memalloc.h" />
@@ -44,6 +46,7 @@
     <ClCompile Include="rggui_dx11.cpp" />
     <ClCompile Include="rggui_window.cpp" />
     <ClCompile Include="rg_font.cpp" />
+    <ClCompile Include="rg_image.cpp" />
     <ClCompile Include="rg_log.cpp" />
     <ClCompile Include="rg_hash.cpp" />
     <ClCompile Include="rg_memalloc.cpp" />

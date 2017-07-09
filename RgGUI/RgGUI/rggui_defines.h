@@ -13,7 +13,7 @@ namespace rg
 		typedef unsigned int RgGuiDrawWindowStyle;
 
 		struct RgGuiDrawList;
-
+		class RgGuiTextRender;
 
 #pragma region static
 		
