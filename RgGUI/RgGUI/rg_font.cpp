@@ -30,8 +30,8 @@ namespace rg
 		{
 			if (!s_ftInited) return false;
 			FT_Error err;
-			FT_Face * face = new FT_Face();
-			err = FT_New_Face(s_ftLibrary, fontpath, 0, face);
+			FT_Face face = nullptr;
+			err = FT_New_Face(s_ftLibrary, fontpath, 0, &face);
 			if (err)
 			{
 				RgLogE() << "FreeType load error:" << err;
@@ -42,12 +42,59 @@ namespace rg
 			return true;
 		}
 
+		void RgFontFreeType::SetPixelSize(unsigned int width, unsigned int height)
+		{
+			FT_Error err = FT_Set_Pixel_Sizes(m_pFtFace, width, height);
+			if (err)
+			{
+				RgLogD() << "freetype set pixel size error:" << err;
+			}
+		}
+
+		unsigned int RgFontFreeType::GetCharIndex(unsigned long charcode)
+		{
+			return FT_Get_Char_Index(m_pFtFace, charcode);
+		}
+
+		bool RgFontFreeType::LoadGlyph(unsigned int index)
+		{
+			FT_Error err = FT_Load_Glyph(m_pFtFace, index, FT_LOAD_DEFAULT);
+			if (err)
+			{
+				RgLogE() << "freetype load glyph error";
+				return false;
+			}
+			return true;
+		}
+
+		bool RgFontFreeType::RenderGlyph(FT_Render_Mode rendermode)
+		{
+			FT_Error err = FT_Render_Glyph(m_pFtFace->glyph, rendermode);
+			if (err)
+			{
+				RgLogE() << "freetype render glyph error";
+				return false;
+			}
+			return true;
+		}
+
+		bool RgFontFreeType::LoadChar(unsigned long charcode, FT_Render_Mode rendermode)
+		{
+			FT_Error err = FT_Load_Char(m_pFtFace, charcode, rendermode);
+			if (err)
+			{
+				RgLogE() << "freetype load char error:" << err;
+				return false;
+			}
+			return true;
+		}
+
 		RgFontFreeType::~RgFontFreeType()
 		{
 			Release();
 		}
 
-		RgFontFreeType::RgFontFreeType(FT_Face * face)
+		RgFontFreeType::RgFontFreeType(FT_Face face)
 		{
 			m_pFtFace = face;
 		}
