@@ -138,10 +138,15 @@ namespace rg
 			RgU32 ScreenWidth, ScreenHeight;
 			RgGuiSkin Skin;
 			RgGuiFont Font;
+
+			RgGuiTextRender * TextRender;
 			bool(*RenderDrawListFunction)(RgGuiDrawList* data);
 
 			void SetScreenSize(RgU32 w, RgU32 h);
 			void SetSkin(RgGuiSkin skin);
+
+			void Init();
+			void Release();
 
 		};
 

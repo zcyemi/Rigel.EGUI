@@ -66,6 +66,8 @@ namespace rg
 			RgLogD() << "init rggui ";
 			RgGuiContext& ctx = GetContext();
 			ctx.SetSkin(skin);
+
+			ctx.Init();
 		}
 
 
@@ -87,6 +89,8 @@ namespace rg
 		void ShutDown()
 		{
 			//before release mem
+			RgGuiContext& ctx = GetContext();
+			ctx.Release();
 
 			//end release mem;
 			RgLogW() << "RgGUI memAlloc cout:" << g_RgGuiMemAlloc.AllocsCount;

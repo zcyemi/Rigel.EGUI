@@ -69,9 +69,6 @@
     <ClInclude Include="rg_font.h">
       <Filter>头文件\rg_font</Filter>
     </ClInclude>
-    <ClInclude Include="rggui_font.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="rg_utility.h">
       <Filter>头文件\rg</Filter>
     </ClInclude>
@@ -116,17 +113,20 @@
     <ClCompile Include="rggui_skin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="rg_font.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="rg_utility.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="rg_image.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="rggui_iconset.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rggui_textrender.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_font.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_image.cpp">
+      <Filter>源文件\rg</Filter>
+    </ClCompile>
+    <ClCompile Include="rg_utility.cpp">
+      <Filter>源文件\rg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 #include "rggui_defines.h"
+#include "rggui_textrender.h"
 
 namespace rg
 {
@@ -138,6 +139,17 @@ namespace rg
 			Skin = skin;
 			bool result = Font.LoadFont(Skin.FONT_TYPE);
 			if (!result) RgLogE() << "load font failed";
+		}
+		void RgGuiContext::Init()
+		{
+			TextRender = g_RgGuiMemAlloc.New<RgGuiTextRender>();
+			TextRender->SetFont(&Font);
+		}
+		void RgGuiContext::Release()
+		{
+			TextRender->Release();
+			delete TextRender;
+			TextRender = nullptr;
 		}
 #pragma endregion
 

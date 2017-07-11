@@ -6,9 +6,9 @@
 #include <stdlib.h>
 
 
-#define RgLogD RgLogger(__FILE__,__FUNCTION__,__LINE__).Debug
-#define RgLogW RgLogger(__FILE__,__FUNCTION__,__LINE__).Warning
-#define RgLogE RgLogger(__FILE__,__FUNCTION__,__LINE__).Error
+#define RgLogD rg::RgLogger(__FILE__,__FUNCTION__,__LINE__).Debug
+#define RgLogW rg::RgLogger(__FILE__,__FUNCTION__,__LINE__).Warning
+#define RgLogE rg::RgLogger(__FILE__,__FUNCTION__,__LINE__).Error
 
 
 namespace rg
