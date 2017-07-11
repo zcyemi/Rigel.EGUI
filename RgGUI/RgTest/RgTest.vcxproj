@@ -86,8 +86,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)x64\Release\;$(LibraryPath);G:\RgGUI\ThirdPart\Lib\x64</LibraryPath>
-    <IncludePath>G:\RgGUI\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Release\;$(LibraryPath);$(SolutionDir)RgGUI;$(SolutionDir)..\ThirdPart\Lib\x64</LibraryPath>
+    <IncludePath>$(SolutionDir)RgGUI;$(SolutionDir)..\ThirdPart\Include;G:\RgGUI\RgGUI\RgGUI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
