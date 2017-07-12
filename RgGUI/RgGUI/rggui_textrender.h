@@ -2,6 +2,7 @@
 #include "rg_include.h"
 #include "rggui_defines.h"
 
+#include <unordered_map>
 
 namespace rg
 {
@@ -23,6 +24,12 @@ namespace rg
 		private:
 			RgGuiFont * m_pFont;
 			unsigned char * m_pdata;
+
+			std::vector<char> m_charTemp;
+			std::unordered_map<char, unsigned int> m_charMap;
+			unsigned int m_charIndex = 0;
+
+		private:
 		};
 	}
 }

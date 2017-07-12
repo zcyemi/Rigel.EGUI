@@ -6,21 +6,11 @@
 
 using namespace rapidjson;
 
+std::unordered_map<char, int *> text_map;
+
 
 void textDraw(const char* t)
 {
-	static std::unordered_map<char, unsigned int> charmap;
-	while (*t)
-	{
-		charmap[*t] +=1;
-		++t;
-	}
-
-
-	for (auto p : charmap)
-	{
-		RgLogD() << p.first << p.second;
-	}
 
 }
 

@@ -38,6 +38,7 @@ namespace rg
 				return false;
 			}
 
+			RgLogD() << "FreeType load done!";
 			font = new RgFontFreeType(face);
 			return true;
 		}
@@ -48,6 +49,10 @@ namespace rg
 			if (err)
 			{
 				RgLogD() << "freetype set pixel size error:" << err;
+			}
+			else
+			{
+				RgLogD() << "freetype set pixel size done!"<<width<<height;
 			}
 		}
 
@@ -61,7 +66,7 @@ namespace rg
 			FT_Error err = FT_Load_Glyph(m_pFtFace, index, FT_LOAD_DEFAULT);
 			if (err)
 			{
-				RgLogE() << "freetype load glyph error";
+				RgLogE() << "freetype load glyph error "<<err;
 				return false;
 			}
 			return true;
@@ -99,6 +104,7 @@ namespace rg
 
 		RgFontFreeType::RgFontFreeType(FT_Face face)
 		{
+			RgLogW() << "font type" << (int)&face;
 			m_pFtFace = face;
 		}
 

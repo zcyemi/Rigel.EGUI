@@ -246,6 +246,7 @@ namespace rg
 		RgGuiFont::RgGuiFont()
 		{
 			font::RgFont_FreeType_Init();
+			TexData = new unsigned char[256 * 256 * 4];
 		}
 
 		RgGuiFont::~RgGuiFont()
@@ -255,15 +256,53 @@ namespace rg
 			
 		}
 
-		RgGuiFont::RgGuiFont(const char * fontpath)
-		{
-			LoadFont(fontpath);
-		}
 
 		bool RgGuiFont::LoadFont(const char * fontpath)
 		{
 			font::RgFont_FreeType_Init();
-			return font::RgFontFreeType::LoadFont(fontpath, FontType);
+			bool suc = font::RgFontFreeType::LoadFont(fontpath, FontType);
+			FontType->SetPixelSize(0, 12);
+			CharSizeMax = 12;
+			return suc;
+		}
+
+		void RgGuiFont::RenderGlyph(char c)
+		{
+			auto charindex = FontType->GetCharIndex(c);
+			if (charindex == 0)
+			{
+				CharRect.push_back(new RgVec4(0, 0, 0, 0));
+				return;
+			}
+
+			bool suc = FontType->LoadGlyph(charindex);
+			if (suc == false)
+			{
+				CharRect.push_back(new RgVec4(0, 0, 0, 0));
+				return;
+			}
+
+			suc = FontType->RenderGlyph(FT_RENDER_MODE_NORMAL);
+			if (suc == false)
+			{
+				CharRect.push_back(new RgVec4(0, 0, 0, 0));
+				return;
+			}
+
+			auto glyph = FontType->Glyph;
+			RgU32 glyphW, glyphH;
+			glyphW = glyph->bitmap.width;
+			glyphH = glyph->bitmap.rows;
+
+			RgLogD() << glyphW << glyphH;
+			//render done
+			RgLogD() << "render char suc"<<c << FontType->Glyph->bitmap_left << FontType->Glyph->bitmap_top;
+
+			static unsigned int offsetw = 0;
+			static unsigned int offseth = 0;
+
+			
+
 		}
 
 		void RgGuiFont::Release()
@@ -274,6 +313,8 @@ namespace rg
 				FontType = nullptr;
 				RgLogD() << "release rggui font";
 			}
+
+			delete TexData;
 		}
 
 }

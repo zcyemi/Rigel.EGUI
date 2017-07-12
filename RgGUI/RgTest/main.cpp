@@ -51,24 +51,24 @@ int main()
 {
 	Test();
 
-	font::RgFontFreeType * font;
-	font::RgFontFreeType::LoadFont("arial.ttf", font);
-	font->SetPixelSize(0, 16);
-	//font->LoadChar(0x0077);
+	//font::RgFontFreeType * font;
+	//font::RgFontFreeType::LoadFont("arial.ttf", font);
+	//font->SetPixelSize(0, 16);
+	////font->LoadChar(0x0077);
 
-	RgU32 index= font->GetCharIndex(0x0077L);
-	RgLogD() << "index" << index;
-	font->LoadGlyph(index);
-	font->RenderGlyph(FT_RENDER_MODE_NORMAL);
+	//RgU32 index= font->GetCharIndex(0x0077L);
+	//RgLogD() << "index" << index;
+	//font->LoadGlyph(index);
+	//font->RenderGlyph(FT_RENDER_MODE_NORMAL);
 
-	FT_GlyphSlotRec_ r = *font->Glyph;
-	RgLogD()<< font->Glyph->advance.x;
-	RgLogD() << font->Glyph->bitmap.width;
-	RgLogD() << font->Glyph->bitmap.rows;
+	//FT_GlyphSlotRec_ r = *font->Glyph;
+	//RgLogD()<< font->Glyph->advance.x;
+	//RgLogD() << font->Glyph->bitmap.width;
+	//RgLogD() << font->Glyph->bitmap.rows;
 
 
-	delete font;
-	font = 0;
+	//delete font;
+	//font = 0;
 
 
 
@@ -145,6 +145,7 @@ int main()
 	return 0;
 }
 
+
 void update()
 {
 	//do draw
@@ -156,20 +157,23 @@ void update()
 
 	auto win = GetCurrentWindow();
 
+
 	gui::Rectangle();
 	gui::Rectangle();
 	gui::Rectangle(RgVec2(100,100));
+
 
 	for (int i = 0; i < 10; i++)
 	{
 		gui::Icon((ICON::RgGuiIcon) (481+ i));
 	}
 
-	Text("test text");
+	Text("you click the button");
 	if (Button("click me"))
 	{
 		std::cout << "you click the button" << std::endl;
 	}
+
 	End();
 
 }

@@ -1,5 +1,6 @@
 #include "rggui.h"
 #include "rg_memalloc.h"
+#include "rggui_textrender.h"
 using namespace std;
 
 namespace rg
@@ -121,6 +122,9 @@ namespace rg
 
 		void Text(const char * t)
 		{
+			RgGuiContext & ctx = GetContext();
+			RgGuiWindow * win = GetCurrentWindow();
+			ctx.TextRender->DrawTextWithRect(t, win, RgVec2(10, 10), RgVec2(100, 20));
 		}
 
 		bool Button(const char * t, PARAM_ICON_F)

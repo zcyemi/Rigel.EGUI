@@ -118,14 +118,17 @@ namespace rg
 		struct RgGuiFont
 		{
 			font::RgFontFreeType *FontType;
-
 			const char * FontFilePath;
+			unsigned char * TexData;
+			RgVector<RgVec4 *> CharRect;
+			unsigned int CharSizeMax;
+
 			RgGuiFont();
 			~RgGuiFont();
-			RgGuiFont(const char* fontpath);
 
 
 			bool LoadFont(const char* fontpath);
+			void RenderGlyph(char c);
 			void Release();
 		};
 
