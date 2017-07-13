@@ -168,7 +168,7 @@ void update()
 		gui::Icon((ICON::RgGuiIcon) (481+ i));
 	}
 
-	Text("FreeType 2.7.1 has been released. The most important news is preliminary support of Adobe's new CFF2 font format and variation fonts as specified in the new OpenType specification version 1.8. It also fixes the handling of raw CID fonts (which might be found in PDF files)");
+	Text("FreeType");
 	if (Button("click me"))
 	{
 		std::cout << "you click the button" << std::endl;

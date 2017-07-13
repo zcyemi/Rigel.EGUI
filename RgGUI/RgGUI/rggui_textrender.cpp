@@ -26,6 +26,8 @@ namespace rg
 
 		void RgGuiTextRender::DrawTextWithRect(const char * text, RgGuiWindow * window, RgVec2 & rectpos, RgVec2 & rectsize)
 		{
+
+			RgVec2 startPos = rectpos;
 			//process char
 			while (*text)
 			{
@@ -37,10 +39,15 @@ namespace rg
 
 					m_pFont->RenderGlyph(c);
 				}
-				else
-				{
 
-				}
+				RgVec4* rect= m_pFont->CharRect[m_charMap[c]];
+
+				
+				//getprect
+
+				window->DrawList->SetColor(0xff4433ff);
+				window->DrawList->AddRect(startPos, startPos+ RgVec2(rect->z,rect->w));
+				startPos.x += (rect->z + 2);
 
 				++text;
 			}

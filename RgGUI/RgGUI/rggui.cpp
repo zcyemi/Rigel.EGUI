@@ -124,7 +124,7 @@ namespace rg
 		{
 			RgGuiContext & ctx = GetContext();
 			RgGuiWindow * win = GetCurrentWindow();
-			ctx.TextRender->DrawTextWithRect(t, win, RgVec2(10, 10), RgVec2(100, 20));
+			//ctx.TextRender->DrawTextWithRect(t, win, win->temp_layoutOffset, RgVec2(100, 20));
 		}
 
 		bool Button(const char * t, PARAM_ICON_F)

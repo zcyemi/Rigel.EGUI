@@ -24,7 +24,7 @@ namespace rg
 			unsigned int GetCharIndex(unsigned long charcode);
 			bool LoadGlyph(unsigned int index);
 			bool RenderGlyph(FT_Render_Mode rendermode);
-			bool LoadChar(unsigned long charcode, FT_Render_Mode rendermode = FT_RENDER_MODE_NORMAL);
+			bool LoadChar(unsigned long charcode, long rendermode = FT_LOAD_RENDER);
 
 			~RgFontFreeType();
 		public:

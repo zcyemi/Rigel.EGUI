@@ -84,7 +84,7 @@ namespace rg
 			return true;
 		}
 
-		bool RgFontFreeType::LoadChar(unsigned long charcode, FT_Render_Mode rendermode)
+		bool RgFontFreeType::LoadChar(unsigned long charcode, long rendermode)
 		{
 			FT_Error err = FT_Load_Char(m_pFtFace, charcode, rendermode);
 			if (err)

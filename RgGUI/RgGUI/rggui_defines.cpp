@@ -250,7 +250,7 @@ namespace rg
 			TexData = new unsigned char[256 * 256];
 			ZeroMemory(TexData, 256 * 256);
 
-			CharSizeMax = 16;
+			CharSizeMax = 20;
 		}
 
 		RgGuiFont::~RgGuiFont()
@@ -265,7 +265,9 @@ namespace rg
 		{
 			font::RgFont_FreeType_Init();
 			bool suc = font::RgFontFreeType::LoadFont(fontpath, FontType);
-			FontType->SetPixelSize(0, CharSizeMax);
+			FontType->SetPixelSize(0, 16);
+
+			//CharRect.push_back(new RgVec4(1.0f, 1.0f, 0.001f, 0.001f));
 			return suc;
 		}
 
@@ -307,7 +309,7 @@ namespace rg
 
 			auto bitmap = FontType->Glyph->bitmap;
 
-			unsigned int rows = bitmap.rows;
+			unsigned rows = bitmap.rows;
 			unsigned int cols = bitmap.width;
 
 			static unsigned int xoffset = 0;
@@ -323,6 +325,10 @@ namespace rg
 				}
 			}
 
+			RgVec4* rect = new RgVec4(xoffset / 256.0f, (255 - yoffset) / 256.0f, (float)cols,(float)rows);
+
+			CharRect.push_back(rect);
+
 			xoffset += (cols + 2);
 			if (xoffset > 256 - CharSizeMax)
 			{
@@ -330,8 +336,8 @@ namespace rg
 				yoffset += CharSizeMax;
 			}
 
-			RgLogD() << c << cols << rows;
-			RgImageSave(L"E:/img.dat", TexData, 256, 256, RgImageType_Raw);
+			RgLogD() << c << cols << rows << rect->z << rect->w;
+			//RgImageSave(L"E:/img.dat", TexData, 256, 256, RgImageType_Raw);
 
 		}
 
