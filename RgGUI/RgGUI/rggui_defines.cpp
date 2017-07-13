@@ -1,6 +1,7 @@
 #pragma once
 #include "rggui_defines.h"
 #include "rggui_textrender.h"
+#include "rg_image.h"
 
 namespace rg
 {
@@ -246,7 +247,10 @@ namespace rg
 		RgGuiFont::RgGuiFont()
 		{
 			font::RgFont_FreeType_Init();
-			TexData = new unsigned char[256 * 256 * 4];
+			TexData = new unsigned char[256 * 256];
+			ZeroMemory(TexData, 256 * 256);
+
+			CharSizeMax = 16;
 		}
 
 		RgGuiFont::~RgGuiFont()
@@ -261,10 +265,22 @@ namespace rg
 		{
 			font::RgFont_FreeType_Init();
 			bool suc = font::RgFontFreeType::LoadFont(fontpath, FontType);
-			FontType->SetPixelSize(0, 12);
-			CharSizeMax = 12;
+			FontType->SetPixelSize(0, CharSizeMax);
 			return suc;
 		}
+
+		void RgGuiFont::setPixel(unsigned int x, unsigned int y,unsigned char c)
+		{
+			//if (x > 255 || y > 255) return;
+			TexData[x + y * 256] = c;
+		}
+
+		unsigned char RgGuiFont::GetPixel(unsigned int x, unsigned int y, unsigned int pitch, unsigned char * data)
+		{
+			return *(data + x + y*(pitch));
+		}
+
+
 
 		void RgGuiFont::RenderGlyph(char c)
 		{
@@ -282,26 +298,40 @@ namespace rg
 				return;
 			}
 
-			suc = FontType->RenderGlyph(FT_RENDER_MODE_NORMAL);
+			suc = FontType->RenderGlyph(FT_RENDER_MODE_LIGHT);
 			if (suc == false)
 			{
 				CharRect.push_back(new RgVec4(0, 0, 0, 0));
 				return;
 			}
 
-			auto glyph = FontType->Glyph;
-			RgU32 glyphW, glyphH;
-			glyphW = glyph->bitmap.width;
-			glyphH = glyph->bitmap.rows;
+			auto bitmap = FontType->Glyph->bitmap;
 
-			RgLogD() << glyphW << glyphH;
-			//render done
-			RgLogD() << "render char suc"<<c << FontType->Glyph->bitmap_left << FontType->Glyph->bitmap_top;
+			unsigned int rows = bitmap.rows;
+			unsigned int cols = bitmap.width;
 
-			static unsigned int offsetw = 0;
-			static unsigned int offseth = 0;
+			static unsigned int xoffset = 0;
+			static unsigned int yoffset = 0;
 
-			
+
+
+			for (unsigned int i = 0; i < rows; i++)
+			{
+				for (unsigned int j = 0; j < cols; j++)
+				{
+					this->setPixel(j + xoffset, 255-i - yoffset, this->GetPixel(j, i, (unsigned int)bitmap.pitch , bitmap.buffer));
+				}
+			}
+
+			xoffset += (cols + 2);
+			if (xoffset > 256 - CharSizeMax)
+			{
+				xoffset = 0;
+				yoffset += CharSizeMax;
+			}
+
+			RgLogD() << c << cols << rows;
+			RgImageSave(L"E:/img.dat", TexData, 256, 256, RgImageType_Raw);
 
 		}
 

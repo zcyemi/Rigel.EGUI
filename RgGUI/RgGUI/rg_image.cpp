@@ -110,6 +110,14 @@ namespace rg
 		return RgImageLoad(filename.c_str(), img, imgtype);
 	}
 
+	void RgImageSave(const WCHAR * filename, unsigned char * data, unsigned int width, unsigned int height, RgImageType imgtype)
+	{
+		std::ofstream img(filename);
+		const char *b = reinterpret_cast<char*>(data);
+		img.write(b, width*height);
+		img.close();
+	}
+
 
 	
 

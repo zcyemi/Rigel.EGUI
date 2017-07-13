@@ -4,7 +4,7 @@ namespace rg
 {
 	namespace gui
 	{
-		const char * SKIN_FONT_DEFAULT = "arial.ttf";
+		const char * SKIN_FONT_DEFAULT = "Data/segoeui.ttf";
 
 		RgGuiSkin::RgGuiSkin()
 		{

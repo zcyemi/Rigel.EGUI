@@ -4,6 +4,7 @@ namespace rg
 {
 	enum RgImageType
 	{
+		RgImageType_Raw,
 		RgImageType_Targa,
 	};
 
@@ -26,4 +27,6 @@ namespace rg
 
 	bool RgImageLoad(const WCHAR * filename, RgImage** img, RgImageType imgtype);
 	bool RgImageLoad(std::wstring filename, RgImage** img, RgImageType imgtype);
+
+	void RgImageSave(const WCHAR* filename, unsigned char * data, unsigned int width, unsigned int height,RgImageType imgtype);
 }

@@ -130,6 +130,9 @@ namespace rg
 			bool LoadFont(const char* fontpath);
 			void RenderGlyph(char c);
 			void Release();
+
+			void setPixel(unsigned int x, unsigned int y, unsigned char c);
+			unsigned char GetPixel(unsigned int x, unsigned int y,unsigned int pitch, unsigned char* data);
 		};
 
 		struct RgGuiContext
