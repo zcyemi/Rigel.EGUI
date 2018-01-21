@@ -93,7 +93,7 @@ namespace Rigel.GUI
 
                 m_constBuffer = m_graphics.Device.CreateBuffer(cbufferDesc);
 
-                m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, 800, 600, 0, 0, 10.0f);
+                m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, 800, 600, 0, 0, 1000.0f);
                 m_graphics.Context.UpdateSubReources(m_constBuffer, m_guiMatrix);
 
             }
@@ -132,7 +132,7 @@ namespace Rigel.GUI
                 m_pstateRect.Rasterizer.Viewport = new RasterViewPort(0, 0, 800f, 600f, 0.0f, 1.0f);
                 m_pstateRect.OutputMerger.SetTargets(m_graphics.DepthView, m_graphics.RenderView);
                 m_pstateRect.Rasterizer.CullMode = GraphicsCullMode.Back;
-                m_pstateRect.Rasterizer.EnableDepthClip = false;
+                m_pstateRect.Rasterizer.EnableDepthClip = true;
                 m_pstateRect.Rasterizer.FillMode = GraphicsFillMode.Solid;
                 m_pstateRect.InputAssembler.PrimitiveTopology = GraphicsPrimitiveTopology.TriangleList;
 
@@ -213,14 +213,20 @@ namespace Rigel.GUI
             foreach (var pair in m_layerBuffer_rect_dynamic)
             {
                 context.SetVertexBuffer(pair.Value.Buffer, VERT_SIZE, 0);
-                context.DrawIndexed(pair.Key.BufferRectDynamic.Count / 4*6, 0, 0);
+                context.DrawIndexed(pair.Key.BufferRectDynamic.Count / 4 * 6, 0, 0);
             }
+
 
             foreach (var pair in m_layerBuffer_rect)
             {
                 context.SetVertexBuffer(pair.Value, VERT_SIZE, 0);
-                context.DrawIndexed(pair.Key.BufferRect.Count /4*6, 0, 0);
+                context.DrawIndexed(pair.Key.BufferRect.Count / 4 * 6, 0, 0);
             }
+
+
+            
+
+            
 
 
         }

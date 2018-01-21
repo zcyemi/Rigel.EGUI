@@ -22,6 +22,12 @@ namespace Rigel.GUI
 
         private int m_order = 0;
 
+        public int Order
+        {
+            get { return m_order; }
+            set { m_order = value; }
+        }
+
         private bool m_focused = false;
         public bool IsFocused { get { return m_focused; } set { m_focused = value; } }
 

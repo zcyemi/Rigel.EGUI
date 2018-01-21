@@ -9,16 +9,17 @@ namespace Rigel.GUI
 
     public enum GUILayerType : int
     {
-        Main = 0,
-        Window = 100,
-        Modal = 200,
-        Overlay = 300,
+        Main = 100,
+        Window = 200,
+        Modal = 300,
+        Overlay = 400,
     }
 
 
     public class GUILayer
     {
         private int m_order;
+        public int Order { get { return m_order; } }
         private List<GUIRegion> m_regions;
         private GUIRegion m_focusedRegion = null;
         private GUIRegion m_lastFocusedRegion = null;
@@ -129,6 +130,16 @@ namespace Rigel.GUI
             if(m_focusedRegion == null && m_lastFocusedRegion != null)
             {
                 m_syncAll = true;
+            }
+
+            m_regions.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
+            for(int i = 0; i < m_regions.Count; i++)
+            {
+                m_regions[i].Order = i;
+            }
+            if(m_focusedRegion != null)
+            {
+                m_focusedRegion.Order = 99;
             }
 
             return m_focusedRegion != null;

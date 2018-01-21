@@ -15,12 +15,16 @@ namespace Rigel.GUI
         private static IGUIBuffer BufRect { get; set; }
         private static IGUIBuffer BufText { get; set; }
 
+        private static int DepthBase;
+
         internal static void StartGUIRegion(GUIRegion region)
         {
             if (m_layer == null) throw new Exception();
             if (m_region != null) throw new Exception();
 
             m_region = region;
+
+            DepthBase = m_layer.Order - m_region.Order;
 
             //Process Buffer and Offset
             BufRect = m_layer.GetBufferRect(m_region);
@@ -47,6 +51,7 @@ namespace Rigel.GUI
         {
             if (m_layer != null) throw new Exception();
             m_layer = layer;
+            
         }
         internal static void EndGUILayer(GUILayer layer)
         {
@@ -65,10 +70,12 @@ namespace Rigel.GUI
         ///
         public static void Rect(Vector4 rect, Vector4 color)
         {
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, 0.5f, 1), color, Vector2.zero);
+            float v = DepthBase / 500.0f;
+
+            BufRect.AddVertices(new Vector4(rect.x, rect.y, v, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, v, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, v, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, v, 1), color, Vector2.zero);
         }
     }
 }
