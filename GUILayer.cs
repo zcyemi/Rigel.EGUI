@@ -9,10 +9,10 @@ namespace Rigel.GUI
 
     public enum GUILayerType : int
     {
-        Main = 100,
-        Window = 200,
-        Modal = 300,
-        Overlay = 400,
+        Main = 400,
+        Window = 300,
+        Modal = 200,
+        Overlay = 100,
     }
 
 
@@ -52,6 +52,8 @@ namespace Rigel.GUI
 
         public GUIRegion FocusedRegion { get { return m_focusedRegion; } }
 
+        public GUILayerType LayerType { protected set; get; }
+
 
         private List<GUIRegionBufferBlockInfo> BlockInfoRect = new List<GUIRegionBufferBlockInfo>();
 
@@ -66,18 +68,10 @@ namespace Rigel.GUI
 
         public GUILayer(GUIForm form,GUILayerType type)
         {
+            LayerType = type;
             m_order = (int)type;
-            Init(form);
-        }
 
-        public GUILayer(GUIForm form,int order)
-        {
-            m_order = order;
-            Init(form);
-        }
 
-        private void Init(GUIForm form)
-        {
             m_form = form;
             m_bufferRect = form.GraphicsBind.CreateBuffer();
             m_bufferRectDynamic = form.GraphicsBind.CreateBuffer();
@@ -92,6 +86,16 @@ namespace Rigel.GUI
 
             m_syncAll = true;
         }
+
+        public void RemoveFocus(RigelGUIEvent e)
+        {
+            m_lastFocusedRegion = null;
+            m_focusedRegion.IsFocused = false;
+            m_focusedRegion = null;
+
+            m_syncAll = true;
+        }
+
         public bool CheckFocused(RigelGUIEvent e)
         {
             m_lastFocusedRegion = null;

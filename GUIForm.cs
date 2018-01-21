@@ -11,7 +11,7 @@ namespace Rigel.GUI
     public class GUIForm
     {
 
-        private Dictionary<GUILayerType, GUILayer> m_layers;
+        private List<GUILayer> m_layers;
 
         private GUILayer m_focusedLayer = null;
 
@@ -30,7 +30,7 @@ namespace Rigel.GUI
         {
             m_graphicsBind = bind;
 
-            m_layers = new Dictionary<GUILayerType, GUILayer>();
+            m_layers = new List<GUILayer>();
         }
 
 
@@ -45,9 +45,9 @@ namespace Rigel.GUI
             m_graphicsBind.Update();
 
             //Sync data
-            foreach(var pair in m_layers)
+            foreach(var layer in m_layers)
             {
-                m_graphicsBind.SyncLayerBuffer(pair.Value);
+                m_graphicsBind.SyncLayerBuffer(layer);
             }
             
         }
@@ -62,11 +62,19 @@ namespace Rigel.GUI
         public void EmitGUIEvent(RigelGUIEvent e)
         {
 
+            //if (e.IsMouseActiveEvent())
+            //{
+            //    foreach (var layer in m_layers)
+            //    {
+            //        Console.WriteLine($"{layer.Value.BufferRect.Count}-{layer.Value.BufferRectDynamic.Count}");
+            //    }
+            //}
+
             CheckFocused(e);
 
             foreach (var layer in m_layers)
             {
-                layer.Value.Update(e);
+                layer.Update(e);
             }
 
         }
@@ -76,34 +84,68 @@ namespace Rigel.GUI
         {
             if (!e.IsMouseActiveEvent()) return;
 
-            GUILayer lastFocusedLayer = null;
-            if(m_focusedLayer != null)
+            //GUILayer lastFocusedLayer = null;
+            //if(m_focusedLayer != null)
+            //{
+            //    if (!m_focusedLayer.CheckFocused(e))
+            //    {
+            //        lastFocusedLayer = m_focusedLayer;
+            //        m_focusedLayer = null;
+            //    }
+            //}
+            //if(m_focusedLayer == null)
+            //{
+
+            //}
+
+
+            GUILayer lastFocusedLayer = m_focusedLayer;
+
+
+            foreach (var layer in m_layers)
             {
-                if (!m_focusedLayer.CheckFocused(e))
+                if (layer.CheckFocused(e))
                 {
-                    lastFocusedLayer = m_focusedLayer;
-                    m_focusedLayer = null;
+                    m_focusedLayer = layer;
+                    break;
                 }
-            }
-            if(m_focusedLayer == null)
-            {
-                foreach(var layer in m_layers.Values)
+                else
                 {
-                    if (lastFocusedLayer == layer) continue;
-                    if (layer.CheckFocused(e))
+                    if (lastFocusedLayer == layer)
                     {
-                        m_focusedLayer = layer;
-                        break;
+                        lastFocusedLayer = null;
                     }
                 }
             }
+
+            if(lastFocusedLayer != null && lastFocusedLayer != m_focusedLayer)
+            {
+                lastFocusedLayer.RemoveFocus(e);
+            }
         }
+
+        public GUILayer GetLayer(GUILayerType type)
+        {
+            foreach(var layer in m_layers)
+            {
+                if (layer.LayerType == type) return layer;
+            }
+            return null;
+        }
+
 
         public void AddRegion(GUIRegion region,GUILayerType layertype)
         {
-            if (!m_layers.ContainsKey(layertype)) m_layers.Add(layertype, new GUILayer(this,layertype));
+            var layer = GetLayer(layertype);
 
-            var layer = m_layers[layertype];
+            if (layer == null)
+            {
+                layer = new GUILayer(this, layertype);
+                m_layers.Add(layer);
+
+                m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
+            }
+
             layer.AddRegion(region);
         }
     }

@@ -94,7 +94,7 @@ namespace Rigel.GUI
                 m_constBuffer = m_graphics.Device.CreateBuffer(cbufferDesc);
 
                 m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, 800, 600, 0, 0, 1000.0f);
-                m_graphics.Context.UpdateSubReources(m_constBuffer, m_guiMatrix);
+                m_graphics.Context.UpdateSubReources(m_constBuffer,0, m_guiMatrix);
 
             }
 
@@ -309,7 +309,7 @@ namespace Rigel.GUI
             if(rectBuffer != null && layer.BufferRect.IsBufferChanged)
             {
                 //Sync buffer Data
-                m_graphics.Context.UpdateSubReources(rectBuffer, layer.BufferRect.GetData());
+                m_graphics.Context.UpdateSubReources(rectBuffer,0, layer.BufferRect.GetData());
                 layer.BufferRect.IsBufferChanged = false;
             }
 
