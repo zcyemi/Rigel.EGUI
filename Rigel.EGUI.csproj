@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +49,7 @@
     <Compile Include="GUIInternal.cs" />
     <Compile Include="GUILayer.cs" />
     <Compile Include="GUIRegion.cs" />
+    <Compile Include="GUIUtility.cs" />
     <Compile Include="IGUIBuffer.cs" />
     <Compile Include="IGUIGraphicsBind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -22,8 +22,11 @@ namespace Rigel.GUI
 
         float VerticesZ(int index);
 
+        Array GetData();
 
         void CopyTo(Array ary);
         void CopyTo(int index, Array ary, int arrayIndex, int count);
+
+        bool IsBufferChanged { get; set; }
     }
 }

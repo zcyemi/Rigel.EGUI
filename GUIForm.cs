@@ -47,7 +47,7 @@ namespace Rigel.GUI
             //Sync data
             foreach(var pair in m_layers)
             {
-                
+                m_graphicsBind.SyncLayerBuffer(pair.Value);
             }
             
         }
@@ -61,12 +61,10 @@ namespace Rigel.GUI
 
         public void EmitGUIEvent(RigelGUIEvent e)
         {
-            if (e.IsMouseActiveEvent())
-            {
-                CheckFocused(e);
-            }
 
-            foreach(var layer in m_layers)
+            CheckFocused(e);
+
+            foreach (var layer in m_layers)
             {
                 layer.Value.Update(e);
             }
@@ -76,12 +74,34 @@ namespace Rigel.GUI
 
         private void CheckFocused(RigelGUIEvent e)
         {
+            if (!e.IsMouseActiveEvent()) return;
 
+            GUILayer lastFocusedLayer = null;
+            if(m_focusedLayer != null)
+            {
+                if (!m_focusedLayer.CheckFocused(e))
+                {
+                    lastFocusedLayer = m_focusedLayer;
+                    m_focusedLayer = null;
+                }
+            }
+            if(m_focusedLayer == null)
+            {
+                foreach(var layer in m_layers.Values)
+                {
+                    if (lastFocusedLayer == layer) continue;
+                    if (layer.CheckFocused(e))
+                    {
+                        m_focusedLayer = layer;
+                        break;
+                    }
+                }
+            }
         }
 
         public void AddRegion(GUIRegion region,GUILayerType layertype)
         {
-            if (!m_layers.ContainsKey(layertype)) m_layers.Add(layertype, new GUILayer(layertype));
+            if (!m_layers.ContainsKey(layertype)) m_layers.Add(layertype, new GUILayer(this,layertype));
 
             var layer = m_layers[layertype];
             layer.AddRegion(region);

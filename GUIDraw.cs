@@ -26,9 +26,16 @@ namespace Rigel.GUI
             BufRect = m_layer.GetBufferRect(m_region);
             BufText = m_layer.GetBufferText(m_region);
 
+
+            region.BlockInfoRect.Start = BufRect.Count;
+            //region.BlockInfoText.Start = BufText.Count;
+
         }
         internal static void EndGUIRegion(GUIRegion region)
         {
+            region.BlockInfoRect.Count = BufRect.Count - region.BlockInfoRect.Start;
+            //region.BlockInfoText.Count = BufText.Count - region.BlockInfoText.Start;
+
             BufRect = null;
             BufText = null;
 
@@ -47,14 +54,21 @@ namespace Rigel.GUI
             m_layer = null;
         }
 
-#endregion
+        #endregion
 
-        public static void Rect(Vector4 rect,Vector4 color)
+        /// v0                v1
+        /// +-----------------+
+        /// |                 |
+        /// |                 |
+        /// +-----------------+
+        /// v4                v3
+        ///
+        public static void Rect(Vector4 rect, Vector4 color)
         {
             BufRect.AddVertices(new Vector4(rect.x, rect.y, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, 0.5f, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, 0.5f, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, 0.5f, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, 0.5f, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, 0.5f, 1), color, Vector2.zero);
         }
     }
 }
