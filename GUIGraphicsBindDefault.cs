@@ -136,6 +136,7 @@ namespace Rigel.GUI
                 m_pstateRect.Rasterizer.FillMode = GraphicsFillMode.Solid;
                 m_pstateRect.InputAssembler.PrimitiveTopology = GraphicsPrimitiveTopology.TriangleList;
 
+                m_pstateRect.OutputMerger.DepthStencilState = m_graphics.Device.DefaultDepthStencilState;
 
 
                 m_pstateText = m_pstateRect.Clone();
@@ -222,11 +223,6 @@ namespace Rigel.GUI
                 context.SetVertexBuffer(pair.Value, VERT_SIZE, 0);
                 context.DrawIndexed(pair.Key.BufferRect.Count / 4 * 6, 0, 0);
             }
-
-
-            
-
-            
 
 
         }
