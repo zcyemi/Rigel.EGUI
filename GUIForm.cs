@@ -98,7 +98,6 @@ namespace Rigel.GUI
 
             //}
 
-
             GUILayer lastFocusedLayer = m_focusedLayer;
 
 

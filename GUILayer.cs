@@ -90,10 +90,12 @@ namespace Rigel.GUI
         public void RemoveFocus(RigelGUIEvent e)
         {
             m_lastFocusedRegion = null;
-            m_focusedRegion.IsFocused = false;
-            m_focusedRegion = null;
-
-            m_syncAll = true;
+            if(m_focusedRegion != null)
+            {
+                m_focusedRegion.IsFocused = false;
+                m_focusedRegion = null;
+                m_syncAll = true;
+            }
         }
 
         public bool CheckFocused(RigelGUIEvent e)
