@@ -77,5 +77,15 @@ namespace Rigel.GUI
             BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, v, 1), color, Vector2.zero);
             BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, v, 1), color, Vector2.zero);
         }
+
+        public static void Char(Vector4 rect,Vector4 color,char c)
+        {
+            float v = DepthBase / 500.0f;
+
+            BufText.AddVertices(new Vector4(rect.x, rect.y, v, 1), color, Vector2.zero);
+            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, v, 1), color, new Vector2(1,0));
+            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, v, 1), color, new Vector2(1, 1));
+            BufText.AddVertices(new Vector4(rect.x, rect.y + rect.w, v, 1), color, new Vector2(0, 1));
+        }
     }
 }

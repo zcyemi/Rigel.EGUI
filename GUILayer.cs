@@ -56,6 +56,7 @@ namespace Rigel.GUI
 
 
         private List<GUIRegionBufferBlockInfo> BlockInfoRect = new List<GUIRegionBufferBlockInfo>();
+        private List<GUIRegionBufferBlockInfo> BlockInfoText = new List<GUIRegionBufferBlockInfo>();
 
         private bool m_syncAll = true;
         private GUIForm m_form;
@@ -75,6 +76,9 @@ namespace Rigel.GUI
             m_form = form;
             m_bufferRect = form.GraphicsBind.CreateBuffer();
             m_bufferRectDynamic = form.GraphicsBind.CreateBuffer();
+
+            m_bufferText = form.GraphicsBind.CreateBuffer();
+            m_bufferTextDynamic = form.GraphicsBind.CreateBuffer();
         }
 
 
@@ -161,6 +165,8 @@ namespace Rigel.GUI
             {
                 m_bufferRect.Clear();
                 m_bufferRectDynamic.Clear();
+                m_bufferText.Clear();
+                m_bufferTextDynamic.Clear();
 
                 foreach (var region in m_regions)
                 {
@@ -170,6 +176,8 @@ namespace Rigel.GUI
 
                 m_bufferRectDynamic.IsBufferChanged = true;
                 m_bufferRect.IsBufferChanged = true;
+                m_bufferTextDynamic.IsBufferChanged = true;
+                m_bufferText.IsBufferChanged = true;
 
                 m_lastFocusedRegion = null;
                 m_syncAll = false;
@@ -181,9 +189,10 @@ namespace Rigel.GUI
                 if(m_focusedRegion != null)
                 {
                     m_bufferRectDynamic.Clear();
+                    m_bufferTextDynamic.Clear();
                     m_focusedRegion.ProcessGUIEvent(e);
                     m_bufferRectDynamic.IsBufferChanged = true;
-                    //Console.WriteLine("sync dynamic");
+                    m_bufferTextDynamic.IsBufferChanged = true;
                 }
             }
 
@@ -191,7 +200,6 @@ namespace Rigel.GUI
 
             GUIDraw.EndGUILayer(this);
 
-            m_bufferRectDynamic.IsBufferChanged = true;
         }
 
         public IGUIBuffer GetBufferRect(GUIRegion region)

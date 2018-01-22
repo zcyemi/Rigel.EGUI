@@ -31,6 +31,7 @@ namespace Rigel.GUI
         private static readonly int VERT_SIZE = Utility.SizeOf<RigelEGUIVertex>();
 
         private IGraphicsAggregation m_graphics;
+        private IFontInfo m_font;
 
         //Graphics Objects
         private IInputLayout m_inputLayout;
@@ -41,9 +42,10 @@ namespace Rigel.GUI
 
         private GUIGraphicsIndicesBuffer m_indicesBuffer;
 
-        private GraphicsScalingBuffer m_bufferRect;
-        private GraphicsScalingBuffer m_bufferText;
         private IGraphicsBuffer m_constBuffer;
+
+        private ITexture m_fontTexture;
+        private ITextureView m_fontTextureView;
 
         private PipelineState m_pstateRect;
         private PipelineState m_pstateText;
@@ -54,9 +56,13 @@ namespace Rigel.GUI
 
         private Dictionary<GUILayer, GraphicsBuffer> m_layerBuffer_rect_dynamic;
         private Dictionary<GUILayer, IGraphicsBuffer> m_layerBuffer_rect;
+        private Dictionary<GUILayer, GraphicsBuffer> m_layerBuffer_text_dynamic;
+        private Dictionary<GUILayer, IGraphicsBuffer> m_layerBuffer_text;
 
-        public GUIGraphicsBindDefault(IGraphicsAggregation aggregation)
+        public GUIGraphicsBindDefault(IGraphicsAggregation aggregation,IFontInfo fontinfo)
         {
+            m_font = fontinfo;
+
             m_graphics = aggregation;
             m_graphics.EventDrawInstant += DrawInstant;
 
@@ -64,22 +70,36 @@ namespace Rigel.GUI
 
             m_layerBuffer_rect = new Dictionary<GUILayer, IGraphicsBuffer>();
             m_layerBuffer_rect_dynamic = new Dictionary<GUILayer, GraphicsBuffer>();
+            m_layerBuffer_text = new Dictionary<GUILayer, IGraphicsBuffer>();
+            m_layerBuffer_text_dynamic = new Dictionary<GUILayer, GraphicsBuffer>();
+
+            //Texture
+            {
+                using (ImageData img = new ImageData(256, 256))
+                {
+                    m_font.GenerateFontTexture(img);
+                    var desc = new TextureCreationDesc()
+                    {
+                        Width = img.Width,
+                        Height = img.Height,
+                        ArraySize = 1,
+                        SampleDescription = new TextureSampleDescription(1,0),
+                        Format = GraphicsFormat.R8G8B8A8_UNorm,
+                        Usage = GraphicsResourceUsage.Default,
+                        CpuAccessFlags = GraphicsBufferCPUAccessFlag.None,
+                        BindFlags = GraphicsBindFlag.ShaderResources,
+                        MipLevels = 1,
+                        OptionFlags = GraphicsOptionFlags.None,
+                    };
+
+                    m_fontTexture = m_graphics.Device.CreateTexture(desc, img.Data,img.Pitch);
+                    m_fontTextureView = m_graphics.Device.CreateTextureView(m_fontTexture);
+                }
+            }
 
 
             //Buffer
             {
-                var vbufferDesc = new GraphicsBufferDesc
-                {
-                    CPUAccessFlags = GraphicsBufferCPUAccessFlag.None,
-                    Usage = GraphicsResourceUsage.Default,
-                    BindFlags = GraphicsBindFlag.VertexBuffer,
-                    SizeInByte = Utility.SizeOf<RigelEGUIVertex>() * 256,
-                    StructureByteStride = 0
-                };
-
-                m_bufferRect = new GraphicsScalingBuffer(m_graphics.Device, vbufferDesc, 2);
-                m_bufferText = new GraphicsScalingBuffer(m_graphics.Device, vbufferDesc, 2);
-
                 //const buffer
 
                 var cbufferDesc = new GraphicsBufferDesc
@@ -102,8 +122,6 @@ namespace Rigel.GUI
             {
                 m_indicesBuffer = new GUIGraphicsIndicesBuffer(m_graphics.Device, 256);
             }
-
-
 
             //Shader and InputLayout
             {
@@ -142,17 +160,15 @@ namespace Rigel.GUI
                 m_pstateText = m_pstateRect.Clone();
 
 
-                m_pstateRect.InputAssembler.VertexBufferBind = new BufferView(m_bufferRect.Buffer, Utility.SizeOf<RigelEGUIVertex>(), 0);
                 m_pstateRect.InputAssembler.IndexBufferBind = new BfferViewIndex(m_indicesBuffer.Buffer, GraphicsFormat.R32_UInt, 0);
                 m_pstateRect.Pipeline.VertexShader = m_shader_vs_rect;
                 m_pstateRect.Pipeline.PixelShader = m_shader_ps_rect;
                 m_pstateRect.Pipeline.AddConstBuffer(GraphicsShaderType.VertexShader, 0, m_constBuffer);
 
-                m_pstateText.InputAssembler.VertexBufferBind = new BufferView(m_bufferText.Buffer, Utility.SizeOf<RigelEGUIVertex>(), 0);
                 m_pstateText.Pipeline.VertexShader = m_shader_vs_text;
                 m_pstateText.Pipeline.PixelShader = m_shader_ps_text;
                 m_pstateText.Pipeline.AddSampler(GraphicsShaderType.PixelShader, 0, m_graphics.Device.DefaultSampler);
-
+                m_pstateText.Pipeline.AddResView(GraphicsShaderType.PixelShader, 0, m_fontTextureView);
 
             }
 
@@ -160,6 +176,15 @@ namespace Rigel.GUI
 
         public void Destroy()
         {
+            GraphicsUtility.Release(ref m_fontTextureView);
+            GraphicsUtility.Release(ref m_fontTexture);
+
+            if(m_font != null)
+            {
+                m_font.Dispose();
+                m_font = null;
+            }
+
             if(m_layerBuffer_rect != null)
             {
                 foreach(var pair in m_layerBuffer_rect)
@@ -179,7 +204,6 @@ namespace Rigel.GUI
                 m_layerBuffer_rect_dynamic = null;
             }
 
-            GraphicsUtility.Release(ref m_bufferRect);
             GraphicsUtility.Release(ref m_pstateText);
 
             GraphicsUtility.Release(ref m_indicesBuffer);
@@ -224,42 +248,26 @@ namespace Rigel.GUI
                 context.DrawIndexed(pair.Key.BufferRect.Count / 4 * 6, 0, 0);
             }
 
+            context.SetPipelineState(m_pstateText);
+
+            //draw text
+            foreach (var pair in m_layerBuffer_text_dynamic)
+            {
+                context.SetVertexBuffer(pair.Value.Buffer, VERT_SIZE, 0);
+                context.DrawIndexed(pair.Key.BufferTextDynamic.Count / 4 * 6, 0, 0);
+            }
+
+            foreach(var pair in m_layerBuffer_text)
+            {
+                context.SetVertexBuffer(pair.Value, VERT_SIZE, 0);
+                context.DrawIndexed(pair.Key.BufferText.Count / 4 * 6, 0, 0);
+            }
+
 
         }
 
-        [TEMP]
-        private static bool BufferUpdated = false;
-
         public void Update()
         {
-            //if (!BufferUpdated)
-            //{
-            //    var vert1 = new RigelEGUIVertex()
-            //    {
-            //        Position = new Vector4(0, 0, 0.5f, 1.0f),
-            //        Color = RigelColor.Red,
-            //        UV = Vector2.zero,
-            //    };
-
-            //    var vert2 = vert1;
-            //    var vert3 = vert2;
-            //    var vert4 = vert3;
-
-                
-            //    vert2.Position = new Vector4(100, 0, 0.5f, 1.0f);
-            //    vert3.Position = new Vector4(100, 25, 0.5f, 1.0f);
-            //    vert4.Position = new Vector4(0, 25, 0.5f, 1.0f);
-
-            //    vert3.Color = RigelColor.Blue;
-            //    vert2.Color = RigelColor.Blue;
-
-            //    m_bufferRect.UpdateData<RigelEGUIVertex>(m_graphics.Device, new RigelEGUIVertex[] {
-            //        vert1,vert2,vert3,vert4
-            //    });
-            //    BufferUpdated = true;
-
-            //    Console.WriteLine("Buffer updated");
-            //}
         }
 
         public void SetDynamicBufferTexture(object vertexdata, int length)
@@ -280,7 +288,6 @@ namespace Rigel.GUI
 
         public void SyncLayerBuffer(GUILayer layer)
         {
-
             var bufferdesc = new GraphicsBufferDesc();
             bufferdesc.BindFlags = GraphicsBindFlag.VertexBuffer;
             bufferdesc.CPUAccessFlags = GraphicsBufferCPUAccessFlag.None;
@@ -288,55 +295,114 @@ namespace Rigel.GUI
             bufferdesc.Usage = GraphicsResourceUsage.Default;
 
             //rect bufffer
-
-            IGraphicsBuffer rectBuffer = null;
-
-            if (!m_layerBuffer_rect.ContainsKey(layer))
             {
-                int sizeinbyte = layer.BufferRect.SizeInByte;
-                if(sizeinbyte != 0)
+                IGraphicsBuffer rectBuffer = null;
+
+                if (!m_layerBuffer_rect.ContainsKey(layer))
                 {
-                    bufferdesc.SizeInByte = sizeinbyte;
+                    int sizeinbyte = layer.BufferRect.SizeInByte;
+                    if (sizeinbyte != 0)
+                    {
+                        bufferdesc.SizeInByte = sizeinbyte;
 
-                    rectBuffer = m_graphics.Device.CreateBuffer(bufferdesc, layer.BufferRect.GetData());
-                    m_layerBuffer_rect.Add(layer, rectBuffer);
+                        rectBuffer = m_graphics.Device.CreateBuffer(bufferdesc, layer.BufferRect.GetData());
+                        m_layerBuffer_rect.Add(layer, rectBuffer);
+                    }
                 }
-            }
-            else
-            {
-                rectBuffer = m_layerBuffer_rect[layer];
-            }
-            if(rectBuffer != null && layer.BufferRect.IsBufferChanged)
-            {
-                //Sync buffer Data
-                m_graphics.Context.UpdateSubReources(rectBuffer,0, layer.BufferRect.GetData());
-                layer.BufferRect.IsBufferChanged = false;
+                else
+                {
+                    rectBuffer = m_layerBuffer_rect[layer];
+                }
+                if (rectBuffer != null && layer.BufferRect.IsBufferChanged)
+                {
+                    //Sync buffer Data
+                    m_graphics.Context.UpdateSubReources(rectBuffer, 0, layer.BufferRect.GetData());
+                    layer.BufferRect.IsBufferChanged = false;
+                }
             }
 
 
             //rect bufffer dynamic
-            GraphicsBuffer rectBufferDynamic = null;
-            if (!m_layerBuffer_rect_dynamic.ContainsKey(layer))
             {
-                int sizeinbyte = layer.BufferRectDynamic.SizeInByte;
-
-                bufferdesc.SizeInByte = sizeinbyte;
-                if (sizeinbyte != 0)
+                GraphicsBuffer rectBufferDynamic = null;
+                if (!m_layerBuffer_rect_dynamic.ContainsKey(layer))
                 {
-                    rectBufferDynamic = new GraphicsBuffer(m_graphics.Device, bufferdesc);
-                    rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), sizeinbyte);
-                    m_layerBuffer_rect_dynamic.Add(layer, rectBufferDynamic);
+                    int sizeinbyte = layer.BufferRectDynamic.SizeInByte;
+
+                    bufferdesc.SizeInByte = sizeinbyte;
+                    if (sizeinbyte != 0)
+                    {
+                        rectBufferDynamic = new GraphicsBuffer(m_graphics.Device, bufferdesc);
+                        rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), sizeinbyte);
+                        m_layerBuffer_rect_dynamic.Add(layer, rectBufferDynamic);
+                    }
+                }
+                else
+                {
+                    rectBufferDynamic = m_layerBuffer_rect_dynamic[layer];
+                }
+                if (rectBufferDynamic != null && layer.BufferRectDynamic.IsBufferChanged)
+                {
+
+                    rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), layer.BufferRectDynamic.SizeInByte);
+                    layer.BufferRectDynamic.IsBufferChanged = false;
                 }
             }
-            else
-            {
-                rectBufferDynamic = m_layerBuffer_rect_dynamic[layer];
-            }
-            if(rectBufferDynamic != null && layer.BufferRectDynamic.IsBufferChanged)
-            {
 
-                rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), layer.BufferRectDynamic.SizeInByte);
-                layer.BufferRectDynamic.IsBufferChanged = false;
+
+            //text bufffer
+            {
+                IGraphicsBuffer textBuffer = null;
+
+                if (!m_layerBuffer_text.ContainsKey(layer))
+                {
+                    int sizeinbyte = layer.BufferText.SizeInByte;
+                    if (sizeinbyte != 0)
+                    {
+                        bufferdesc.SizeInByte = sizeinbyte;
+
+                        textBuffer = m_graphics.Device.CreateBuffer(bufferdesc, layer.BufferText.GetData());
+                        m_layerBuffer_text.Add(layer, textBuffer);
+                    }
+                }
+                else
+                {
+                    textBuffer = m_layerBuffer_text[layer];
+                }
+                if (textBuffer != null && layer.BufferText.IsBufferChanged)
+                {
+                    //Sync buffer Data
+                    m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData());
+                    layer.BufferText.IsBufferChanged = false;
+                }
+            }
+
+
+            //text bufffer dynamic
+            {
+                GraphicsBuffer textBufferDynamic = null;
+                if (!m_layerBuffer_text_dynamic.ContainsKey(layer))
+                {
+                    int sizeinbyte = layer.BufferTextDynamic.SizeInByte;
+
+                    bufferdesc.SizeInByte = sizeinbyte;
+                    if (sizeinbyte != 0)
+                    {
+                        textBufferDynamic = new GraphicsBuffer(m_graphics.Device, bufferdesc);
+                        textBufferDynamic.UpdateData(m_graphics.Device, layer.BufferTextDynamic.GetData(), sizeinbyte);
+                        m_layerBuffer_text_dynamic.Add(layer, textBufferDynamic);
+                    }
+                }
+                else
+                {
+                    textBufferDynamic = m_layerBuffer_text_dynamic[layer];
+                }
+                if (textBufferDynamic != null && layer.BufferTextDynamic.IsBufferChanged)
+                {
+
+                    textBufferDynamic.UpdateData(m_graphics.Device, layer.BufferTextDynamic.GetData(), layer.BufferTextDynamic.SizeInByte);
+                    layer.BufferTextDynamic.IsBufferChanged = false;
+                }
             }
 
         }
@@ -473,9 +539,16 @@ namespace Rigel.GUI
             PS_IN VS( VS_IN input )
             {
 	            PS_IN output = (PS_IN)0;
+
+                float4x4 mtx = float4x4(
+                    2.0/800.0,0,0,0,
+                    0,-2.0/600,0,0,
+                    0,0,1,0,
+                    -1,1,0,1
+                );
 	
 	            float4 pos = input.pos;
-	            output.pos = mul(pos, worldViewProj);
+	            output.pos = mul(pos, mtx);
 	            output.col = input.col;
 	            output.uv = input.uv;
 	            return output;
@@ -484,7 +557,7 @@ namespace Rigel.GUI
             float4 PS( PS_IN input ) : SV_Target
             {
 	            float4 v = input.col;
-	            v.a = texfont.Sample(MeshTextureSampler,input.uv).r;
+	            v = texfont.Sample(MeshTextureSampler,input.uv);
 	            return v;
             }";
 
