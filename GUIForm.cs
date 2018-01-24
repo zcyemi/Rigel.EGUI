@@ -17,6 +17,8 @@ namespace Rigel.GUI
 
         public GUILayer FocusedLayer { get { return m_focusedLayer; } }
 
+        public bool FastMode { get; set; } = false;
+
         private IGUIGraphicsBind m_graphicsBind;
         public IGUIGraphicsBind GraphicsBind
         {
@@ -42,6 +44,7 @@ namespace Rigel.GUI
 
         public void Update()
         {
+
             m_graphicsBind.Update();
 
             //Sync data
@@ -61,6 +64,10 @@ namespace Rigel.GUI
 
         public void EmitGUIEvent(RigelGUIEvent e)
         {
+            if (FastMode && e.EventType == RigelGUIEventType.MouseMove)
+            {
+                return;
+            }
 
             //if (e.IsMouseActiveEvent())
             //{

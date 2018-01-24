@@ -16,6 +16,9 @@ namespace Rigel.GUI
         private static IGUIBuffer BufText { get; set; }
 
         private static int DepthBase;
+        private static float DepthValue = 0;
+
+        private static readonly float DepthStep = 0.0001f;
 
         internal static void StartGUIRegion(GUIRegion region)
         {
@@ -25,6 +28,7 @@ namespace Rigel.GUI
             m_region = region;
 
             DepthBase = m_layer.Order - m_region.Order;
+            DepthValue = DepthBase;
 
             //Process Buffer and Offset
             BufRect = m_layer.GetBufferRect(m_region);
@@ -70,22 +74,24 @@ namespace Rigel.GUI
         ///
         public static void Rect(Vector4 rect, Vector4 color)
         {
-            float v = DepthBase / 500.0f;
 
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, v, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, v, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, v, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, v, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
+            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
+
+            DepthValue -= DepthStep;
         }
 
         public static void Char(Vector4 rect,Vector4 color,char c)
         {
-            float v = DepthBase / 500.0f;
 
-            BufText.AddVertices(new Vector4(rect.x, rect.y, v, 1), color, Vector2.zero);
-            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, v, 1), color, new Vector2(1,0));
-            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, v, 1), color, new Vector2(1, 1));
-            BufText.AddVertices(new Vector4(rect.x, rect.y + rect.w, v, 1), color, new Vector2(0, 1));
+            BufText.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
+            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, new Vector2(1,0));
+            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, new Vector2(1, 1));
+            BufText.AddVertices(new Vector4(rect.x, rect.y + rect.w, DepthValue, 1), color, new Vector2(0, 1));
+
+            DepthValue -= DepthStep;
         }
     }
 }
