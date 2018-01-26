@@ -15,11 +15,11 @@ namespace Rigel.GUI.Component
 
         protected override sealed void OnGUI(RigelGUIEvent e)
         {
-            GUIDraw.Rect(m_rect,IsFocused? GUIStyle.Current.ColorBackgroundL1: GUIStyle.Current.ColorBackground);
+            GUI.Rect(m_rect,IsFocused? GUIStyle.Current.ColorBackgroundL1: GUIStyle.Current.ColorBackground);
 
             Vector4 rectHeader = m_rect;
             rectHeader.w = 25;
-            GUIDraw.Rect(rectHeader, GUIStyle.Current.ColorBackgroundL2);
+            GUI.Rect(rectHeader, GUIStyle.Current.ColorBackgroundL2);
 
             OnWindowGUI(e);
         }

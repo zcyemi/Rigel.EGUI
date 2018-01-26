@@ -43,11 +43,11 @@ namespace Rigel.GUI
 
         internal void ProcessGUIEvent(RigelGUIEvent e)
         {
-            GUIDraw.StartGUIRegion(this);
+            GUI.StartGUIRegion(this);
 
             OnGUI(e);
 
-            GUIDraw.EndGUIRegion(this);
+            GUI.EndGUIRegion(this);
 
         }
 

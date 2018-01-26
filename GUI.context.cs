@@ -4,21 +4,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Rigel.GUI.Collections;
+
 namespace Rigel.GUI
 {
-    public static class GUIDraw
+    public static partial class GUI
     {
-        #region State
 
+        private static GUIForm m_form = null;
         private static GUILayer m_layer = null;
         private static GUIRegion m_region = null;
+
         private static IGUIBuffer BufRect { get; set; }
         private static IGUIBuffer BufText { get; set; }
 
         private static int DepthBase;
         private static float DepthValue = 0;
-
         private static readonly float DepthStep = 0.0001f;
+
+        private static GUIFrame m_frame = new GUIFrame();
+        private static GUIFrame Frame { get { return m_frame; } }
+
+        private static GUIAreaInfo CurArea;
+
+
+        internal static void StartFrame(GUIForm form)
+        {
+            if (m_form != null) throw new Exception();
+            m_form = form;
+
+            m_frame = m_form.Frame;
+            m_frame.Reset(m_form);
+        }
+        internal static void EndFrame(GUIForm form)
+        {
+            if (m_form != form) throw new Exception();
+            m_form = null;
+
+
+            if (!m_frame.EndFrame())
+            {
+                throw new Exception();
+            }
+            m_frame = null;
+        }
 
         internal static void StartGUIRegion(GUIRegion region)
         {
@@ -38,9 +67,13 @@ namespace Rigel.GUI
             region.BlockInfoRect.Start = BufRect.Count;
             //region.BlockInfoText.Start = BufText.Count;
 
+            BeginArea(region.Rect);
+
         }
         internal static void EndGUIRegion(GUIRegion region)
         {
+            EndArea();
+
             region.BlockInfoRect.Count = BufRect.Count - region.BlockInfoRect.Start;
             //region.BlockInfoText.Count = BufText.Count - region.BlockInfoText.Start;
 
@@ -55,43 +88,12 @@ namespace Rigel.GUI
         {
             if (m_layer != null) throw new Exception();
             m_layer = layer;
-            
+
         }
         internal static void EndGUILayer(GUILayer layer)
         {
             if (m_layer != layer) throw new Exception();
             m_layer = null;
-        }
-
-        #endregion
-
-        /// v0                v1
-        /// +-----------------+
-        /// |                 |
-        /// |                 |
-        /// +-----------------+
-        /// v4                v3
-        ///
-        public static void Rect(Vector4 rect, Vector4 color)
-        {
-
-            BufRect.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
-            BufRect.AddVertices(new Vector4(rect.x, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
-
-            DepthValue -= DepthStep;
-        }
-
-        public static void Char(Vector4 rect,Vector4 color,char c)
-        {
-
-            BufText.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
-            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, new Vector2(1,0));
-            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, new Vector2(1, 1));
-            BufText.AddVertices(new Vector4(rect.x, rect.y + rect.w, DepthValue, 1), color, new Vector2(0, 1));
-
-            DepthValue -= DepthStep;
         }
     }
 }

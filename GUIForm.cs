@@ -12,13 +12,10 @@ namespace Rigel.GUI
     {
 
         private List<GUILayer> m_layers;
-
         private GUILayer m_focusedLayer = null;
-
         public GUILayer FocusedLayer { get { return m_focusedLayer; } }
 
         public bool FastMode { get; set; } = false;
-
         private IGUIGraphicsBind m_graphicsBind;
         public IGUIGraphicsBind GraphicsBind
         {
@@ -27,7 +24,6 @@ namespace Rigel.GUI
                 return m_graphicsBind;
             }
         }
-
         public GUIForm(IGUIGraphicsBind bind)
         {
             m_graphicsBind = bind;
@@ -35,6 +31,10 @@ namespace Rigel.GUI
             m_layers = new List<GUILayer>();
         }
 
+        internal GUIFrame Frame = new GUIFrame();
+
+        private Vector4 m_rect = Vector4.zero;
+        public Vector4 Rect { get { return m_rect; } }
 
         protected virtual void Init()
         {
@@ -69,6 +69,9 @@ namespace Rigel.GUI
                 return;
             }
 
+            m_rect.z = e.RenderWidth;
+            m_rect.w = e.RenderHeight;
+
             //if (e.IsMouseActiveEvent())
             //{
             //    foreach (var layer in m_layers)
@@ -79,10 +82,14 @@ namespace Rigel.GUI
 
             CheckFocused(e);
 
+            GUI.StartFrame(this);
+
             foreach (var layer in m_layers)
             {
                 layer.Update(e);
             }
+
+            GUI.EndFrame(this);
 
         }
 

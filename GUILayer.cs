@@ -159,7 +159,7 @@ namespace Rigel.GUI
         {
             if (m_regions == null) return;
 
-            GUIDraw.StartGUILayer(this);
+            GUI.StartGUILayer(this);
 
             if (m_syncAll)
             {
@@ -198,7 +198,7 @@ namespace Rigel.GUI
 
             
 
-            GUIDraw.EndGUILayer(this);
+            GUI.EndGUILayer(this);
 
         }
 

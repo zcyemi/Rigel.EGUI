@@ -42,10 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\GUIAreaInfo.cs" />
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Component\GUIWindow.cs" />
-    <Compile Include="GUIDraw.cs" />
+    <Compile Include="GUI.context.cs" />
+    <Compile Include="GUI.cs" />
     <Compile Include="GUIForm.cs" />
+    <Compile Include="GUIFrame.cs" />
     <Compile Include="GUIGraphicsBindDefault.cs" />
     <Compile Include="GUIInternal.cs" />
     <Compile Include="GUILayer.cs" />
