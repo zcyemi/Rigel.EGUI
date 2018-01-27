@@ -51,6 +51,35 @@ namespace Rigel.GUI
             m_frame = null;
         }
 
+        public static void BeginArea(Vector4 rect)
+        {
+            CurArea = new GUIAreaInfo()
+            {
+                Rect = rect.Move(CurArea.Rect.Pos()),
+            };
+            Frame.AreaStack.Push(CurArea);
+            Frame.LayoutStack.Push(CurLayout);
+
+            CurLayout.RectSize = CurArea.Rect.Size() - CurLayout.Offset;
+            CurLayout.Reset();
+
+        }
+
+        public static void EndArea()
+        {
+            Frame.AreaStack.Pop();
+            CurLayout = Frame.LayoutStack.Pop();
+
+            if (Frame.AreaStack.Count == 0)
+            {
+                CurArea.Rect = Frame.RootRect;
+            }
+            else
+            {
+                CurArea = Frame.AreaStack.Peek();
+            }
+        }
+
         internal static void StartGUIRegion(GUIRegion region)
         {
             if (m_layer == null) throw new Exception();
