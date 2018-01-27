@@ -22,10 +22,12 @@ namespace Rigel.GUI
         private static float DepthValue = 0;
         private static readonly float DepthStep = 0.0001f;
 
-        private static GUIFrame m_frame = new GUIFrame();
+        internal static GUIFrame m_frame = new GUIFrame();
         private static GUIFrame Frame { get { return m_frame; } }
 
-        private static GUIAreaInfo CurArea;
+        internal static GUIAreaInfo CurArea;
+        internal static GUILayoutInfo CurLayout;
+        
 
 
         internal static void StartFrame(GUIForm form)

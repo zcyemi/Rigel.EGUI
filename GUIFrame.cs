@@ -11,12 +11,14 @@ namespace Rigel.GUI
     internal class GUIFrame
     {
         public Stack<GUIAreaInfo> AreaStack = new Stack<GUIAreaInfo>();
+        public Stack<GUILayoutInfo> LayoutStack = new Stack<GUILayoutInfo>();
 
         public Vector4 RootRect;
 
         public void Reset(GUIForm form)
         {
             AreaStack.Clear();
+            LayoutStack.Clear();
 
             RootRect = form.Rect;
         }

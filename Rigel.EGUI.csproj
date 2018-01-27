@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Collections\GUIAreaInfo.cs" />
     <Compile Include="Collections\GUIBufferList.cs" />
+    <Compile Include="Collections\GUILayoutInfo.cs" />
+    <Compile Include="Component\GUIDemoWindow.cs" />
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
@@ -52,6 +54,8 @@
     <Compile Include="GUIGraphicsBindDefault.cs" />
     <Compile Include="GUIInternal.cs" />
     <Compile Include="GUILayer.cs" />
+    <Compile Include="GUI.Layout.cs" />
+    <Compile Include="GUIOption.cs" />
     <Compile Include="GUIRegion.cs" />
     <Compile Include="GUIStyle.cs" />
     <Compile Include="GUIUtility.cs" />

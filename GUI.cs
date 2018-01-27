@@ -20,7 +20,12 @@ namespace Rigel.GUI
         ///
         public static void Rect(Vector4 rect, Vector4 color)
         {
+            rect = rect.Move(CurArea.Rect);
+            RectAbsolute(rect, color);
+        }
 
+        public static void RectAbsolute(Vector4 rect,Vector4 color)
+        {
             BufRect.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
             BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, Vector2.zero);
             BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
@@ -28,6 +33,7 @@ namespace Rigel.GUI
 
             DepthValue -= DepthStep;
         }
+
         public static void Char(Vector4 rect,Vector4 color,char c)
         {
 
@@ -39,19 +45,25 @@ namespace Rigel.GUI
             DepthValue -= DepthStep;
         }
 
-
         public static void BeginArea(Vector4 rect)
         {
             CurArea = new GUIAreaInfo()
             {
-                Rect = rect,
+                Rect = rect.Move(CurArea.Rect.Pos()),
             };
             Frame.AreaStack.Push(CurArea);
+            Frame.LayoutStack.Push(CurLayout);
+
+            CurLayout.RectSize = CurArea.Rect.Size() - CurLayout.Offset;
+            CurLayout.Reset();
+            
         }
 
         public static void EndArea()
         {
             Frame.AreaStack.Pop();
+            CurLayout = Frame.LayoutStack.Pop();
+
             if (Frame.AreaStack.Count == 0)
             {
                 CurArea.Rect = Frame.RootRect;
@@ -61,5 +73,6 @@ namespace Rigel.GUI
                 CurArea = Frame.AreaStack.Peek();
             }
         }
+
     }
 }
