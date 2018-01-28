@@ -46,6 +46,8 @@ namespace Rigel.GUI
 
         private IGraphicsBuffer m_constBuffer;
 
+        private IBlendState m_blendState;
+
         private ITexture m_fontTexture;
         private ITextureView m_fontTextureView;
 
@@ -97,6 +99,31 @@ namespace Rigel.GUI
                     m_fontTexture = m_graphics.Device.CreateTexture(desc, img.Data,img.Pitch);
                     m_fontTextureView = m_graphics.Device.CreateTextureView(m_fontTexture);
                 }
+            }
+
+            //BlendState
+            {
+                var blenddesc = new BlendStateDesc()
+                {
+                    AlphaToConverageEnable = false,
+                    IndependentBlendEnable = false,
+                    RenderTargets = new RenderTargetBlendDesc[1]
+                    {
+                        new RenderTargetBlendDesc()
+                        {
+                            IsBlendEnabled = true,
+                            BlendOperation = GraphicsBlendOperation.Add,
+                            SourceBlend = GraphicsBlendOption.SourceAlpha,
+                            DestinationBlend = GraphicsBlendOption.InverseSourceAlpha,
+                            SourceAlphaBlend = GraphicsBlendOption.One,
+                            DestinationAlphaBlend = GraphicsBlendOption.Zero,
+                            AlphaBlendOperation = GraphicsBlendOperation.Add,
+                            RenderTargetWriteMask = ColorWriteMaskFlags.All
+                        }
+                    }
+                };
+
+                m_blendState = m_graphics.Device.CreateBlendState(blenddesc);
             }
 
 
@@ -171,7 +198,7 @@ namespace Rigel.GUI
                 m_pstateText.Pipeline.PixelShader = m_shader_ps_text;
                 m_pstateText.Pipeline.AddSampler(GraphicsShaderType.PixelShader, 0, m_graphics.Device.DefaultSampler);
                 m_pstateText.Pipeline.AddResView(GraphicsShaderType.PixelShader, 0, m_fontTextureView);
-
+                m_pstateText.OutputMerger.BlendState = m_blendState;
             }
 
         }
@@ -205,6 +232,8 @@ namespace Rigel.GUI
                 m_layerBuffer_rect_dynamic.Clear();
                 m_layerBuffer_rect_dynamic = null;
             }
+
+            GraphicsUtility.Release(ref m_blendState);
 
             GraphicsUtility.Release(ref m_pstateText);
 
@@ -559,7 +588,7 @@ namespace Rigel.GUI
             float4 PS( PS_IN input ) : SV_Target
             {
 	            float4 v = input.col;
-	            v = texfont.Sample(MeshTextureSampler,input.uv);
+	            v.a = texfont.Sample(MeshTextureSampler,input.uv);
 	            return v;
             }";
 
