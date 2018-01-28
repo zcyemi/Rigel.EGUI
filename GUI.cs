@@ -86,7 +86,7 @@ namespace Rigel.GUI
         }
 
 
-        public static void Text(Vector4 rect,String text,Vector4 color,Vector4 pos,bool clip = true)
+        public static void Text(Vector4 rect,String text,Vector4 color,Vector2 pos,bool clip = true)
         {
             rect = rect.Move(CurArea.Rect);
             TextAbsolute(rect, text, color, pos, clip);
@@ -100,7 +100,7 @@ namespace Rigel.GUI
         /// <param name="color"></param>
         /// <param name="pos"></param>
         /// <param name="noclip"></param>
-        public static void TextAbsolute(Vector4 recta,String text,Vector4 color,Vector4 pos,bool clip = true)
+        public static void TextAbsolute(Vector4 recta,String text,Vector4 color,Vector2 pos,bool clip = true)
         {
 
             Vector2 startpos = pos;
@@ -148,6 +148,68 @@ namespace Rigel.GUI
                     startpos.x += CharAbsolute(recta, c, color, startpos, false);
                 }
             }
+        }
+
+
+        public static bool Button(Vector4 rect,string label,params GUIOption[] option)
+        {
+            rect = rect.Move(CurArea.Rect);
+            return ButtonAbsolute(rect, label, option);
+        }
+
+        public static bool ButtonAbsolute(Vector4 recta,string label,params GUIOption[] option)
+        {
+            recta = recta.Padding(1);
+
+            GUIOptionAlign optAlign = null;
+            if(option != null)
+            {
+                option.GetOption(out optAlign);
+            }
+
+            bool clicked = false;
+
+
+            if (GUI.Event.Used)
+            {
+                GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+            }
+            else
+            {
+                if(GUIUtility.RectContainsCheck(recta, GUI.Event.Pointer))
+                {
+
+                    if (GUI.Event.EventType == RigelGUIEventType.MouseClick)
+                    {
+                        GUI.RectAbsolute(recta, GUIStyle.Current.ColorActiveD);
+
+                        GUI.Event.Use();
+                        clicked = true;
+                    }
+                    else
+                    {
+                        GUI.RectAbsolute(recta, GUIStyle.Current.ColorActive);
+                    }
+                }
+                else
+                {
+                    GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                }
+            }
+
+            Vector2 offset = new Vector2(2,(recta.w - GUI.Font.FontPixelSize) / 2);
+            if(optAlign == null || optAlign == GUIOption.AlignCenter)
+            {
+                offset.x = Mathf.FloorToInt((recta.z - GUI.Font.GetTextWidth(label)) / 2);
+            }
+            else if(optAlign == GUIOption.AlignRight)
+            {
+                offset.x = recta.z - GUI.Font.GetTextWidth(label) - 2;
+            }
+
+            GUI.TextAbsolute(recta, label, RigelColor.White, offset, true);
+
+            return clicked;
         }
     }
 }

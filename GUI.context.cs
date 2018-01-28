@@ -30,13 +30,16 @@ namespace Rigel.GUI
         internal static GUILayoutInfo CurLayout;
 
         internal static IFontInfo Font { get; private set; }
+
+        public static RigelGUIEvent Event { get; private set; }
         
 
 
-        internal static void StartFrame(GUIForm form)
+        internal static void StartFrame(GUIForm form,RigelGUIEvent e)
         {
             if (m_form != null) throw new Exception();
             m_form = form;
+            Event = e;
 
             m_frame = m_form.Frame;
             m_frame.Reset(m_form);
@@ -48,6 +51,8 @@ namespace Rigel.GUI
             if (m_form != form) throw new Exception();
             m_form = null;
             Font = null;
+
+            Event = null;
 
             if (!m_frame.EndFrame())
             {

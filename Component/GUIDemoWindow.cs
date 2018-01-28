@@ -88,17 +88,60 @@ namespace Rigel.GUI.Component
         private void SampleText(RigelGUIEvent e)
         {
             //Draw Text
-            GUI.Char(new Vector4(0, 0, 20, 20), 'R', RigelColor.Green, Vector2.Zero, false);
-            GUI.Text(new Vector4(0, 20, 100, 20), "Hello World", RigelColor.Blue, Vector2.zero, false);
+            GUI.Char(new Vector4(0, 0, 20, 20), 'R', RigelColor.Red, Vector2.Zero, false);
+            GUI.Text(new Vector4(0, 20, 100, 20), "Hello World", RigelColor.White, Vector2.zero, false);
 
+            GUILayout.Space(40);
+            //Layout text
+            GUILayout.Label("This is a label.", RigelColor.White);
 
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Button("TestBtn", GUIOption.Grid(0.5f));
+                GUILayout.Label("HorizontalLabel", RigelColor.Green);
+                GUILayout.Button("TestBtn", GUIOption.Width(30));
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.Rect(new Vector2(30, 10), RigelColor.Green);
+            GUILayout.Label(">> Label <<", RigelColor.White);
+
+            
+        }
+
+        private void SampleButton(RigelGUIEvent e)
+        {
+            //Button Align
+            if(GUI.Button(new Vector4(0, 0, 100, 23), "BtnC"))
+            {
+                Console.WriteLine("GUI.Button Center Click");
+            }
+            if (GUI.Button(new Vector4(100, 0, 100, 23), "BtnL",GUIOption.AlignLeft))
+            {
+                Console.WriteLine("GUI.Button Left Click");
+            }
+            if (GUI.Button(new Vector4(200, 0, 100, 23), "BtnR", GUIOption.AlignRight))
+            {
+                Console.WriteLine("GUI.Button Right Click");
+            }
+
+            GUILayout.Space(25);
+
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Button("None", GUIOption.Grid(0.25f));
+                GUILayout.Button("Left", GUIOption.Grid(0.25f), GUIOption.AlignLeft);
+                GUILayout.Button("Center", GUIOption.Grid(0.25f), GUIOption.AlignCenter);
+                GUILayout.Button("Right", GUIOption.Grid(0.25f), GUIOption.AlignRight);
+            }
+            GUILayout.EndHorizontal();
         }
 
         protected override void OnWindowGUI(RigelGUIEvent e)
         {
             //SampleLayout(e);
-            SampleText(e);
-
+            //SampleText(e);
+            SampleButton(e);
         }
             
     }

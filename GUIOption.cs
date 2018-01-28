@@ -11,6 +11,7 @@ namespace Rigel.GUI
         Grid,
         Width,
         Height,
+        Align,
     }
 
     public class GUIOption
@@ -27,6 +28,10 @@ namespace Rigel.GUI
         {
             return new GUIOptionHeight(h);
         }
+
+        public static readonly GUIOptionAlign AlignCenter = new GUIOptionAlign(0);
+        public static readonly GUIOptionAlign AlignLeft = new GUIOptionAlign(1);
+        public static readonly GUIOptionAlign AlignRight = new GUIOptionAlign(2);
     }
 
     public class GUIOption<T> : GUIOption
@@ -60,6 +65,13 @@ namespace Rigel.GUI
     public class GUIOptionHeight : GUIOption<int>
     {
         public GUIOptionHeight(int value) : base(GUIOptionType.Height, value)
+        {
+
+        }
+    }
+    public class GUIOptionAlign: GUIOption<int>
+    {
+        public GUIOptionAlign(int v): base(GUIOptionType.Align, v)
         {
 
         }
@@ -124,5 +136,8 @@ namespace Rigel.GUI
                 }
             }
         }
+
+        
+
     }
 }

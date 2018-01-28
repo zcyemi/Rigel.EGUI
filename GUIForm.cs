@@ -82,7 +82,7 @@ namespace Rigel.GUI
 
             CheckFocused(e);
 
-            GUI.StartFrame(this);
+            GUI.StartFrame(this,e);
 
             foreach (var layer in m_layers)
             {

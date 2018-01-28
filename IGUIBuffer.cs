@@ -15,7 +15,9 @@ namespace Rigel.GUI
         void AddVertices(Vector4 vert, Vector4 color, Vector2 uv);
 
         void RemoveRange(int startpos, int count);
-
+        /// <summary>
+        /// VertexCount
+        /// </summary>
         int Count { get; }
         int ItemByte { get; }
         int SizeInByte { get; }

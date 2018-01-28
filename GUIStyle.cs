@@ -19,5 +19,7 @@ namespace Rigel.GUI
         public Vector4 ColorBackground = RigelColor.RGBA(30, 30, 30, 255);
         public Vector4 ColorBackgroundL1 = RigelColor.RGBA(42, 42, 42, 255);
         public Vector4 ColorBackgroundL2 = RigelColor.RGBA(58, 58, 58, 255);
+
+        public Vector4 BtnColor = RigelColor.RGBA(80, 80, 80, 255);
     }
 }

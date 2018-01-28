@@ -104,18 +104,30 @@ namespace Rigel.GUI
             GUI.CurLayout = layout;
         }
 
+        public static void Rect(Vector2 size,Vector4 color)
+        {
+            GUI.Rect(new Vector4(GUI.CurLayout.Offset,size), color);
+            AutoCaculateOffset(size.x,size.y);
+        }
 
 
         public static bool Button(string label,params GUIOption[] options)
         {
             float w = GUI.CurLayout.RectSize.x;
             float h = LineHeight;
+
+
+            GUIOptionAlign optAlign = null;
+
             if(options != null)
             {
                 GUIOptionGrid grid = null;
                 GUIOptionWidth optWidth = null;
                 GUIOptionHeight optHeight = null;
                 options.GetOption(out grid,out optWidth,out optHeight);
+
+                options.GetOption(out optAlign);
+
                 if(optWidth != null)
                 {
                     w = optWidth.Value;
@@ -129,17 +141,65 @@ namespace Rigel.GUI
                 {
                     h = optHeight.Value;
                 }
-
-
             }
 
             var rect = new Vector4(GUI.CurLayout.Offset,w, h);
-            GUI.Rect(rect,RigelColor.Random());
+            rect = rect.Padding(1);
+
+            bool clicked = false;
+
+            var recta = rect.Move(GUI.CurArea.Rect);
+            if (GUI.Event.Used)
+            {
+                GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+            }
+            else
+            {
+                if (GUIUtility.RectContainsCheck(recta, GUI.Event.Pointer))
+                {
+                    if(GUI.Event.EventType == RigelGUIEventType.MouseClick)
+                    {
+                        GUI.RectAbsolute(recta, GUIStyle.Current.ColorActiveD);
+                        GUI.Event.Use();
+                        clicked = true;
+                    }
+                    else
+                    {
+                        GUI.RectAbsolute(recta, GUIStyle.Current.ColorActive);
+                    }
+                }
+                else
+                {
+                    GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                }
+            }
+            
+            //Draw label
+
+            Vector2 offset = new Vector2(4, (rect.w - GUI.Font.FontPixelSize) / 2);
+            if (optAlign == null || optAlign == GUIOption.AlignCenter)
+            {
+                offset.x = (rect.z - GUI.Font.GetTextWidth(label)) / 2;
+            }
+            else if(optAlign == GUIOption.AlignRight)
+            {
+                offset.x = rect.z - GUI.Font.GetTextWidth(label) - 2;
+            }
+            GUI.Text(rect, label, RigelColor.White, offset, true);
 
             AutoCaculateOffset(w, h);
 
-            
-            return false;
+            return clicked;
+        }
+
+        public static void Label(string content,Vector4 color)
+        {
+            var offset = new Vector2(2, (LineHeight - GUI.Font.FontPixelSize) / 2);
+            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RectSize), content,color, offset);
+
+            int textWidth = GUI.Font.GetTextWidth(content);
+
+            AutoCaculateOffset(textWidth, LineHeight);
         }
 
     }

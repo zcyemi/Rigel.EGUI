@@ -325,6 +325,8 @@ namespace Rigel.GUI
             bufferdesc.StructureByteStride = 0;
             bufferdesc.Usage = GraphicsResourceUsage.Default;
 
+            int maxVertCount = 0;
+
             //rect bufffer
             {
                 IGraphicsBuffer rectBuffer = null;
@@ -349,6 +351,8 @@ namespace Rigel.GUI
                     //Sync buffer Data
                     m_graphics.Context.UpdateSubReources(rectBuffer, 0, layer.BufferRect.GetData());
                     layer.BufferRect.IsBufferChanged = false;
+
+                    maxVertCount = Mathf.Max(maxVertCount, layer.BufferRect.Count);
                 }
             }
 
@@ -377,6 +381,8 @@ namespace Rigel.GUI
 
                     rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), layer.BufferRectDynamic.SizeInByte);
                     layer.BufferRectDynamic.IsBufferChanged = false;
+
+                    maxVertCount = Mathf.Max(maxVertCount, layer.BufferRectDynamic.Count);
                 }
             }
 
@@ -405,6 +411,8 @@ namespace Rigel.GUI
                     //Sync buffer Data
                     m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData());
                     layer.BufferText.IsBufferChanged = false;
+
+                    maxVertCount = Mathf.Max(maxVertCount, layer.BufferText.Count);
                 }
             }
 
@@ -430,10 +438,17 @@ namespace Rigel.GUI
                 }
                 if (textBufferDynamic != null && layer.BufferTextDynamic.IsBufferChanged)
                 {
-
                     textBufferDynamic.UpdateData(m_graphics.Device, layer.BufferTextDynamic.GetData(), layer.BufferTextDynamic.SizeInByte);
                     layer.BufferTextDynamic.IsBufferChanged = false;
+
+                    maxVertCount = Mathf.Max(maxVertCount, layer.BufferTextDynamic.Count);
                 }
+            }
+
+            if (m_indicesBuffer.CheckBufferExten(maxVertCount))
+            {
+                Console.WriteLine("Exten Indices Buffer");
+                m_indicesBuffer.ExtenSize(m_graphics.Device, maxVertCount);
             }
 
         }
@@ -649,7 +664,7 @@ namespace Rigel.GUI
                 m_bufferSize = GetIndicesCount(m_vertCount);
 
                 m_desc.SizeInByte = m_bufferSize * sizeof(uint);
-                m_buffer = device.CreateBuffer(m_desc, CreateDataArray(m_vertCount));
+                m_buffer = device.CreateBuffer(m_desc, CreateDataArray(m_vertCount),m_buffer);
 
                 Console.WriteLine($"exten buffer to:{m_vertCount} - {m_bufferSize}");
 
