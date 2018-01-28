@@ -36,7 +36,6 @@ namespace Rigel.GUI
 
         public static void DebugFontTexture(Vector4 rect,Vector4 color)
         {
-            
 
             BufText.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
             BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, new Vector2(1,0));
@@ -46,12 +45,109 @@ namespace Rigel.GUI
             DepthValue -= DepthStep;
         }
 
-        public static void Char(Vector4 rect)
+        public static int Char(Vector4 rect,Char c,Vector4 color,Vector2 pos,bool clip = true)
         {
-
+            rect = rect.Move(CurArea.Rect);
+            return CharAbsolute(rect, c, color, pos, clip);
         }
 
-        
+        public static int CharAbsolute(Vector4 recta,Char c,Vector4 color,Vector2 pos,bool clip = true)
+        {
+            Vector2 posa = recta.Pos() + pos;
 
+            var glyph = Font.GetGlyphInfo(c);
+
+            Vector4 charrect = new Vector4(posa, glyph.PixelWidth, glyph.PixelHeight);
+            charrect.X += glyph.LineOffsetX;
+            charrect.Y += glyph.LineOffsetY;
+
+            float x2 = charrect.X + charrect.Z;
+            float y2 = charrect.Y + charrect.W;
+
+            if (clip)
+            {
+                //TODO implement clip
+                BufText.AddVertices(new Vector4(charrect.X, charrect.Y, DepthValue, 1), color, glyph.UV[0]);
+                BufText.AddVertices(new Vector4(x2, charrect.Y, DepthValue, 1), color, glyph.UV[3]);
+                BufText.AddVertices(new Vector4(x2, y2, DepthValue, 1), color, glyph.UV[2]);
+                BufText.AddVertices(new Vector4(charrect.X, y2, DepthValue, 1), color, glyph.UV[1]);
+            }
+            else
+            {
+                BufText.AddVertices(new Vector4(charrect.X, charrect.Y, DepthValue, 1), color, glyph.UV[0]);
+                BufText.AddVertices(new Vector4(x2, charrect.Y, DepthValue, 1), color, glyph.UV[3]);
+                BufText.AddVertices(new Vector4(x2, y2, DepthValue, 1), color, glyph.UV[2]);
+                BufText.AddVertices(new Vector4(charrect.X, y2, DepthValue, 1), color, glyph.UV[1]);
+            }
+
+            DepthValue -= DepthStep;
+
+            return glyph.AdvancedX+1;
+        }
+
+
+        public static void Text(Vector4 rect,String text,Vector4 color,Vector4 pos,bool clip = true)
+        {
+            rect = rect.Move(CurArea.Rect);
+            TextAbsolute(rect, text, color, pos, clip);
+        }
+
+        /// <summary>
+        /// Single line text
+        /// </summary>
+        /// <param name="recta"></param>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <param name="pos"></param>
+        /// <param name="noclip"></param>
+        public static void TextAbsolute(Vector4 recta,String text,Vector4 color,Vector4 pos,bool clip = true)
+        {
+
+            Vector2 startpos = pos;
+            if (pos.y > recta.w) return;
+            if (pos.x > recta.z) return;
+
+            bool yclip = true;
+            if(pos.y > recta.y && pos.y + Font.FontPixelSize < recta.w)
+            {
+                yclip = false;
+            }
+
+            foreach(var c in text)
+            {
+                if(c< 33)
+                {
+                    startpos.x += 6;
+                    continue;
+                }
+
+                var charWidth = Font.GetCharWidth(c);
+                int charendpos = (int)startpos.x + charWidth;
+
+                if(charendpos < 0)
+                {
+                    startpos.x = charendpos;
+                    continue;
+                }
+
+                if (startpos.x > recta.z) return;
+
+                if (clip)
+                {
+                    if (charendpos < recta.z && !yclip)
+                    {
+                        startpos.x += CharAbsolute(recta, c, color, startpos, false);
+                    }
+                    else
+                    {
+                        startpos.x += CharAbsolute(recta, c, color, startpos, true);
+                    }
+                }
+                else
+                {
+                    startpos.x += CharAbsolute(recta, c, color, startpos, false);
+                }
+            }
+        }
     }
 }

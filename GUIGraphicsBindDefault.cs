@@ -33,6 +33,8 @@ namespace Rigel.GUI
         private IGraphicsAggregation m_graphics;
         private IFontInfo m_font;
 
+        public IFontInfo FontInfo { get { return m_font; } }
+
         //Graphics Objects
         private IInputLayout m_inputLayout;
         private IShader m_shader_vs_rect = null;

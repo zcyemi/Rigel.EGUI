@@ -87,7 +87,11 @@ namespace Rigel.GUI.Component
 
         private void SampleText(RigelGUIEvent e)
         {
-            GUI.DebugFontTexture(new Vector4(0, 0, 256, 256), RigelColor.White);
+            //Draw Text
+            GUI.Char(new Vector4(0, 0, 20, 20), 'R', RigelColor.Green, Vector2.Zero, false);
+            GUI.Text(new Vector4(0, 20, 100, 20), "Hello World", RigelColor.Blue, Vector2.zero, false);
+
+
         }
 
         protected override void OnWindowGUI(RigelGUIEvent e)

@@ -16,6 +16,7 @@ namespace Rigel.GUI
         IGUIBuffer CreateBuffer();
 
         bool NeedRebuildCommandList { get; set; }
+        IFontInfo FontInfo { get; }
 
         //void SyncDrawTarget(GUIDrawStage stage, GUIDrawTarget drawtarget);
         void UpdateGUIParams(int width, int height);

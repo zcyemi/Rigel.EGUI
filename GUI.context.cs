@@ -22,11 +22,14 @@ namespace Rigel.GUI
         private static float DepthValue = 0;
         private static readonly float DepthStep = 0.0001f;
 
+
         internal static GUIFrame m_frame = new GUIFrame();
         private static GUIFrame Frame { get { return m_frame; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
+
+        internal static IFontInfo Font { get; private set; }
         
 
 
@@ -37,12 +40,14 @@ namespace Rigel.GUI
 
             m_frame = m_form.Frame;
             m_frame.Reset(m_form);
+
+            Font = m_form.GraphicsBind.FontInfo;
         }
         internal static void EndFrame(GUIForm form)
         {
             if (m_form != form) throw new Exception();
             m_form = null;
-
+            Font = null;
 
             if (!m_frame.EndFrame())
             {
