@@ -197,7 +197,7 @@ namespace Rigel.GUI
                 }
             }
 
-            Vector2 offset = new Vector2(2,(recta.w - GUI.Font.FontPixelSize) / 2);
+            Vector2 offset = new Vector2(2,(int)(recta.w - GUI.Font.FontPixelSize) / 2);
             if(optAlign == null || optAlign == GUIOption.AlignCenter)
             {
                 offset.x = Mathf.FloorToInt((recta.z - GUI.Font.GetTextWidth(label)) / 2);

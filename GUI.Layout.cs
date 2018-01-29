@@ -179,7 +179,7 @@ namespace Rigel.GUI
             Vector2 offset = new Vector2(4, (rect.w - GUI.Font.FontPixelSize) / 2);
             if (optAlign == null || optAlign == GUIOption.AlignCenter)
             {
-                offset.x = (rect.z - GUI.Font.GetTextWidth(label)) / 2;
+                offset.x = (int)((rect.z - GUI.Font.GetTextWidth(label)) / 2);
             }
             else if(optAlign == GUIOption.AlignRight)
             {
@@ -194,7 +194,7 @@ namespace Rigel.GUI
 
         public static void Label(string content,Vector4 color)
         {
-            var offset = new Vector2(2, (LineHeight - GUI.Font.FontPixelSize) / 2);
+            var offset = new Vector2(2,(int) (LineHeight - GUI.Font.FontPixelSize) / 2);
             GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RectSize), content,color, offset);
 
             int textWidth = GUI.Font.GetTextWidth(content);

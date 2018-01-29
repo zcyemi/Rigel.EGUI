@@ -116,16 +116,16 @@ namespace Rigel.GUI.Component
             {
                 Console.WriteLine("GUI.Button Center Click");
             }
-            if (GUI.Button(new Vector4(100, 0, 100, 23), "BtnL",GUIOption.AlignLeft))
+            if (GUI.Button(new Vector4(100, 0, 100, 38), "BtnL",GUIOption.AlignLeft))
             {
                 Console.WriteLine("GUI.Button Left Click");
             }
-            if (GUI.Button(new Vector4(200, 0, 100, 23), "BtnR", GUIOption.AlignRight))
+            if (GUI.Button(new Vector4(200, 0, 100, 43), "BtnR", GUIOption.AlignRight))
             {
                 Console.WriteLine("GUI.Button Right Click");
             }
 
-            GUILayout.Space(25);
+            GUILayout.Space(45);
 
             GUILayout.BeginHorizontal();
             {
