@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\GUIAreaInfo.cs" />
+    <Compile Include="Collections\GUIBufferArray.cs" />
+    <Compile Include="Collections\GUIBufferInverseArray.cs" />
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Collections\GUILayoutInfo.cs" />
     <Compile Include="Component\GUIDemoWindow.cs" />

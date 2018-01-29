@@ -10,7 +10,6 @@ namespace Rigel.GUI
 {
     public class GUIForm
     {
-
         private List<GUILayer> m_layers;
         private GUILayer m_focusedLayer = null;
         public GUILayer FocusedLayer { get { return m_focusedLayer; } }
@@ -59,6 +58,12 @@ namespace Rigel.GUI
         {
             m_graphicsBind.Destroy();
             m_graphicsBind = null;
+
+            foreach(var layer in m_layers)
+            {
+                layer.Destroy();
+            }
+            m_layers.Clear();
         }
 
 

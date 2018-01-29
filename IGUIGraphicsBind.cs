@@ -13,7 +13,7 @@ namespace Rigel.GUI
     {
         void SetDynamicBufferTexture(object vertexdata, int length);
 
-        IGUIBuffer CreateBuffer();
+        IGUIBuffer CreateBuffer(int capacity);
 
         bool NeedRebuildCommandList { get; set; }
         IFontInfo FontInfo { get; }

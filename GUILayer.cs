@@ -74,11 +74,11 @@ namespace Rigel.GUI
 
 
             m_form = form;
-            m_bufferRect = form.GraphicsBind.CreateBuffer();
-            m_bufferRectDynamic = form.GraphicsBind.CreateBuffer();
+            m_bufferRect = form.GraphicsBind.CreateBuffer(256);
+            m_bufferRectDynamic = form.GraphicsBind.CreateBuffer(256);
 
-            m_bufferText = form.GraphicsBind.CreateBuffer();
-            m_bufferTextDynamic = form.GraphicsBind.CreateBuffer();
+            m_bufferText = form.GraphicsBind.CreateBuffer(256);
+            m_bufferTextDynamic = form.GraphicsBind.CreateBuffer(256);
         }
 
 
@@ -229,6 +229,14 @@ namespace Rigel.GUI
             {
                 return m_bufferText;
             }
+        }
+
+        public void Destroy()
+        {
+            m_bufferRect.Dispose();
+            m_bufferRectDynamic.Dispose();
+            m_bufferText.Dispose();
+            m_bufferTextDynamic.Dispose();
         }
     }
 }

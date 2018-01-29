@@ -21,6 +21,7 @@ namespace Rigel.GUI
         int Count { get; }
         int ItemByte { get; }
         int SizeInByte { get; }
+        int BufferSize { get; }
 
         float VerticesZ(int index);
 
@@ -30,5 +31,8 @@ namespace Rigel.GUI
         void CopyTo(int index, Array ary, int arrayIndex, int count);
 
         bool IsBufferChanged { get; set; }
+
+
+        void Dispose();
     }
 }

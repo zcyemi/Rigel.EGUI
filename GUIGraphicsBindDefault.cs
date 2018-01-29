@@ -143,7 +143,7 @@ namespace Rigel.GUI
                 m_constBuffer = m_graphics.Device.CreateBuffer(cbufferDesc);
 
                 m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, 800, 600, 0, 0, 1000.0f);
-                m_graphics.Context.UpdateSubReources(m_constBuffer,0, m_guiMatrix);
+                m_graphics.Context.UpdateSubReources(m_constBuffer,0, m_guiMatrix,Utility.SizeOf<Matrix4x4>());
 
             }
 
@@ -252,9 +252,9 @@ namespace Rigel.GUI
             m_graphics = null;
         }
 
-        public IGUIBuffer CreateBuffer()
+        public IGUIBuffer CreateBuffer(int capacity = 256)
         {
-            return new GUIBufferVertices();
+            return new GUIBufferVerticesArray(capacity);
         }
 
         private static DrawAttribute drawAttr = new DrawAttribute(6, 0);
@@ -333,7 +333,7 @@ namespace Rigel.GUI
 
                 if (!m_layerBuffer_rect.ContainsKey(layer))
                 {
-                    int sizeinbyte = layer.BufferRect.SizeInByte;
+                    int sizeinbyte = layer.BufferRect.BufferSize;
                     if (sizeinbyte != 0)
                     {
                         bufferdesc.SizeInByte = sizeinbyte;
@@ -349,7 +349,7 @@ namespace Rigel.GUI
                 if (rectBuffer != null && layer.BufferRect.IsBufferChanged)
                 {
                     //Sync buffer Data
-                    m_graphics.Context.UpdateSubReources(rectBuffer, 0, layer.BufferRect.GetData());
+                    m_graphics.Context.UpdateSubReources(rectBuffer, 0, layer.BufferRect.GetData(),layer.BufferRect.SizeInByte);
                     layer.BufferRect.IsBufferChanged = false;
 
                     maxVertCount = Mathf.Max(maxVertCount, layer.BufferRect.Count);
@@ -362,7 +362,7 @@ namespace Rigel.GUI
                 GraphicsBuffer rectBufferDynamic = null;
                 if (!m_layerBuffer_rect_dynamic.ContainsKey(layer))
                 {
-                    int sizeinbyte = layer.BufferRectDynamic.SizeInByte;
+                    int sizeinbyte = layer.BufferRectDynamic.BufferSize;
 
                     bufferdesc.SizeInByte = sizeinbyte;
                     if (sizeinbyte != 0)
@@ -379,7 +379,7 @@ namespace Rigel.GUI
                 if (rectBufferDynamic != null && layer.BufferRectDynamic.IsBufferChanged)
                 {
 
-                    rectBufferDynamic.UpdateData(m_graphics.Device, layer.BufferRectDynamic.GetData(), layer.BufferRectDynamic.SizeInByte);
+                    rectBufferDynamic.UpdateData(m_graphics.Device,(RigelEGUIVertex[]) layer.BufferRectDynamic.GetData(), layer.BufferRectDynamic.ItemByte);
                     layer.BufferRectDynamic.IsBufferChanged = false;
 
                     maxVertCount = Mathf.Max(maxVertCount, layer.BufferRectDynamic.Count);
@@ -393,7 +393,7 @@ namespace Rigel.GUI
 
                 if (!m_layerBuffer_text.ContainsKey(layer))
                 {
-                    int sizeinbyte = layer.BufferText.SizeInByte;
+                    int sizeinbyte = layer.BufferText.BufferSize;
                     if (sizeinbyte != 0)
                     {
                         bufferdesc.SizeInByte = sizeinbyte;
@@ -409,7 +409,7 @@ namespace Rigel.GUI
                 if (textBuffer != null && layer.BufferText.IsBufferChanged)
                 {
                     //Sync buffer Data
-                    m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData());
+                    m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData(),layer.BufferText.SizeInByte);
                     layer.BufferText.IsBufferChanged = false;
 
                     maxVertCount = Mathf.Max(maxVertCount, layer.BufferText.Count);
@@ -422,7 +422,7 @@ namespace Rigel.GUI
                 GraphicsBuffer textBufferDynamic = null;
                 if (!m_layerBuffer_text_dynamic.ContainsKey(layer))
                 {
-                    int sizeinbyte = layer.BufferTextDynamic.SizeInByte;
+                    int sizeinbyte = layer.BufferTextDynamic.BufferSize;
 
                     bufferdesc.SizeInByte = sizeinbyte;
                     if (sizeinbyte != 0)
@@ -438,7 +438,7 @@ namespace Rigel.GUI
                 }
                 if (textBufferDynamic != null && layer.BufferTextDynamic.IsBufferChanged)
                 {
-                    textBufferDynamic.UpdateData(m_graphics.Device, layer.BufferTextDynamic.GetData(), layer.BufferTextDynamic.SizeInByte);
+                    textBufferDynamic.UpdateData(m_graphics.Device, (RigelEGUIVertex[])layer.BufferTextDynamic.GetData(), layer.BufferTextDynamic.ItemByte);
                     layer.BufferTextDynamic.IsBufferChanged = false;
 
                     maxVertCount = Mathf.Max(maxVertCount, layer.BufferTextDynamic.Count);
@@ -454,64 +454,47 @@ namespace Rigel.GUI
         }
     }
 
-    public class GUIBufferVertices : GUIBufferList<RigelEGUIVertex>, IGUIBuffer
+    public class GUIBufferVerticesArray : GUIBufferArray<RigelEGUIVertex>, IGUIBuffer
     {
-        public int Count
+        public GUIBufferVerticesArray(int capacity, float resizeScale = 2) : base(capacity, resizeScale)
         {
-            get { return m_data.Count; }
         }
 
-        private static readonly int s_itemByte = Utility.SizeOf<RigelEGUIVertex>();
-        public int ItemByte { get { return s_itemByte; } }
+        public bool IsBufferChanged { get; set; }
 
-        public int SizeInByte { get { return Count * s_itemByte; } }
-
-        public bool IsBufferChanged
-        {
-            get; set;
-        }
         public void AddVertices(Vector4 vert, Vector4 color, Vector2 uv)
         {
-            m_data.Add(new RigelEGUIVertex()
+            AddItem(new RigelEGUIVertex()
             {
                 Position = vert,
                 Color = color,
                 UV = uv
             });
-
-
-        }
-
-        public void Clear()
-        {
-            m_data.Clear();
         }
 
         public void CopyTo(Array ary)
         {
-            if (ary.GetType() != typeof(RigelEGUIVertex).MakeArrayType()) return;
-            m_data.CopyTo((RigelEGUIVertex[])ary);
+            throw new NotImplementedException();
         }
 
         public void CopyTo(int index, Array ary, int arrayIndex, int count)
         {
-            if (ary.GetType() != typeof(RigelEGUIVertex).MakeArrayType()) return;
-            m_data.CopyTo(index, (RigelEGUIVertex[])ary, arrayIndex, count);
-        }
-
-        public void RemoveRange(int startpos, int count)
-        {
-            m_data.RemoveRange(startpos, count);
-        }
-
-        public float VerticesZ(int index)
-        {
-            return m_data[index].Position.z;
+            throw new NotImplementedException();
         }
 
         public Array GetData()
         {
-            return m_data.ToArray();
+            return GetRawArray();
+        }
+
+        public void RemoveRange(int startpos, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public float VerticesZ(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 
