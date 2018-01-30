@@ -8,10 +8,17 @@ namespace Rigel.GUI.Component
 {
     public class GUIDemoWindow : GUIWindow
     {
+
+        private List<Action<RigelGUIEvent>> m_sampleFunctions = new List<Action<RigelGUIEvent>>();
+        private int m_sampleIndex;
+
         public GUIDemoWindow(GUIForm form, int order = 0) : base(form, order)
         {
+            m_sampleFunctions.Add(SampleLayout);
+            m_sampleFunctions.Add(SampleText);
+            m_sampleFunctions.Add(SampleButton);
+            m_sampleFunctions.Add(SampleWindow);
         }
-
 
         private void SampleLayout(RigelGUIEvent e)
         {
@@ -84,7 +91,6 @@ namespace Rigel.GUI.Component
             }
 
     }
-
         private void SampleText(RigelGUIEvent e)
         {
             //Draw Text
@@ -108,7 +114,6 @@ namespace Rigel.GUI.Component
 
             
         }
-
         private void SampleButton(RigelGUIEvent e)
         {
             //Button Align
@@ -137,11 +142,56 @@ namespace Rigel.GUI.Component
             GUILayout.EndHorizontal();
         }
 
+
+        private GUIWindow m_sampleWindow = null;
+        private void SampleWindow(RigelGUIEvent e)
+        {
+            bool hasWindow = m_sampleWindow != null;
+            if (GUILayout.Button(hasWindow ? "Remove Window":"New window"))
+            {
+                if (hasWindow)
+                {
+                    GUI.Form.RemoveRegion(m_sampleWindow);
+                    m_sampleWindow = null;
+                    hasWindow = false;
+                }
+                else
+                {
+                    m_sampleWindow = new GUIWindow(GUI.Form, 0);
+                    m_sampleWindow.Caption = "Dynamic Window";
+                    GUI.Form.AddRegion(m_sampleWindow, GUILayerType.Window);
+                }
+            }
+
+            if (!hasWindow) return;
+
+            if (GUILayout.Button("Window Move : " + m_sampleWindow.Moveable))
+            {
+                m_sampleWindow.Moveable = !m_sampleWindow.Moveable;
+            }
+
+        }
+
         protected override void OnWindowGUI(RigelGUIEvent e)
         {
-            //SampleLayout(e);
-            //SampleText(e);
-            SampleButton(e);
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("<",GUIOption.Grid(0.1f)))
+            {
+                m_sampleIndex+= m_sampleFunctions.Count - 1;
+                m_sampleIndex = m_sampleIndex % m_sampleFunctions.Count;
+            }
+            GUILayout.Button(m_sampleFunctions[m_sampleIndex].Method.Name,GUIOption.Grid(0.8f));
+            if (GUILayout.Button(">", GUIOption.Grid(0.1f)))
+            {
+                m_sampleIndex++;
+                m_sampleIndex = m_sampleIndex % m_sampleFunctions.Count;
+            }
+            GUILayout.EndHorizontal();
+
+            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RectSize));
+            m_sampleFunctions[m_sampleIndex](e);
+            GUI.EndArea();
         }
             
     }

@@ -91,6 +91,26 @@ namespace Rigel.GUI
             m_syncAll = true;
         }
 
+        public void RemoveRegion(GUIRegion region)
+        {
+            if (m_regions.Contains(region))
+            {
+                m_regions.Remove(region);
+                if (m_focusedRegion == region) m_focusedRegion = null;
+                m_syncAll = true;
+            }
+            
+        }
+
+        public bool HasRegion(GUIRegion region)
+        {
+            foreach(var reg in m_regions)
+            {
+                if (reg == region) return true;
+            }
+            return false;
+        }
+
         public void RemoveFocus(RigelGUIEvent e)
         {
             m_lastFocusedRegion = null;

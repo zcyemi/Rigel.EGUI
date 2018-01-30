@@ -111,6 +111,12 @@ namespace Rigel.GUI
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="options">GUIOptionGrid | GUIOptionWidth | GUIOptionHeight | GUIOptionAlign </param>
+        /// <returns></returns>
         public static bool Button(string label,params GUIOption[] options)
         {
             float w = GUI.CurLayout.RectSize.x;

@@ -22,6 +22,8 @@ namespace Rigel.GUI
         private static float DepthValue = 0;
         private static readonly float DepthStep = 0.0001f;
 
+        public static GUIForm Form { get { return m_form; } }
+
 
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
@@ -69,14 +71,13 @@ namespace Rigel.GUI
         {
             CurArea = new GUIAreaInfo()
             {
-                Rect = rect.Move(CurArea.Rect.Pos()),
+                Rect = rect.Move(CurArea.Rect.Pos()).Truncate(),
             };
             Frame.AreaStack.Push(CurArea);
             Frame.LayoutStack.Push(CurLayout);
 
             CurLayout.RectSize = CurArea.Rect.Size() - CurLayout.Offset;
             CurLayout.Reset();
-
         }
 
         public static void EndArea()

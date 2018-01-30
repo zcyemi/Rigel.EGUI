@@ -93,6 +93,31 @@ namespace Rigel.GUI
             return v;
         }
 
+        public static Vector4 Truncate(this Vector4 v)
+        {
+            v.x = (int)v.x;
+            v.y = (int)v.y;
+            v.z = (int)v.z;
+            v.w = (int)v.w;
+
+            return v;
+        }
+        public static Vector2 Truncate(this Vector2 v)
+        {
+            v.x = (int)v.x;
+            v.y = (int)v.y;
+            return v;
+        }
+
+        public static Vector3 Truncate(this Vector3 v)
+        {
+            v.x = (int)v.x;
+            v.y = (int)v.y;
+            v.z = (int)v.z;
+            return v;
+        }
+
+
         public static Vector4 CenterPos(this Vector4 v, Vector2 size)
         {
             size = (size - v.Size()) * 0.5f;

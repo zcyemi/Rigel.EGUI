@@ -35,6 +35,9 @@ namespace Rigel.GUI
         private Vector4 m_rect = Vector4.zero;
         public Vector4 Rect { get { return m_rect; } }
 
+        private GUIDelayAction startFrameAction = new GUIDelayAction();
+        private GUIDelayAction endFrameAction = new GUIDelayAction();
+
         protected virtual void Init()
         {
 
@@ -88,12 +91,14 @@ namespace Rigel.GUI
             CheckFocused(e);
 
             GUI.StartFrame(this,e);
+            startFrameAction.Invoke();
 
             foreach (var layer in m_layers)
             {
                 layer.Update(e);
             }
 
+            endFrameAction.Invoke();
             GUI.EndFrame(this);
 
         }
@@ -154,17 +159,35 @@ namespace Rigel.GUI
 
         public void AddRegion(GUIRegion region,GUILayerType layertype)
         {
-            var layer = GetLayer(layertype);
-
-            if (layer == null)
+            startFrameAction.Call(() =>
             {
-                layer = new GUILayer(this, layertype);
-                m_layers.Add(layer);
+                var layer = GetLayer(layertype);
+                if (layer == null)
+                {
+                    layer = new GUILayer(this, layertype);
+                    m_layers.Add(layer);
 
-                m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
-            }
+                    m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
+                }
+                layer.AddRegion(region);
 
-            layer.AddRegion(region);
+            });
+            
+        }
+
+        public void RemoveRegion(GUIRegion region)
+        {
+            startFrameAction.Call(() =>
+            {
+                foreach (var layer in m_layers)
+                {
+                    if (layer.HasRegion(region))
+                    {
+                        layer.RemoveRegion(region);
+                        return;
+                    }
+                }
+            });
         }
     }
 }

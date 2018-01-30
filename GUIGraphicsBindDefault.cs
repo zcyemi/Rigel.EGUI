@@ -432,15 +432,18 @@ namespace Rigel.GUI
             //text bufffer dynamic
             {
                 GraphicsBuffer textBufferDynamic = null;
+
+                var layerBufTextDynamic = layer.BufferTextDynamic;
+
                 if (!m_layerBuffer_text_dynamic.ContainsKey(layer))
                 {
-                    int sizeinbyte = layer.BufferTextDynamic.BufferSize;
+                    int sizeinbyte = layerBufTextDynamic.BufferSize;
 
                     bufferdesc.SizeInByte = sizeinbyte;
                     if (sizeinbyte != 0)
                     {
                         textBufferDynamic = new GraphicsBuffer(m_graphics.Device, bufferdesc);
-                        textBufferDynamic.UpdateData(m_graphics.Device, layer.BufferTextDynamic.GetData(), sizeinbyte);
+                        textBufferDynamic.UpdateData(m_graphics.Device, layerBufTextDynamic.GetData(), sizeinbyte);
                         m_layerBuffer_text_dynamic.Add(layer, textBufferDynamic);
                     }
                 }
@@ -448,12 +451,18 @@ namespace Rigel.GUI
                 {
                     textBufferDynamic = m_layerBuffer_text_dynamic[layer];
                 }
-                if (textBufferDynamic != null && layer.BufferTextDynamic.IsBufferChanged)
+                if (textBufferDynamic != null && layerBufTextDynamic.IsBufferChanged)
                 {
-                    textBufferDynamic.UpdateData(m_graphics.Device, (RigelEGUIVertex[])layer.BufferTextDynamic.GetData(), layer.BufferTextDynamic.ItemByte);
-                    layer.BufferTextDynamic.IsBufferChanged = false;
-
-                    maxVertCount = Mathf.Max(maxVertCount, layer.BufferTextDynamic.Count);
+                    if(layerBufTextDynamic.BufferSize > textBufferDynamic.BufferSize)
+                    {
+                        textBufferDynamic.Resize(m_graphics.Device, layerBufTextDynamic.BufferSize, (RigelEGUIVertex[])layerBufTextDynamic.GetData());
+                    }
+                    else
+                    {
+                        textBufferDynamic.UpdateData(m_graphics.Device, (RigelEGUIVertex[])layerBufTextDynamic.GetData(), layerBufTextDynamic.ItemByte);
+                    }
+                    layerBufTextDynamic.IsBufferChanged = false;
+                    maxVertCount = Mathf.Max(maxVertCount, layerBufTextDynamic.Count);
                 }
             }
 

@@ -14,8 +14,8 @@ namespace Rigel.GUI.Component
         protected GUIDragState m_dragMove = new GUIDragState();
         protected GUIDragState m_dragResize = new GUIDragState();
 
-        protected bool Moveable { get; set; } = true;
-        protected bool Resizeable { get; set; } = true;
+        public bool Moveable { get; set; } = true;
+        public bool Resizeable { get; set; } = true;
         protected Vector2 MinSize = new Vector2(400, 300);
         public string Caption { get; set; }
 
