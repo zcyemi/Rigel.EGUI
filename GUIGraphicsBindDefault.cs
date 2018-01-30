@@ -409,8 +409,20 @@ namespace Rigel.GUI
                 if (textBuffer != null && layer.BufferText.IsBufferChanged)
                 {
                     //Sync buffer Data
-                    m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData(),layer.BufferText.SizeInByte);
+                    if(layer.BufferText.SizeInByte > textBuffer.SizeInByte)
+                    {
+                        textBuffer.Dispose();
+                        bufferdesc.SizeInByte = layer.BufferText.SizeInByte;
+                        m_graphics.Device.CreateBuffer(bufferdesc, layer.BufferText.GetData(), textBuffer);
+
+                        Console.WriteLine("resize text buffer");
+                    }
+                    else
+                    {
+                        m_graphics.Context.UpdateSubReources(textBuffer, 0, layer.BufferText.GetData(), layer.BufferText.SizeInByte);
+                    }
                     layer.BufferText.IsBufferChanged = false;
+
 
                     maxVertCount = Mathf.Max(maxVertCount, layer.BufferText.Count);
                 }

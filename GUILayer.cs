@@ -113,8 +113,6 @@ namespace Rigel.GUI
                     m_lastFocusedRegion = m_focusedRegion;
                     m_focusedRegion.IsFocused = false;
                     m_focusedRegion = null;
-
-                    Console.WriteLine("clear focus");
                 }
             }
 
@@ -126,8 +124,6 @@ namespace Rigel.GUI
 
                     if (region.CheckFocused(e))
                     {
-                        Console.WriteLine("get focus");
-
                         m_syncAll = true;
                         region.IsFocused = true;
                         m_focusedRegion = region;
@@ -181,8 +177,6 @@ namespace Rigel.GUI
 
                 m_lastFocusedRegion = null;
                 m_syncAll = false;
-
-                Console.WriteLine("sync all");
             }
             else
             {

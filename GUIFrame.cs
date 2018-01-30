@@ -15,6 +15,7 @@ namespace Rigel.GUI
 
         public Vector4 RootRect;
 
+
         public void Reset(GUIForm form)
         {
             AreaStack.Clear();

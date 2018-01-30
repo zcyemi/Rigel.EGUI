@@ -23,7 +23,7 @@ namespace Rigel.GUI
         private static readonly float DepthStep = 0.0001f;
 
 
-        internal static GUIFrame m_frame = new GUIFrame();
+        internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
 
         internal static GUIAreaInfo CurArea;
@@ -32,6 +32,10 @@ namespace Rigel.GUI
         internal static IFontInfo Font { get; private set; }
 
         public static RigelGUIEvent Event { get; private set; }
+
+        //ObjPool
+        
+
         
 
 

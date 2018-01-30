@@ -51,12 +51,14 @@
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="GUIDragStatecs.cs" />
     <Compile Include="GUIForm.cs" />
     <Compile Include="GUIFrame.cs" />
     <Compile Include="GUIGraphicsBindDefault.cs" />
     <Compile Include="GUIInternal.cs" />
     <Compile Include="GUILayer.cs" />
     <Compile Include="GUI.Layout.cs" />
+    <Compile Include="GUIObj.cs" />
     <Compile Include="GUIOption.cs" />
     <Compile Include="GUIRegion.cs" />
     <Compile Include="GUIStyle.cs" />
