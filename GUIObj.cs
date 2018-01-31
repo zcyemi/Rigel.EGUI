@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI
 {
-    internal enum GUIObjType : byte
+    public enum GUIObjType : byte
     {
         ScrollBar = 1,
         DragRegion = 2,

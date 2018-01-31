@@ -208,5 +208,64 @@ namespace Rigel.GUI
             AutoCaculateOffset(textWidth, LineHeight);
         }
 
+
+        //////////////////
+        //Components
+        //1.TabView
+        //2.ScrollView
+        //3.TextField
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="tabnames"></param>
+        /// <param name="draw"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static int TabView(int index, List<string> tabnames, Action<int> draw, params GUIOption[] options)
+        {
+            var sizeRemain = GUI.CurLayout.RectSize;
+            var rect = new Vector4(GUI.CurLayout.Offset, sizeRemain);
+
+            if (options != null)
+            {
+                GUIOptionHeight optHeight;
+                options.GetOption(out optHeight);
+                if(optHeight != null)
+                {
+                    rect.w = optHeight.Value;
+                }
+            }
+            var rectab = GUI.GetAbsoluteRect(rect);
+            var tabview = GUI.GetObjTabView(rectab);
+
+            int ret = tabview.Draw(rect, index, tabnames, draw);
+            AutoCaculateOffset(rect.z, rect.w);
+
+            return ret;
+        }
+        public static int TabViewVertical(int index, List<string> tabnames, Action<int> draw,int tabWidth, params GUIOption[] options)
+        {
+            var sizeRemain = GUI.CurLayout.RectSize;
+            var rect = new Vector4(GUI.CurLayout.Offset, sizeRemain);
+
+            if (options != null)
+            {
+
+            }
+            var rectab = GUI.GetAbsoluteRect(rect);
+            var tabview = GUI.GetObjTabView(rectab,(tv)=> { tv.SetVerticalMode(tabWidth); });
+
+            int ret = tabview.Draw(rect, index, tabnames, draw);
+            AutoCaculateOffset(rect.z, rect.w);
+
+            return ret;
+        }
+
+
+
+
+
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+
 
 namespace Rigel.GUI
 {
@@ -76,7 +78,6 @@ namespace Rigel.GUI
             return true;
         }
 
-
         public static Vector4 Padding(this Vector4 v, float offset)
         {
             v.X += offset;
@@ -108,7 +109,6 @@ namespace Rigel.GUI
             v.y = (int)v.y;
             return v;
         }
-
         public static Vector3 Truncate(this Vector3 v)
         {
             v.x = (int)v.x;
@@ -116,7 +116,6 @@ namespace Rigel.GUI
             v.z = (int)v.z;
             return v;
         }
-
 
         public static Vector4 CenterPos(this Vector4 v, Vector2 size)
         {
@@ -144,6 +143,24 @@ namespace Rigel.GUI
             v.Z = szx;
             v.W = szy;
             return v;
+        }
+
+        public static long GetHash(Vector4 rect, GUIObjType type)
+        {
+            MemoryStream ms = new MemoryStream(20);
+            BinaryWriter bw = new BinaryWriter(ms);
+            bw.Write(rect.X);
+            bw.Write(rect.Y);
+            bw.Write(rect.Z);
+            bw.Write(rect.W);
+            bw.Write((byte)type);
+
+            long hash = Rigel.Algorithms.HashFunction.RSHash(ms.ToArray());
+
+            bw.Close();
+            ms.Dispose();
+
+            return hash;
         }
 
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Rigel.GUI.Collections;
+using Rigel.GUI.Component;
 
 namespace Rigel.GUI
 {
@@ -36,9 +37,23 @@ namespace Rigel.GUI
         public static RigelGUIEvent Event { get; private set; }
 
         //ObjPool
-        
+        [TODO("Refactoring","Move to form for multipal form draw")]
+        private static GUIObjPool<GUIObjTabView> s_poolTabView = new GUIObjPool<GUIObjTabView>();
 
-        
+
+        internal static GUIObjTabView GetObjTabView(Vector4 rect, Action<GUIObjTabView> createFunction = null) 
+        {
+            return s_poolTabView.Get(GUIUtility.GetHash(rect, GUIObjType.TabView), createFunction);
+        }
+
+        /////////////
+        //Utilities
+        public static Vector4 GetAbsoluteRect(Vector4 rect)
+        {
+            return rect.Move(GUI.CurArea.Rect.Pos());
+        }
+
+
 
 
         internal static void StartFrame(GUIForm form,RigelGUIEvent e)
@@ -51,6 +66,8 @@ namespace Rigel.GUI
             m_frame.Reset(m_form);
 
             Font = m_form.GraphicsBind.FontInfo;
+
+            s_poolTabView.OnFrame();
         }
         internal static void EndFrame(GUIForm form)
         {
@@ -94,6 +111,8 @@ namespace Rigel.GUI
                 CurArea = Frame.AreaStack.Peek();
             }
         }
+
+        
 
         internal static void StartGUIRegion(GUIRegion region)
         {

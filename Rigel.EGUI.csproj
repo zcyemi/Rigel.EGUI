@@ -48,6 +48,7 @@
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Collections\GUILayoutInfo.cs" />
     <Compile Include="Component\GUIDemoWindow.cs" />
+    <Compile Include="Component\GUIObjTabView.cs" />
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />

@@ -18,6 +18,7 @@ namespace Rigel.GUI.Component
             m_sampleFunctions.Add(SampleText);
             m_sampleFunctions.Add(SampleButton);
             m_sampleFunctions.Add(SampleWindow);
+            m_sampleFunctions.Add(SampleTabView);
         }
 
         private void SampleLayout(RigelGUIEvent e)
@@ -140,6 +141,21 @@ namespace Rigel.GUI.Component
                 GUILayout.Button("Right", GUIOption.Grid(0.25f), GUIOption.AlignRight);
             }
             GUILayout.EndHorizontal();
+        }
+
+        private List<string> m_sampleTabViewList = new List<string>() { "Tab1", "Tab2", "Tab3" };
+        private int m_sampleTabViewIndex = 0;
+        private void SampleTabView(RigelGUIEvent e)
+        {
+            m_sampleTabViewIndex = GUILayout.TabView(m_sampleTabViewIndex, m_sampleTabViewList, (i) =>
+            {
+                GUILayout.Button("Btn in tabview : " + i);
+            },GUIOption.Height(100));
+
+            m_sampleTabViewIndex = GUILayout.TabViewVertical(m_sampleTabViewIndex, m_sampleTabViewList, (i) =>
+            {
+                GUILayout.Label("label in vertical tabview : " + i,Vector4.one);
+            }, 50);
         }
 
 
