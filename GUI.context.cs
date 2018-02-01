@@ -39,11 +39,17 @@ namespace Rigel.GUI
         //ObjPool
         [TODO("Refactoring","Move to form for multipal form draw")]
         private static GUIObjPool<GUIObjTabView> s_poolTabView = new GUIObjPool<GUIObjTabView>();
+        private static GUIObjPool<GUIObjScrollView> s_poolScrollView = new GUIObjPool<GUIObjScrollView>();
 
 
         internal static GUIObjTabView GetObjTabView(Vector4 rect, Action<GUIObjTabView> createFunction = null) 
         {
             return s_poolTabView.Get(GUIUtility.GetHash(rect, GUIObjType.TabView), createFunction);
+        }
+
+        internal static GUIObjScrollView GetObjScrollView(Vector4 rect,Action<GUIObjScrollView> createFuction = null)
+        {
+            return s_poolScrollView.Get(GUIUtility.GetHash(rect, GUIObjType.ScrollView), createFuction);
         }
 
         /////////////
@@ -93,7 +99,7 @@ namespace Rigel.GUI
             Frame.AreaStack.Push(CurArea);
             Frame.LayoutStack.Push(CurLayout);
 
-            CurLayout.RectSize = CurArea.Rect.Size() - CurLayout.Offset;
+            CurLayout.RemainSize = CurArea.Rect.Size() - CurLayout.Offset;
             CurLayout.Reset();
         }
 

@@ -20,7 +20,8 @@ namespace Rigel.GUI.Collections
         /// <summary>
         /// remain area size from offset point.
         /// </summary>
-        public Vector2 RectSize;
+        public Vector2 RemainSize;
+
 
         public void Reset()
         {

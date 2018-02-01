@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Rigel.GUI.Collections;
+using Rigel.GUI.Component;
 
 namespace Rigel.GUI
 {
@@ -14,14 +15,14 @@ namespace Rigel.GUI
         private static GUIFrame Frame { get { return GUI.m_frame; } }
 
         private static int LineHeight = 23;
-        private static int LineOffset = 2;
+        //private static int LineOffset = 2;
 
         public static void BeginHorizontal()
         {
             Frame.LayoutStack.Push(GUI.CurLayout);
             GUI.CurLayout.AlignHorizontal = true;
             GUI.CurLayout.SizeMax = Vector3.zero;
-            GUI.CurLayout.RectSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
+            GUI.CurLayout.RemainSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
         }
 
         public static void EndHorizontal()
@@ -40,7 +41,7 @@ namespace Rigel.GUI
             Frame.LayoutStack.Push(GUI.CurLayout);
             GUI.CurLayout.AlignHorizontal = false;
             GUI.CurLayout.SizeMax = Vector3.zero;
-            GUI.CurLayout.RectSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
+            GUI.CurLayout.RemainSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
         }
         public static void EndVertical()
         {
@@ -119,7 +120,7 @@ namespace Rigel.GUI
         /// <returns></returns>
         public static bool Button(string label,params GUIOption[] options)
         {
-            float w = GUI.CurLayout.RectSize.x;
+            float w = GUI.CurLayout.RemainSize.x;
             float h = LineHeight;
 
 
@@ -201,7 +202,7 @@ namespace Rigel.GUI
         public static void Label(string content,Vector4 color)
         {
             var offset = new Vector2(2,(int) (LineHeight - GUI.Font.FontPixelSize) / 2);
-            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RectSize), content,color, offset);
+            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize), content,color, offset);
 
             int textWidth = GUI.Font.GetTextWidth(content);
 
@@ -225,7 +226,7 @@ namespace Rigel.GUI
         /// <returns></returns>
         public static int TabView(int index, List<string> tabnames, Action<int> draw, params GUIOption[] options)
         {
-            var sizeRemain = GUI.CurLayout.RectSize;
+            var sizeRemain = GUI.CurLayout.RemainSize;
             var rect = new Vector4(GUI.CurLayout.Offset, sizeRemain);
 
             if (options != null)
@@ -247,7 +248,7 @@ namespace Rigel.GUI
         }
         public static int TabViewVertical(int index, List<string> tabnames, Action<int> draw,int tabWidth, params GUIOption[] options)
         {
-            var sizeRemain = GUI.CurLayout.RectSize;
+            var sizeRemain = GUI.CurLayout.RemainSize;
             var rect = new Vector4(GUI.CurLayout.Offset, sizeRemain);
 
             if (options != null)
@@ -263,7 +264,31 @@ namespace Rigel.GUI
             return ret;
         }
 
+        public static Vector2 BeginScrollView(Vector2 pos, GUIScrollType scrolltype = GUIScrollType.Vertical, params GUIOption[] options)
+        {
 
+            {
+                var sizeremian = GUI.CurLayout.RemainSize;
+
+
+                if (options != null)
+                {
+                    GUIOptionHeight optHeight;
+                    options.GetOption(out optHeight);
+
+                }
+
+                var rect = new Vector4(GUI.CurLayout.Offset, sizeremian);
+                var rectab = GUI.GetAbsoluteRect(rect);
+
+                var scrollview = GUI.GetObjScrollView(rectab);
+
+                GUI.BeginArea(rect);
+
+                return scrollview.Draw(rectab,pos,scrolltype);
+            }
+
+        }
 
 
 

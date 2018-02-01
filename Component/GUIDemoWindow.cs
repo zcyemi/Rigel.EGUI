@@ -158,6 +158,11 @@ namespace Rigel.GUI.Component
             }, 50);
         }
 
+        private void SampleScrollView(RigelGUIEvent e)
+        {
+
+        }
+
 
         private GUIWindow m_sampleWindow = null;
         private void SampleWindow(RigelGUIEvent e)
@@ -205,7 +210,7 @@ namespace Rigel.GUI.Component
             }
             GUILayout.EndHorizontal();
 
-            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RectSize));
+            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize));
             m_sampleFunctions[m_sampleIndex](e);
             GUI.EndArea();
         }
