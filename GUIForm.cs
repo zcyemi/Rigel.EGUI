@@ -38,6 +38,7 @@ namespace Rigel.GUI
         private GUIDelayAction startFrameAction = new GUIDelayAction();
         private GUIDelayAction endFrameAction = new GUIDelayAction();
 
+
         protected virtual void Init()
         {
 
@@ -46,7 +47,6 @@ namespace Rigel.GUI
 
         public void Update()
         {
-
             m_graphicsBind.Update();
 
             //Sync data
@@ -54,7 +54,6 @@ namespace Rigel.GUI
             {
                 m_graphicsBind.SyncLayerBuffer(layer);
             }
-            
         }
 
         public void Destroy()
@@ -96,6 +95,7 @@ namespace Rigel.GUI
             foreach (var layer in m_layers)
             {
                 layer.Update(e);
+
             }
 
             endFrameAction.Invoke();

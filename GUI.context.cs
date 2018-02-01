@@ -59,9 +59,6 @@ namespace Rigel.GUI
             return rect.Move(GUI.CurArea.Rect.Pos());
         }
 
-
-
-
         internal static void StartFrame(GUIForm form,RigelGUIEvent e)
         {
             if (m_form != null) throw new Exception();
@@ -74,13 +71,15 @@ namespace Rigel.GUI
             Font = m_form.GraphicsBind.FontInfo;
 
             s_poolTabView.OnFrame();
+            s_poolScrollView.OnFrame();
         }
-        internal static void EndFrame(GUIForm form)
+        internal static bool EndFrame(GUIForm form)
         {
             if (m_form != form) throw new Exception();
             m_form = null;
             Font = null;
 
+            bool eventUsed = Event.Used;
             Event = null;
 
             if (!m_frame.EndFrame())
@@ -88,6 +87,8 @@ namespace Rigel.GUI
                 throw new Exception();
             }
             m_frame = null;
+
+            return eventUsed;
         }
 
         public static void BeginArea(Vector4 rect)
@@ -96,6 +97,7 @@ namespace Rigel.GUI
             {
                 Rect = rect.Move(CurArea.Rect.Pos()).Truncate(),
             };
+            CurArea.ContentMax = CurArea.Rect.Size();
             Frame.AreaStack.Push(CurArea);
             Frame.LayoutStack.Push(CurLayout);
 

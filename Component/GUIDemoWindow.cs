@@ -19,6 +19,7 @@ namespace Rigel.GUI.Component
             m_sampleFunctions.Add(SampleButton);
             m_sampleFunctions.Add(SampleWindow);
             m_sampleFunctions.Add(SampleTabView);
+            m_sampleFunctions.Add(SampleScrollView);
         }
 
         private void SampleLayout(RigelGUIEvent e)
@@ -158,8 +159,20 @@ namespace Rigel.GUI.Component
             }, 50);
         }
 
+        private Vector2 m_sampleScrollPos = Vector2.zero;
+
+
         private void SampleScrollView(RigelGUIEvent e)
         {
+
+            m_sampleScrollPos = GUILayout.BeginScrollView(m_sampleScrollPos);
+
+            for(int i = 0; i < 20; i++)
+            {
+                GUILayout.Label("Text" + i,Vector4.one);
+            }
+
+            GUILayout.EndScrollView();
 
         }
 

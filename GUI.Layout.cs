@@ -56,9 +56,18 @@ namespace Rigel.GUI
         {
             GUI.CurLayout.Offset.y += offset;
         }
+        public static void Space(float offset)
+        {
+            GUI.CurLayout.Offset.y += (int)offset;
+        }
+
         public static void Indent(int offset)
         {
             GUI.CurLayout.Offset.x += offset;
+        }
+        public static void Indent(float offset)
+        {
+            GUI.CurLayout.Offset.x += (int)offset;
         }
 
         internal static void AutoCaculateOffsetWidth(float w)
@@ -101,6 +110,10 @@ namespace Rigel.GUI
 
             layout.SizeMax.y = Mathf.Max(h, layout.SizeMax.y);
             layout.SizeMax.x = Mathf.Max(w, layout.SizeMax.x);
+
+            //ContentMax
+            GUI.CurArea.ContentMax.Y = Mathf.Max(layout.Offset.y, GUI.CurArea.ContentMax.y);
+            GUI.CurArea.ContentMax.x = Mathf.Max(layout.Offset.x, GUI.CurArea.ContentMax.x);
 
             GUI.CurLayout = layout;
         }
@@ -266,16 +279,13 @@ namespace Rigel.GUI
 
         public static Vector2 BeginScrollView(Vector2 pos, GUIScrollType scrolltype = GUIScrollType.Vertical, params GUIOption[] options)
         {
-
             {
                 var sizeremian = GUI.CurLayout.RemainSize;
-
 
                 if (options != null)
                 {
                     GUIOptionHeight optHeight;
                     options.GetOption(out optHeight);
-
                 }
 
                 var rect = new Vector4(GUI.CurLayout.Offset, sizeremian);
@@ -288,6 +298,15 @@ namespace Rigel.GUI
                 return scrollview.Draw(rectab,pos,scrolltype);
             }
 
+        }
+
+        public static void EndScrollView()
+        {
+            var rect = GUI.CurArea.Rect;
+            var sv = GUI.GetObjScrollView(rect);
+            sv.LateDraw();
+            GUI.EndArea();
+            GUILayout.AutoCaculateOffset(rect.Z, rect.W);
         }
 
 
