@@ -16,11 +16,15 @@ namespace Rigel.GUI
         /// <param name="rect"></param>
         /// <param name="group"></param>
         /// <returns>**absolute rect**</returns>
-        internal static bool RectClip(ref Vector4 rect, Vector4 group)
+        internal static bool RectClip(ref Vector4 rect, Vector4 group, bool intersectChecked = false)
         {
             Vector2 rb = rect.Pos() + rect.Size();
-            if (rb.X < 0 || rb.Y < 0) return false;
-            if (rect.X > group.Z || rect.Y > group.W) return false;
+
+            if (!intersectChecked)
+            {
+                if (rb.X < 0 || rb.Y < 0) return false;
+                if (rect.X > group.Z || rect.Y > group.W) return false;
+            }
 
             rect.X = Mathf.Clamp(rect.X, 0, group.Z);
             rect.Y = Mathf.Clamp(rect.Y, 0, group.W);
@@ -35,6 +39,13 @@ namespace Rigel.GUI
 
             if (rect.Z < 1.0f || rect.W < 1.0f) return false;
             return true;
+        }
+
+        internal static bool RectClipAbosolute(ref Vector4 recta,Vector4 group, bool intersectChecked = false)
+        {
+            recta.x -= group.x;
+            recta.y -= group.y;
+            return RectClip(ref recta, group, intersectChecked);
         }
 
         internal static bool RectClip(ref Vector4 rect, Vector4 group, out Vector4 clipoffset)
@@ -77,6 +88,16 @@ namespace Rigel.GUI
             if (point.Y < rect.Y || point.Y > rect.Y + rect.W) return false;
             return true;
         }
+
+        internal static bool RectIntersectCheck(Vector4 rect, Vector4 rectrelative)
+        {
+            if (rectrelative.x >= rect.z) return false;
+            if (rectrelative.y >= rect.w) return false;
+            if (rectrelative.x  <= -rectrelative.z) return false;
+            if (rectrelative.y  <= -rectrelative.w) return false;
+            return true;
+        }
+
 
         public static Vector4 Padding(this Vector4 v, float offset)
         {

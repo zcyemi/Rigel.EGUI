@@ -26,6 +26,15 @@ namespace Rigel.GUI
 
         public static void RectAbsolute(Vector4 rect,Vector4 color)
         {
+            if (GUI.CurArea.Clip)
+            {
+                //RectIntersectCheck
+                var arearect = GUI.CurArea.Rect;
+                if(!GUIUtility.RectClipAbosolute(ref rect, GUI.CurArea.Rect))
+                {
+                    return;
+                }
+            }
             BufRect.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
             BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, Vector2.zero);
             BufRect.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, Vector2.zero);
@@ -88,6 +97,10 @@ namespace Rigel.GUI
 
         public static void Text(Vector4 rect,String text,Vector4 color,Vector2 pos,bool clip = true)
         {
+            if (GUI.CurArea.Clip) {
+                var intersect = GUIUtility.RectIntersectCheck(GUI.CurArea.Rect, rect);
+                if (!intersect) return;
+            }
             rect = rect.Move(CurArea.Rect);
             TextAbsolute(rect, text, color, pos, clip);
         }

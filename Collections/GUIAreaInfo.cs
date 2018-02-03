@@ -13,5 +13,6 @@ namespace Rigel.GUI.Collections
         /// Max rectilinear
         /// </summary>
         public Vector2 ContentMax;
+        public bool Clip;
     }
 }

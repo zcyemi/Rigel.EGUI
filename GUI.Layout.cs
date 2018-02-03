@@ -212,10 +212,14 @@ namespace Rigel.GUI
             return clicked;
         }
 
+        public static void Label(string content)
+        {
+            Label(content, RigelColor.White);
+        }
         public static void Label(string content,Vector4 color)
         {
             var offset = new Vector2(2,(int) (LineHeight - GUI.Font.FontPixelSize) / 2);
-            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize), content,color, offset);
+            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize.x,LineHeight), content,color, offset);
 
             int textWidth = GUI.Font.GetTextWidth(content);
 
@@ -293,7 +297,7 @@ namespace Rigel.GUI
 
                 var scrollview = GUI.GetObjScrollView(rectab);
 
-                GUI.BeginArea(rect);
+                GUI.BeginArea(rect,true);
 
                 return scrollview.Draw(rectab,pos,scrolltype);
             }

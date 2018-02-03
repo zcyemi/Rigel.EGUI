@@ -91,11 +91,12 @@ namespace Rigel.GUI
             return eventUsed;
         }
 
-        public static void BeginArea(Vector4 rect)
+        public static void BeginArea(Vector4 rect,bool clip = false)
         {
             CurArea = new GUIAreaInfo()
             {
                 Rect = rect.Move(CurArea.Rect.Pos()).Truncate(),
+                Clip = clip
             };
             CurArea.ContentMax = CurArea.Rect.Size();
             Frame.AreaStack.Push(CurArea);

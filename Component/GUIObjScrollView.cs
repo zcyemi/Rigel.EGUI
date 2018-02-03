@@ -94,7 +94,7 @@ namespace Rigel.GUI.Component
                     m_scrollPos.Y = Mathf.Clamp(m_scrollPos.Y, scrollVmax, 0);
                     thumbActive = true;
                 }
-                GUILayout.Rect(rectSBV, thumbActive ? GUIStyle.Current.ColorActive : GUIStyle.Current.ColorBackground);
+                //GUILayout.Rect(rectSBV, thumbActive ? GUIStyle.Current.ColorActive : GUIStyle.Current.ColorBackground);
 
                 if (containerContains)
                 {
