@@ -17,94 +17,126 @@ namespace Rigel.GUI.Component
     {
 
         private Vector4 m_rectAbsolute;
+
+
         private bool m_scrollInit = false;
         private Vector2 m_scrollPos;
         public GUIScrollType m_scrollType;
 
         private GUIDragState m_scrollVertical = new GUIDragState();
 
+        private Vector4 m_rectBarV;
+        private Vector4 m_rectBarH;
+
+        private Vector2 m_maxscroll;
+
+
+        private bool m_scrollV;
+        private bool m_scrollH;
+
         public override void Reset()
         {
             Checked = false;
+            m_scrollInit = false;
         }
 
-        public Vector2 Draw(Vector4 rectab,Vector2 pos,GUIScrollType scrolltype)
+        public void Draw(Vector4 rect, Vector4 rectab, Vector2 pos, GUIScrollType scrolltype)
         {
+            GUI.BeginArea(rect, true);
+
             m_rectAbsolute = rectab;
+
             if (!m_scrollInit)
             {
-                Console.WriteLine("new");
+                //Console.WriteLine("new");
 
                 m_scrollPos = pos;
                 m_scrollType = scrolltype;
                 m_scrollInit = true;
             }
 
-            if ((m_scrollType & GUIScrollType.Vertical) > 0) GUILayout.Space(m_scrollPos.y);
-            if ((m_scrollType & GUIScrollType.Horizontal) > 0) GUILayout.Indent(m_scrollPos.x);
-
-            return pos;
+            if ((m_scrollType & GUIScrollType.Vertical) > 0)
+            {
+                GUILayout.Space(m_scrollPos.y);
+                m_scrollV = true;
+            }
+            if ((m_scrollType & GUIScrollType.Horizontal) > 0)
+            {
+                GUILayout.Indent(m_scrollPos.x);
+                m_scrollH = true;
+            }
         }
 
-        public void LateDraw()
+        public Vector2 LateDraw()
         {
-            var e = GUI.Event;
-            var curoffset = GUI.CurArea.ContentMax;
 
-            bool overflowH = (curoffset.x - m_scrollPos.x) > m_rectAbsolute.z;
-            bool overflowV = (curoffset.y - m_scrollPos.y) > m_rectAbsolute.w;
+            Vector2 content = GUI.CurArea.ContentMax - m_scrollPos;
+            m_maxscroll = m_rectAbsolute.Size() - content;
 
-            overflowV &= (m_scrollType & GUIScrollType.Vertical) > 0;
-            overflowH &= (m_scrollType & GUIScrollType.Horizontal) > 0;
+            bool showScrollBarV = false;
+            bool wheelScrollBarV = false;
 
-            float contentV = (curoffset.Y - m_scrollPos.Y);
-            float scrollVmax = m_rectAbsolute.W - contentV;
-
-            float ch = m_rectAbsolute.W / contentV;
-            float chinv = 1.0f / ch;
-
-            bool containerContains = GUIUtility.RectContainsCheck(m_rectAbsolute, e.Pointer);
-
-            bool scrollall = overflowV && overflowH;
-
-            if (overflowV)
+            if (content.y > m_rectAbsolute.w && m_scrollV)
             {
-                var rectSBV = new Vector4(m_rectAbsolute.Z - 10f, 0, 10, m_rectAbsolute.W);
+                m_rectBarV = new Vector4(m_rectAbsolute.z - 6, 0, 6, m_rectAbsolute.w);
+                GUI.Rect(m_rectBarV, GUIStyle.Current.ColorBackground);
 
-                bool containsThumb = false;
+                float ysize = m_rectAbsolute.w / content.y * m_rectAbsolute.w;
+                float yoff = -m_scrollPos.y / content.y * m_rectAbsolute.w;
 
-                rectSBV.W *= ch;
-                rectSBV.Y = (-m_scrollPos.Y) / contentV * m_rectAbsolute.W;
+                var thumbRect = new Vector4(m_rectBarV.x, yoff, 6, ysize);
+                var scrollBarVdrag = false;
 
                 if (!GUI.Event.Used)
                 {
-                    if (GUIUtility.RectContainsCheck(GUI.GetAbsoluteRect(rectSBV), GUI.Event.Pointer))
+                    if (GUI.Event.EventType == RigelGUIEventType.MouseWheel)
                     {
-                        containsThumb = true;
+                        m_scrollPos.y += 0.2f * GUI.Event.Delta;
+                        if (m_scrollPos.y > 0) m_scrollPos.y = 0;
+                        if (m_scrollPos.y < m_maxscroll.y) m_scrollPos.y = m_maxscroll.y;
+
+                        GUI.Event.Use();
+                        wheelScrollBarV = true;
+                    }
+                    else
+                    {
+
+                        var thumbRectA = GUI.GetAbsoluteRect(thumbRect);
+
+                        var contains = GUIUtility.RectContainsCheck(thumbRectA, GUI.Event.Pointer);
+                        if (contains) scrollBarVdrag = true;
+
+                        if (m_scrollVertical.OnDrag(contains))
+                        {
+                            m_scrollPos.y -= m_scrollVertical.OffSet.y;
+                            if (m_scrollPos.y > 0) m_scrollPos.y = 0;
+                            var maxscroll = m_rectAbsolute.w - content.y;
+                            if (m_scrollPos.y < (maxscroll)) m_scrollPos.y = maxscroll;
+
+                            scrollBarVdrag = true;
+                        }
                     }
                 }
 
-                bool thumbActive = containsThumb;
 
 
-                if (m_scrollVertical.OnDrag(containsThumb))
-                {
-                    m_scrollPos.Y -= (int)(GUI.Event.DragOffset.Y * chinv);
-                    m_scrollPos.Y = Mathf.Clamp(m_scrollPos.Y, scrollVmax, 0);
-                    thumbActive = true;
-                }
-                //GUILayout.Rect(rectSBV, thumbActive ? GUIStyle.Current.ColorActive : GUIStyle.Current.ColorBackground);
+                GUI.Rect(thumbRect, scrollBarVdrag ? GUIStyle.Current.ColorActiveD : GUIStyle.Current.ColorBackgroundL2);
 
-                if (containerContains)
-                {
-                    if (!e.Used && e.EventType == RigelGUIEventType.MouseWheel)
-                    {
-                        m_scrollPos.Y += (int)(chinv * 12 * (e.Delta > 0 ? 1 : -1));
-                        m_scrollPos.Y = Mathf.Clamp(m_scrollPos.Y, scrollVmax, 0);
-                        e.Use();
-                    }
-                }
+                showScrollBarV = true;
             }
+
+            if (content.x > m_rectAbsolute.x && m_scrollH)
+            {
+                m_rectBarH = new Vector4(0, m_rectAbsolute.w - 6, showScrollBarV ? m_rectAbsolute.z - 6 : m_rectAbsolute.z, 6);
+                GUI.Rect(m_rectBarV, GUIStyle.Current.ColorBackgroundL2);
+            }
+
+
+
+            GUI.EndArea();
+
+            return m_scrollPos;
+
         }
     }
 }

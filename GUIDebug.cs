@@ -13,6 +13,6 @@ namespace Rigel.GUI
     public static class GUIDebug
     {
         public static bool DebugTextClip = false;
-        
+        public static bool DebugScrollView = true;
     }
 }

@@ -14,7 +14,7 @@ namespace Rigel.GUI
 
         private static GUIFrame Frame { get { return GUI.m_frame; } }
 
-        private static int LineHeight = 23;
+        internal static int LineHeight = 23;
         //private static int LineOffset = 2;
 
         public static void BeginHorizontal()
@@ -281,7 +281,7 @@ namespace Rigel.GUI
             return ret;
         }
 
-        public static Vector2 BeginScrollView(Vector2 pos, GUIScrollType scrolltype = GUIScrollType.Vertical, params GUIOption[] options)
+        public static void BeginScrollView(Vector2 pos, GUIScrollType scrolltype = GUIScrollType.Vertical, params GUIOption[] options)
         {
             {
                 var sizeremian = GUI.CurLayout.RemainSize;
@@ -297,20 +297,20 @@ namespace Rigel.GUI
 
                 var scrollview = GUI.GetObjScrollView(rectab);
 
-                GUI.BeginArea(rect,true);
-
-                return scrollview.Draw(rectab,pos,scrolltype);
+                scrollview.Draw(rect,rectab,pos,scrolltype);
             }
 
         }
 
-        public static void EndScrollView()
+        public static Vector2 EndScrollView()
         {
             var rect = GUI.CurArea.Rect;
             var sv = GUI.GetObjScrollView(rect);
-            sv.LateDraw();
-            GUI.EndArea();
+
+            var pos = sv.LateDraw();
+            
             GUILayout.AutoCaculateOffset(rect.Z, rect.W);
+            return pos;
         }
 
 
