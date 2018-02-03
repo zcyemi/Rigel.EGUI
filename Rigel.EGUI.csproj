@@ -53,6 +53,7 @@
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
     <Compile Include="GUIDragStatecs.cs" />
     <Compile Include="GUIForm.cs" />

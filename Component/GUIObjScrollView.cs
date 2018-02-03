@@ -30,7 +30,6 @@ namespace Rigel.GUI.Component
 
         public Vector2 Draw(Vector4 rectab,Vector2 pos,GUIScrollType scrolltype)
         {
-
             m_rectAbsolute = rectab;
             if (!m_scrollInit)
             {

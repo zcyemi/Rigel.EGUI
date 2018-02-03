@@ -76,10 +76,53 @@ namespace Rigel.GUI
             if (clip)
             {
                 //TODO implement clip
-                BufText.AddVertices(new Vector4(charrect.X, charrect.Y, DepthValue, 1), color, glyph.UV[0]);
-                BufText.AddVertices(new Vector4(x2, charrect.Y, DepthValue, 1), color, glyph.UV[3]);
-                BufText.AddVertices(new Vector4(x2, y2, DepthValue, 1), color, glyph.UV[2]);
-                BufText.AddVertices(new Vector4(charrect.X, y2, DepthValue, 1), color, glyph.UV[1]);
+                float rectx2 = (recta.x + recta.z);
+                float recty2 = (recta.y + recta.w);
+
+                Vector2 uv0 = glyph.UV[0];
+                Vector2 uv3 = glyph.UV[3];
+                Vector2 uv2 = glyph.UV[2];
+                Vector2 uv1 = glyph.UV[1];
+
+
+                if(x2 > rectx2)
+                {
+                    var xoff =(x2 - rectx2) * GUI.Font.UVUnit;
+                    uv3.x -= xoff;
+                    uv2.x -= xoff;
+
+                    x2 = rectx2;
+                }
+                if(y2 > recty2)
+                {
+                    var yoff = (y2 - recty2) * GUI.Font.UVUnit;
+                    uv1.y -= yoff;
+                    uv2.y -= yoff;
+
+                    y2 = recty2;
+                }
+
+                if(charrect.x < recta.x)
+                {
+                    var xoff = recta.x - charrect.x;
+                    uv0.x += xoff;
+                    uv1.x += xoff;
+
+                    charrect.x = recta.x;
+                }
+                if(charrect.y < recta.y)
+                {
+                    var yoff = recta.y - charrect.y;
+                    uv0.y += yoff;
+                    uv3.y += yoff;
+
+                    charrect.y = recta.y;
+                }
+
+                BufText.AddVertices(new Vector4(charrect.X, charrect.Y, DepthValue, 1), color, uv0);
+                BufText.AddVertices(new Vector4(x2, charrect.Y, DepthValue, 1), color, uv3);
+                BufText.AddVertices(new Vector4(x2, y2, DepthValue, 1), color, uv2);
+                BufText.AddVertices(new Vector4(charrect.X, y2, DepthValue, 1), color, uv1);
             }
             else
             {
@@ -115,16 +158,48 @@ namespace Rigel.GUI
         /// <param name="noclip"></param>
         public static void TextAbsolute(Vector4 recta,String text,Vector4 color,Vector2 pos,bool clip = true)
         {
+            if (GUI.CurArea.Clip)
+            {
+                Vector4 areaRect = GUI.CurArea.Rect;
+
+                Vector4 rect = recta;
+                rect.x -= areaRect.x;
+                rect.y -= areaRect.y;
+
+                if(rect.x < 0)
+                {
+                    pos.x += rect.x;
+                    rect.x = 0;
+                }
+                if(rect.z + rect.x > areaRect.z)
+                {
+                    rect.z = areaRect.z - rect.x;
+                }
+
+                if(rect.y < 0)
+                {
+                    pos.y += rect.y;
+                    rect.y = 0;
+                }
+                if(rect.w+ rect.y > areaRect.w)
+                {
+                    rect.w = areaRect.w - rect.y;
+                }
+
+                recta = rect.Move(areaRect.Pos());
+            }
 
             Vector2 startpos = pos;
             if (pos.y > recta.w) return;
             if (pos.x > recta.z) return;
 
             bool yclip = true;
-            if(pos.y > recta.y && pos.y + Font.FontPixelSize < recta.w)
+            if(pos.y >= 0 && pos.y + Font.FontPixelSize < recta.w)
             {
                 yclip = false;
             }
+
+            if (yclip && GUIDebug.DebugTextClip) color = RigelColor.Green;
 
             foreach(var c in text)
             {
@@ -147,12 +222,13 @@ namespace Rigel.GUI
 
                 if (clip)
                 {
-                    if (charendpos < recta.z && !yclip)
+                    if (startpos.x >=0 && charendpos < recta.z && !yclip)
                     {
                         startpos.x += CharAbsolute(recta, c, color, startpos, false);
                     }
                     else
                     {
+                        if (GUIDebug.DebugTextClip) color = RigelColor.Red;
                         startpos.x += CharAbsolute(recta, c, color, startpos, true);
                     }
                 }

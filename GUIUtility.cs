@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using System.Runtime.CompilerServices;
+
 
 namespace Rigel.GUI
 {
@@ -48,14 +50,17 @@ namespace Rigel.GUI
             return RectClip(ref recta, group, intersectChecked);
         }
 
-        internal static bool RectClip(ref Vector4 rect, Vector4 group, out Vector4 clipoffset)
+        internal static bool RectClip(ref Vector4 rect, Vector4 group, out Vector4 clipoffset,bool intersectChecked = false)
         {
             clipoffset = Vector4.Zero;
             var rectori = rect;
 
             Vector2 rb = rect.Pos() + rect.Size();
-            if (rb.X < 0 || rb.Y < 0) return false;
-            if (rect.X > group.Z || rect.Y > group.W) return false;
+            if (!intersectChecked)
+            {
+                if (rb.X < 0 || rb.Y < 0) return false;
+                if (rect.X > group.Z || rect.Y > group.W) return false;
+            }
 
             rect.X = Mathf.Clamp(rect.X, 0, group.Z);
             rect.Y = Mathf.Clamp(rect.Y, 0, group.W);
@@ -98,7 +103,19 @@ namespace Rigel.GUI
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float rectx2(this Vector4 r)
+        {
+            return r.x + r.z;
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float recty2(this Vector4 r)
+        {
+            return r.y + r.w;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 Padding(this Vector4 v, float offset)
         {
             v.X += offset;
@@ -108,6 +125,7 @@ namespace Rigel.GUI
             return v;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 Move(this Vector4 v, Vector2 off)
         {
             v.X += off.X;
@@ -115,6 +133,7 @@ namespace Rigel.GUI
             return v;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 Truncate(this Vector4 v)
         {
             v.x = (int)v.x;
@@ -124,12 +143,16 @@ namespace Rigel.GUI
 
             return v;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 Truncate(this Vector2 v)
         {
             v.x = (int)v.x;
             v.y = (int)v.y;
             return v;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Truncate(this Vector3 v)
         {
             v.x = (int)v.x;
@@ -147,18 +170,22 @@ namespace Rigel.GUI
             return v;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 Move(this Vector4 v, float offx, float offy)
         {
             v.X += offx;
             v.Y += offy;
             return v;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 SetSize(this Vector4 v, Vector2 size)
         {
             v.Z += size.X;
             v.W += size.Y;
             return v;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 SetSize(this Vector4 v, float szx, float szy)
         {
             v.Z = szx;
