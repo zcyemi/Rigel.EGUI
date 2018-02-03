@@ -164,7 +164,7 @@ namespace Rigel.GUI.Component
 
         private void SampleScrollView(RigelGUIEvent e)
         {
-            GUILayout.BeginScrollView(m_sampleScrollPos);
+            GUILayout.BeginScrollView(m_sampleScrollPos, GUIScrollType.All);
             {
                 GUILayout.Label("Clip:" + GUI.CurArea.Clip);
                 GUILayout.Button("Button", GUIOption.Width(100));

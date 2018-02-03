@@ -94,13 +94,15 @@ namespace Rigel.GUI
 
         public static void AutoCaculateOffset(int w,int h)
         {
-
             var layout = GUI.CurLayout;
+
+            var offsetmax = layout.Offset;
+            offsetmax.x += w;
+            offsetmax.y += h;
 
             if (layout.AlignHorizontal)
             {
                 layout.Offset.x += w;
-                
             }
             else
             {
@@ -112,8 +114,8 @@ namespace Rigel.GUI
             layout.SizeMax.x = Mathf.Max(w, layout.SizeMax.x);
 
             //ContentMax
-            GUI.CurArea.ContentMax.Y = Mathf.Max(layout.Offset.y, GUI.CurArea.ContentMax.y);
-            GUI.CurArea.ContentMax.x = Mathf.Max(layout.Offset.x, GUI.CurArea.ContentMax.x);
+            GUI.CurArea.ContentMax.Y = Mathf.Max(offsetmax.y, GUI.CurArea.ContentMax.y);
+            GUI.CurArea.ContentMax.x = Mathf.Max(offsetmax.x, GUI.CurArea.ContentMax.x);
 
             GUI.CurLayout = layout;
         }

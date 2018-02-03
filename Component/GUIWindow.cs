@@ -46,8 +46,8 @@ namespace Rigel.GUI.Component
             if(Resizeable && !m_onMove)
             {
                 var rectResize = m_rect;
-                rectResize.Y += (rectResize.W - 3);
-                rectResize.X += rectResize.Z - 3;
+                rectResize.Y += (rectResize.W - 6);
+                rectResize.X += rectResize.Z - 6;
                 rectResize.Z = 6;
                 rectResize.W = 6;
 
