@@ -48,9 +48,10 @@ namespace Rigel.GUI
         public void Update()
         {
             m_graphicsBind.Update();
+            m_graphicsBind.UpdateGUIParams((int)m_rect.z, (int)m_rect.w);
 
             //Sync data
-            foreach(var layer in m_layers)
+            foreach (var layer in m_layers)
             {
                 m_graphicsBind.SyncLayerBuffer(layer);
             }

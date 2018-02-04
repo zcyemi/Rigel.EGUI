@@ -41,13 +41,9 @@ namespace Rigel.GUI
         private IShader m_shader_ps_rect = null;
         private IShader m_shader_vs_text = null;
         private IShader m_shader_ps_text = null;
-
         private GUIGraphicsIndicesBuffer m_indicesBuffer;
-
         private IGraphicsBuffer m_constBuffer;
-
         private IBlendState m_blendState;
-
         private ITexture m_fontTexture;
         private ITextureView m_fontTextureView;
 
@@ -142,7 +138,7 @@ namespace Rigel.GUI
 
                 m_constBuffer = m_graphics.Device.CreateBuffer(cbufferDesc);
 
-                m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, 800, 600, 0, 0, 1000.0f);
+                m_guiMatrix = new Matrix4x4(2.0f / 800, 0, 0, 0, 0, -2.0f / 600, 0, 0, 0, 0, 2.0f / 1000.0f, 0, -1, 1, 0, 1);
                 m_graphics.Context.UpdateSubReources(m_constBuffer,0, m_guiMatrix,Utility.SizeOf<Matrix4x4>());
 
             }
@@ -196,6 +192,7 @@ namespace Rigel.GUI
 
                 m_pstateText.Pipeline.VertexShader = m_shader_vs_text;
                 m_pstateText.Pipeline.PixelShader = m_shader_ps_text;
+                m_pstateText.Pipeline.AddConstBuffer(GraphicsShaderType.VertexShader, 0, m_constBuffer);
                 m_pstateText.Pipeline.AddSampler(GraphicsShaderType.PixelShader, 0, m_graphics.Device.DefaultSampler);
                 m_pstateText.Pipeline.AddResView(GraphicsShaderType.PixelShader, 0, m_fontTextureView);
                 m_pstateText.OutputMerger.BlendState = m_blendState;
@@ -261,9 +258,8 @@ namespace Rigel.GUI
         private void DrawInstant(IDeviceContext context)
         {
 
-            //context.ClearRenderTarget(m_graphics.RenderView, RigelColor.Random());
+
             context.SetPipelineState(m_pstateRect);
-            //context.DrawIndexed(6, 0, 0);
 
 
             foreach (var pair in m_layerBuffer_rect_dynamic)
@@ -314,7 +310,14 @@ namespace Rigel.GUI
             m_currentWidth = width;
             m_currentHeight = height;
 
-            m_guiMatrix = Matrix4x4.OrthoOffCenterLH(0, width, height, 0, 0, 10.0f);
+            m_pstateRect.Rasterizer.Viewport.Width = m_currentWidth;
+            m_pstateRect.Rasterizer.Viewport.Height = m_currentHeight;
+            m_pstateText.Rasterizer.Viewport.Width = m_currentWidth;
+            m_pstateText.Rasterizer.Viewport.Height = m_currentHeight;
+
+            m_guiMatrix = new Matrix4x4(2.0f / width, 0, 0, 0, 0, -2.0f / height, 0, 0, 0, 0, 2.0f / 1000.0f, 0, -1, 1, 0, 1);
+
+            m_graphics.Context.UpdateSubReources(m_constBuffer, 0, m_guiMatrix, Utility.SizeOf<Matrix4x4>());
         }
 
         public void SyncLayerBuffer(GUILayer layer)
@@ -545,16 +548,9 @@ namespace Rigel.GUI
             PS_IN VS( VS_IN input )
             {
 	            PS_IN output = (PS_IN)0;
-
-                float4x4 mtx = float4x4(
-                    2.0/800.0,0,0,0,
-                    0,-2.0/600,0,0,
-                    0,0,0.002,0,
-                    -1,1,0,1
-                );
 	
 	            float4 pos = input.pos;
-	            output.pos = mul(pos, mtx);
+	            output.pos = mul(pos, worldViewProj);
 	            output.col = input.col;
 	            output.uv = input.uv;
 	            return output;
@@ -589,16 +585,9 @@ namespace Rigel.GUI
             PS_IN VS( VS_IN input )
             {
 	            PS_IN output = (PS_IN)0;
-
-                float4x4 mtx = float4x4(
-                    2.0/800.0,0,0,0,
-                    0,-2.0/600,0,0,
-                    0,0,0.002,0,
-                    -1,1,0,1
-                );
 	
 	            float4 pos = input.pos;
-	            output.pos = mul(pos, mtx);
+	            output.pos = mul(pos, worldViewProj);
 	            output.col = input.col;
 	            output.uv = input.uv;
 	            return output;
