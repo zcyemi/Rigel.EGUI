@@ -35,12 +35,19 @@ namespace Rigel.GUI
         internal static IFontInfo Font { get; private set; }
 
         public static RigelGUIEvent Event { get; private set; }
+        public static bool RegionIsFocused {
+            get
+            {
+                if (m_region == null) return false;
+                return m_region.IsFocused;
+            }
+        }
 
         //ObjPool
         [TODO("Refactoring","Move to form for multipal form draw")]
         private static GUIObjPool<GUIObjTabView> s_poolTabView = new GUIObjPool<GUIObjTabView>();
         private static GUIObjPool<GUIObjScrollView> s_poolScrollView = new GUIObjPool<GUIObjScrollView>();
-
+        private static GUIObjPool<GUIObjMenuDraw> s_poolMenuDraw = new GUIObjPool<GUIObjMenuDraw>();
 
         internal static GUIObjTabView GetObjTabView(Vector4 rect, Action<GUIObjTabView> createFunction = null) 
         {
@@ -50,6 +57,10 @@ namespace Rigel.GUI
         internal static GUIObjScrollView GetObjScrollView(Vector4 rect,Action<GUIObjScrollView> createFuction = null)
         {
             return s_poolScrollView.Get(GUIUtility.GetHash(rect, GUIObjType.ScrollView), createFuction);
+        }
+        internal static GUIObjMenuDraw GetObjMenuDraw(int menuhash,Vector4 rect,Action<GUIObjMenuDraw> createFunction = null)
+        {
+            return s_poolMenuDraw.Get(GUIUtility.GetHash(menuhash,rect, GUIObjType.MenuDraw),createFunction);
         }
 
         /////////////
@@ -72,6 +83,7 @@ namespace Rigel.GUI
 
             s_poolTabView.OnFrame();
             s_poolScrollView.OnFrame();
+            s_poolMenuDraw.OnFrame();
         }
         internal static bool EndFrame(GUIForm form)
         {
@@ -169,5 +181,21 @@ namespace Rigel.GUI
             if (m_layer != layer) throw new Exception();
             m_layer = null;
         }
+
+        public static float GetDepth(int increaseStep = 0)
+        {
+            var ret = DepthValue;
+            DepthValue -= increaseStep * DepthStep;
+            return DepthValue;
+        }
+
+        public static float SetDepth(float depth)
+        {
+            var lastDepth = DepthValue;
+            DepthValue = depth;
+            return lastDepth;
+        }
+
+
     }
 }

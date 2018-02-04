@@ -12,6 +12,7 @@ namespace Rigel.GUI
         DragRegion = 2,
         TextInput = 3,
         TabView = 4,
+        MenuDraw = 5,
     }
 
     public abstract class GUIObjBase

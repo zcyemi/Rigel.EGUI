@@ -48,6 +48,8 @@
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Collections\GUILayoutInfo.cs" />
     <Compile Include="Component\GUIDemoWindow.cs" />
+    <Compile Include="Component\GUIMenuList.cs" />
+    <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />
     <Compile Include="Component\GUIWindow.cs" />

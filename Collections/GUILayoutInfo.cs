@@ -22,12 +22,15 @@ namespace Rigel.GUI.Collections
         /// </summary>
         public Vector2 RemainSize;
 
+        public Vector4 LastDrawRect;
+
 
         public void Reset()
         {
             AlignHorizontal = false;
             Offset = Vector2.zero;
             SizeMax = Vector3.zero;
+            LastDrawRect = Vector4.zero;
         }
     }
 }

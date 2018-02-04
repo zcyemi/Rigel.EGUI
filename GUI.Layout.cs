@@ -25,15 +25,16 @@ namespace Rigel.GUI
             GUI.CurLayout.RemainSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
         }
 
-        public static void EndHorizontal()
+        public static Vector4 EndHorizontal()
         {
             var curLayout = GUI.CurLayout;
             var prevLayout = Frame.LayoutStack.Pop();
-
-
+            var layoutrect = new Vector4(prevLayout.Offset, curLayout.SizeMax);
             prevLayout.Offset.y += curLayout.SizeMax.y;
-
+            layoutrect.z = curLayout.Offset.x - prevLayout.Offset.x;
             GUI.CurLayout = prevLayout;
+
+            return layoutrect;
         }
 
         public static void BeginVertical()
@@ -43,13 +44,16 @@ namespace Rigel.GUI
             GUI.CurLayout.SizeMax = Vector3.zero;
             GUI.CurLayout.RemainSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
         }
-        public static void EndVertical()
+        public static Vector4 EndVertical()
         {
             var curLayout = GUI.CurLayout;
             var prevLayout = Frame.LayoutStack.Pop();
-            
+            var layoutrect = new Vector4(prevLayout.Offset, curLayout.SizeMax);
             prevLayout.Offset.x += curLayout.SizeMax.x;
+            layoutrect.w = curLayout.Offset.y - prevLayout.Offset.y;
             GUI.CurLayout = prevLayout;
+
+            return layoutrect;
         }
 
         public static void Space(int offset)
@@ -92,9 +96,10 @@ namespace Rigel.GUI
             AutoCaculateOffset((int)w, (int)h);
         }
 
-        public static void AutoCaculateOffset(int w,int h)
+        public static void AutoCaculateOffset(int w, int h)
         {
             var layout = GUI.CurLayout;
+            layout.LastDrawRect = new Vector4(layout.Offset, w, h);
 
             var offsetmax = layout.Offset;
             offsetmax.x += w;
@@ -120,12 +125,17 @@ namespace Rigel.GUI
             GUI.CurLayout = layout;
         }
 
-        public static void Rect(Vector2 size,Vector4 color)
+        public static void Rect(Vector2 size, Vector4 color)
         {
-            GUI.Rect(new Vector4(GUI.CurLayout.Offset,size), color);
-            AutoCaculateOffset(size.x,size.y);
+            GUI.Rect(new Vector4(GUI.CurLayout.Offset, size), color);
+            AutoCaculateOffset(size.x, size.y);
         }
 
+
+        public static bool Button(string label, params GUIOption[] options)
+        {
+            return Button(label, GUIStyle.Current.BtnColor, options);
+        }
 
         /// <summary>
         /// 
@@ -133,7 +143,7 @@ namespace Rigel.GUI
         /// <param name="label"></param>
         /// <param name="options">GUIOptionGrid | GUIOptionWidth | GUIOptionHeight | GUIOptionAlign </param>
         /// <returns></returns>
-        public static bool Button(string label,params GUIOption[] options)
+        public static bool Button(string label, Vector4 color, params GUIOption[] options)
         {
             float w = GUI.CurLayout.RemainSize.x;
             float h = LineHeight;
@@ -141,16 +151,16 @@ namespace Rigel.GUI
 
             GUIOptionAlign optAlign = null;
 
-            if(options != null)
+            if (options != null)
             {
                 GUIOptionGrid grid = null;
                 GUIOptionWidth optWidth = null;
                 GUIOptionHeight optHeight = null;
-                options.GetOption(out grid,out optWidth,out optHeight);
+                options.GetOption(out grid, out optWidth, out optHeight);
 
                 options.GetOption(out optAlign);
 
-                if(optWidth != null)
+                if (optWidth != null)
                 {
                     w = optWidth.Value;
                 }
@@ -159,13 +169,13 @@ namespace Rigel.GUI
                     w *= grid.Value;
                 }
 
-                if(optHeight != null)
+                if (optHeight != null)
                 {
                     h = optHeight.Value;
                 }
             }
 
-            var rect = new Vector4(GUI.CurLayout.Offset,w, h);
+            var rect = new Vector4(GUI.CurLayout.Offset, w, h);
             rect = rect.Padding(1);
 
             bool clicked = false;
@@ -173,13 +183,13 @@ namespace Rigel.GUI
             var recta = rect.Move(GUI.CurArea.Rect);
             if (GUI.Event.Used)
             {
-                GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                GUI.RectAbsolute(recta, color);
             }
             else
             {
                 if (GUIUtility.RectContainsCheck(recta, GUI.Event.Pointer))
                 {
-                    if(GUI.Event.EventType == RigelGUIEventType.MouseClick)
+                    if (GUI.Event.EventType == RigelGUIEventType.MouseClick)
                     {
                         GUI.RectAbsolute(recta, GUIStyle.Current.ColorActiveD);
                         GUI.Event.Use();
@@ -192,10 +202,10 @@ namespace Rigel.GUI
                 }
                 else
                 {
-                    GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                    GUI.RectAbsolute(recta, color);
                 }
             }
-            
+
             //Draw label
 
             Vector2 offset = new Vector2(4, (rect.w - GUI.Font.FontPixelSize) / 2);
@@ -203,7 +213,7 @@ namespace Rigel.GUI
             {
                 offset.x = (int)((rect.z - GUI.Font.GetTextWidth(label)) / 2);
             }
-            else if(optAlign == GUIOption.AlignRight)
+            else if (optAlign == GUIOption.AlignRight)
             {
                 offset.x = rect.z - GUI.Font.GetTextWidth(label) - 2;
             }
@@ -218,10 +228,10 @@ namespace Rigel.GUI
         {
             Label(content, RigelColor.White);
         }
-        public static void Label(string content,Vector4 color)
+        public static void Label(string content, Vector4 color)
         {
-            var offset = new Vector2(2,(int) (LineHeight - GUI.Font.FontPixelSize) / 2);
-            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize.x,LineHeight), content,color, offset);
+            var offset = new Vector2(2, (int)(LineHeight - GUI.Font.FontPixelSize) / 2);
+            GUI.Text(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize.x, LineHeight), content, color, offset);
 
             int textWidth = GUI.Font.GetTextWidth(content);
 
@@ -252,7 +262,7 @@ namespace Rigel.GUI
             {
                 GUIOptionHeight optHeight;
                 options.GetOption(out optHeight);
-                if(optHeight != null)
+                if (optHeight != null)
                 {
                     rect.w = optHeight.Value;
                 }
@@ -265,7 +275,7 @@ namespace Rigel.GUI
 
             return ret;
         }
-        public static int TabViewVertical(int index, List<string> tabnames, Action<int> draw,int tabWidth, params GUIOption[] options)
+        public static int TabViewVertical(int index, List<string> tabnames, Action<int> draw, int tabWidth, params GUIOption[] options)
         {
             var sizeRemain = GUI.CurLayout.RemainSize;
             var rect = new Vector4(GUI.CurLayout.Offset, sizeRemain);
@@ -275,7 +285,7 @@ namespace Rigel.GUI
 
             }
             var rectab = GUI.GetAbsoluteRect(rect);
-            var tabview = GUI.GetObjTabView(rectab,(tv)=> { tv.SetVerticalMode(tabWidth); });
+            var tabview = GUI.GetObjTabView(rectab, (tv) => { tv.SetVerticalMode(tabWidth); });
 
             int ret = tabview.Draw(rect, index, tabnames, draw);
             AutoCaculateOffset(rect.z, rect.w);
@@ -299,7 +309,7 @@ namespace Rigel.GUI
 
                 var scrollview = GUI.GetObjScrollView(rectab);
 
-                scrollview.Draw(rect,rectab,pos,scrolltype);
+                scrollview.Draw(rect, rectab, pos, scrolltype);
             }
 
         }
@@ -310,9 +320,23 @@ namespace Rigel.GUI
             var sv = GUI.GetObjScrollView(rect);
 
             var pos = sv.LateDraw();
-            
+
             GUILayout.AutoCaculateOffset(rect.Z, rect.W);
             return pos;
+        }
+
+        public static void DrawMenu(GUIMenuList menu, params GUIOption[] option)
+        {
+            var clicked = GUILayout.Button(menu.Label, option);
+            var lastRect = GUI.CurLayout.LastDrawRect;
+            var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
+            menuDraw.Draw(clicked, menu, lastRect);
+
+        }
+
+        public static void DrawMenu()
+        {
+
         }
 
 

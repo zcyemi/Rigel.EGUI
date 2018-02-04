@@ -185,6 +185,16 @@ namespace Rigel.GUI
             v.W += size.Y;
             return v;
         }
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector4 SetPos(this Vector4 v, Vector2 pos)
+        {
+            v.x = pos.x;
+            v.y = pos.y;
+            return v;
+        }
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector4 SetSize(this Vector4 v, float szx, float szy)
         {
@@ -197,6 +207,25 @@ namespace Rigel.GUI
         {
             MemoryStream ms = new MemoryStream(20);
             BinaryWriter bw = new BinaryWriter(ms);
+            bw.Write(rect.X);
+            bw.Write(rect.Y);
+            bw.Write(rect.Z);
+            bw.Write(rect.W);
+            bw.Write((byte)type);
+
+            long hash = Rigel.Algorithms.HashFunction.RSHash(ms.ToArray());
+
+            bw.Close();
+            ms.Dispose();
+
+            return hash;
+        }
+
+        public static long GetHash(int hashcode,Vector4 rect, GUIObjType type)
+        {
+            MemoryStream ms = new MemoryStream(24);
+            BinaryWriter bw = new BinaryWriter(ms);
+            bw.Write(hashcode);
             bw.Write(rect.X);
             bw.Write(rect.Y);
             bw.Write(rect.Z);

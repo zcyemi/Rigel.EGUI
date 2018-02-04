@@ -14,12 +14,49 @@ namespace Rigel.GUI.Component
 
         public GUIDemoWindow(GUIForm form, int order = 0) : base(form, order)
         {
-            m_sampleFunctions.Add(SampleLayout);
-            m_sampleFunctions.Add(SampleText);
-            m_sampleFunctions.Add(SampleButton);
-            m_sampleFunctions.Add(SampleWindow);
-            m_sampleFunctions.Add(SampleTabView);
-            m_sampleFunctions.Add(SampleScrollView);
+            {
+                m_sampleFunctions.Add(SampleMenuList);
+                m_sampleFunctions.Add(SampleLayout);
+                m_sampleFunctions.Add(SampleText);
+                m_sampleFunctions.Add(SampleButton);
+                m_sampleFunctions.Add(SampleWindow);
+                m_sampleFunctions.Add(SampleTabView);
+                m_sampleFunctions.Add(SampleScrollView);
+            }
+
+
+            {
+                //SampleMenuList
+                m_sampleMenuList.AddItem("Item1", null)
+                    .AddItem("Item2", null).
+                    AddItem(
+                        new GUIMenuList("submeun")
+                        .AddItem("subitem1", null)
+                        .AddItem(new GUIMenuList("level3")
+                            .AddItem("l3i1")
+                            .AddItem("l3i2")
+                        )
+                        .AddItem("subitem2", null)
+                    )
+                    .AddItem(
+                        new GUIMenuList("test")
+                        .AddItem("test1")
+                        .AddItem("test2")
+                    );
+            }
+
+
+        }
+
+        private GUIMenuList m_sampleMenuList = new GUIMenuList("Menu");
+        private void SampleMenuList(RigelGUIEvent e)
+        {
+            //Layout
+            GUILayout.Indent(250);
+            GUILayout.DrawMenu(m_sampleMenuList,GUIOption.Width(150));
+
+
+            //NoLayout
         }
 
         private void SampleLayout(RigelGUIEvent e)
@@ -160,8 +197,6 @@ namespace Rigel.GUI.Component
         }
 
         private Vector2 m_sampleScrollPos = Vector2.zero;
-
-
         private void SampleScrollView(RigelGUIEvent e)
         {
             GUILayout.BeginScrollView(m_sampleScrollPos, GUIScrollType.All);
@@ -227,7 +262,7 @@ namespace Rigel.GUI.Component
             }
             GUILayout.EndHorizontal();
 
-            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize));
+            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize),true);
             m_sampleFunctions[m_sampleIndex](e);
             GUI.EndArea();
         }
