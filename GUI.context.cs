@@ -20,6 +20,7 @@ namespace Rigel.GUI
         private static IGUIBuffer BufText { get; set; }
 
         private static int DepthBase;
+        private static int DepthLevel = 0;
         private static float DepthValue = 0;
         private static readonly float DepthStep = 0.0001f;
 
@@ -28,6 +29,8 @@ namespace Rigel.GUI
 
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
+
+        public static GUIRegion CurRegion { get { return m_region; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
@@ -143,6 +146,7 @@ namespace Rigel.GUI
             m_region = region;
 
             DepthBase = m_layer.Order - m_region.Order;
+            DepthLevel = 0;
             DepthValue = DepthBase;
 
             //Process Buffer and Offset
@@ -194,6 +198,15 @@ namespace Rigel.GUI
             var lastDepth = DepthValue;
             DepthValue = depth;
             return lastDepth;
+        }
+
+        public static int SetDepthLevel(int level = 0)
+        {
+            var ret = DepthLevel;
+            DepthValue += DepthLevel * 0.1f;
+            DepthLevel = level;
+            DepthValue -= DepthLevel * 0.1f;
+            return ret;
         }
 
 

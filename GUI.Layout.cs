@@ -148,7 +148,6 @@ namespace Rigel.GUI
             float w = GUI.CurLayout.RemainSize.x;
             float h = LineHeight;
 
-
             GUIOptionAlign optAlign = null;
 
             if (options != null)
@@ -168,7 +167,6 @@ namespace Rigel.GUI
                 {
                     w *= grid.Value;
                 }
-
                 if (optHeight != null)
                 {
                     h = optHeight.Value;
@@ -198,6 +196,10 @@ namespace Rigel.GUI
                     else
                     {
                         GUI.RectAbsolute(recta, GUIStyle.Current.ColorActive);
+                        if(GUI.Event.EventType == RigelGUIEventType.MouseMove)
+                        {
+                            GUI.Event.Use();
+                        }
                     }
                 }
                 else
@@ -218,7 +220,6 @@ namespace Rigel.GUI
                 offset.x = rect.z - GUI.Font.GetTextWidth(label) - 2;
             }
             GUI.Text(rect, label, RigelColor.White, offset, true);
-
             AutoCaculateOffset(w, h);
 
             return clicked;
@@ -330,7 +331,10 @@ namespace Rigel.GUI
             var clicked = GUILayout.Button(menu.Label, option);
             var lastRect = GUI.CurLayout.LastDrawRect;
             var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
+
+            var lastLevel = GUI.SetDepthLevel(5);
             menuDraw.Draw(clicked, menu, lastRect);
+            GUI.SetDepthLevel(lastLevel);
 
         }
 

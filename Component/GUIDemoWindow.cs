@@ -54,7 +54,7 @@ namespace Rigel.GUI.Component
             //Layout
             GUILayout.Indent(250);
             GUILayout.DrawMenu(m_sampleMenuList,GUIOption.Width(150));
-
+            GUILayout.Button("Button on nextline");
 
             //NoLayout
         }

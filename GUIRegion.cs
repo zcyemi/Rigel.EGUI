@@ -21,6 +21,7 @@ namespace Rigel.GUI
         public string DebugInfo = "GUIRegion";
 
         private int m_order = 0;
+        private bool m_overlayFocus = false;
 
         public int Order
         {
@@ -55,7 +56,12 @@ namespace Rigel.GUI
 
         public virtual bool CheckFocused(RigelGUIEvent e)
         {
-            return GUIUtility.RectContainsCheck(m_rect, e.Pointer);
+            return GUIUtility.RectContainsCheck(m_rect, e.Pointer) || m_overlayFocus;
+        }
+
+        public void SetOverlayFocuse(bool focus)
+        {
+            m_overlayFocus = focus;
         }
 
     }

@@ -31,6 +31,8 @@ namespace Rigel.GUI.Component
                 m_drawLevels.Add(menu);
                 m_drawOffset.Clear();
                 m_drawOffset.Add(0);
+
+                GUI.CurRegion.SetOverlayFocuse(true);
             }
 
             bool active = false;
@@ -57,14 +59,9 @@ namespace Rigel.GUI.Component
                 if (!active && GUI.Event.IsMouseActiveEvent() && !GUI.Event.Used)
                 {
                     m_onActive = false;
-                }
-                else
-                {
-                    if (!GUI.RegionIsFocused) m_onActive = false;
+                    GUI.CurRegion.SetOverlayFocuse(false);
                 }
             }
-
-
         }
 
         private bool DrawMenuList(GUIMenuList menuList, int level, bool active)
@@ -84,6 +81,7 @@ namespace Rigel.GUI.Component
                         if (menuitem.Function != null) menuitem.Function.Invoke();
 
                         m_onActive = false;
+                        GUI.CurRegion.SetOverlayFocuse(false);
                     }
                     else if (item is GUIMenuList)
                     {
@@ -99,7 +97,7 @@ namespace Rigel.GUI.Component
                                 m_drawOffset.RemoveRange(level + 1, levelLastIndex - level);
                             }
                             m_drawLevels.Add(menulist);
-                            m_drawOffset.Add(offsety - m_drawOffset[levelLastIndex]);
+                            m_drawOffset.Add(offsety - ( m_drawOffset[m_drawOffset.Count -1]));
 
                         }
                     }
