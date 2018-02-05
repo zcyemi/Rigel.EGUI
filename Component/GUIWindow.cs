@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI.Component
 {
-    public class GUIWindow :GUIRegion
+    public class GUIWindowView : GUISimpleView
     {
 
         protected Vector4 m_rectContent;
@@ -22,10 +22,9 @@ namespace Rigel.GUI.Component
 
         protected bool m_onMove = false;
 
-        public GUIWindow(GUIForm form, int order = 0) : base(form, order)
+        public GUIWindowView(Rigel.GUI.IGUIContent content) : base(content)
         {
             m_rect = new Vector4(100, 100, 400, 300);
-
             Caption = this.GetType().ToString();
         }
 
@@ -71,15 +70,10 @@ namespace Rigel.GUI.Component
 
             GUI.BeginArea(m_rectContent);
 
-            OnWindowGUI(e);
+            if (m_content != null) m_content.OnGUI(e);
 
             GUI.EndArea();
 
-
-        }
-
-        protected virtual void OnWindowGUI(RigelGUIEvent e)
-        {
 
         }
     }

@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI.Component
 {
-    public class GUIDemoWindow : GUIWindow
+    public class GUIDemoContent : IGUIContent
     {
+        public IGUIView Region { get; set; }
 
         private List<Action<RigelGUIEvent>> m_sampleFunctions = new List<Action<RigelGUIEvent>>();
         private int m_sampleIndex;
 
-        public GUIDemoWindow(GUIForm form, int order = 0) : base(form, order)
+        public GUIDemoContent()
         {
             {
                 m_sampleFunctions.Add(SampleMenuList);
@@ -23,8 +24,6 @@ namespace Rigel.GUI.Component
                 m_sampleFunctions.Add(SampleTabView);
                 m_sampleFunctions.Add(SampleScrollView);
             }
-
-
             {
                 //SampleMenuList
                 m_sampleMenuList.AddItem("Item1", null)
@@ -44,27 +43,21 @@ namespace Rigel.GUI.Component
                         .AddItem("test2")
                     );
             }
-
-
         }
 
         private GUIMenuList m_sampleMenuList = new GUIMenuList("Menu");
         private void SampleMenuList(RigelGUIEvent e)
         {
-            //Layout
             GUILayout.Indent(250);
             GUILayout.DrawMenu(m_sampleMenuList,GUIOption.Width(150));
             GUILayout.Button("Button on nextline");
-
-            //NoLayout
         }
-
         private void SampleLayout(RigelGUIEvent e)
         {
             //Absolute and relative
             {
                 GUI.Rect(new Vector4(0, 0, 20, 20), RigelColor.Red);
-                Vector4 rectab = new Vector4(m_rect.x + 21, m_rect.y + 25, 20, 20);
+                Vector4 rectab = new Vector4(Region.Rect.x + 21, Region.Rect.y + 25, 20, 20);
                 GUI.RectAbsolute(rectab, RigelColor.Red);
             }
 
@@ -80,7 +73,8 @@ namespace Rigel.GUI.Component
 
             //Layout
             {
-                GUI.BeginArea(new Vector4(m_rect.z / 2, 0, m_rect.z / 2, m_rect.w - 25));
+                var regionrect = Region.Rect;
+                GUI.BeginArea(new Vector4(regionrect.z / 2, 0, regionrect.z / 2, regionrect.w - 25));
                 {
                     GUILayout.Button("Button1");
                     GUILayout.Button("Button2");
@@ -180,7 +174,6 @@ namespace Rigel.GUI.Component
             }
             GUILayout.EndHorizontal();
         }
-
         private List<string> m_sampleTabViewList = new List<string>() { "Tab1", "Tab2", "Tab3" };
         private int m_sampleTabViewIndex = 0;
         private void SampleTabView(RigelGUIEvent e)
@@ -195,8 +188,9 @@ namespace Rigel.GUI.Component
                 GUILayout.Label("label in vertical tabview : " + i,Vector4.one);
             }, 50);
         }
-
         private Vector2 m_sampleScrollPos = Vector2.zero;
+
+
         private void SampleScrollView(RigelGUIEvent e)
         {
             GUILayout.BeginScrollView(m_sampleScrollPos, GUIScrollType.All);
@@ -214,47 +208,45 @@ namespace Rigel.GUI.Component
             m_sampleScrollPos = GUILayout.EndScrollView();
 
         }
-
-
-        private GUIWindow m_sampleWindow = null;
+        //private IGUIContent m_sampleWindow = null;
         private void SampleWindow(RigelGUIEvent e)
         {
-            bool hasWindow = m_sampleWindow != null;
-            if (GUILayout.Button(hasWindow ? "Remove Window":"New window"))
-            {
-                if (hasWindow)
-                {
-                    GUI.Form.RemoveRegion(m_sampleWindow);
-                    m_sampleWindow = null;
-                    hasWindow = false;
-                }
-                else
-                {
-                    m_sampleWindow = new GUIWindow(GUI.Form, 0);
-                    m_sampleWindow.Caption = "Dynamic Window";
-                    GUI.Form.AddRegion(m_sampleWindow, GUILayerType.Window);
-                }
-            }
+            //bool hasWindow = m_sampleWindow != null;
+            //if (GUILayout.Button(hasWindow ? "Remove Window":"New window"))
+            //{
+            //    if (hasWindow)
+            //    {
+            //        GUI.Form.RemoveRegion(m_sampleWindow);
+            //        m_sampleWindow = null;
+            //        hasWindow = false;
+            //    }
+            //    else
+            //    {
+            //        m_sampleWindow = new IGUIContent(GUI.Form, 0);
+            //        m_sampleWindow.Caption = "Dynamic Window";
+            //        GUI.Form.AddRegion(m_sampleWindow, GUILayerType.Window);
+            //    }
+            //}
 
-            if (!hasWindow) return;
+            //if (!hasWindow) return;
 
-            if (GUILayout.Button("Window Move : " + m_sampleWindow.Moveable))
-            {
-                m_sampleWindow.Moveable = !m_sampleWindow.Moveable;
-            }
+            //if (GUILayout.Button("Window Move : " + m_sampleWindow.Moveable))
+            //{
+            //    m_sampleWindow.Moveable = !m_sampleWindow.Moveable;
+            //}
 
         }
 
-        protected override void OnWindowGUI(RigelGUIEvent e)
+        public void OnGUI(RigelGUIEvent e)
         {
             GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("<",GUIOption.Grid(0.1f)))
+            if (GUILayout.Button("<", GUIOption.Grid(0.1f)))
             {
-                m_sampleIndex+= m_sampleFunctions.Count - 1;
+                m_sampleIndex += m_sampleFunctions.Count - 1;
                 m_sampleIndex = m_sampleIndex % m_sampleFunctions.Count;
             }
-            GUILayout.Button(m_sampleFunctions[m_sampleIndex].Method.Name,GUIOption.Grid(0.8f));
+            GUILayout.Button(m_sampleFunctions[m_sampleIndex].Method.Name, GUIOption.Grid(0.8f));
             if (GUILayout.Button(">", GUIOption.Grid(0.1f)))
             {
                 m_sampleIndex++;
@@ -262,10 +254,9 @@ namespace Rigel.GUI.Component
             }
             GUILayout.EndHorizontal();
 
-            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize),true);
+            GUI.BeginArea(new Vector4(GUI.CurLayout.Offset, GUI.CurLayout.RemainSize), true);
             m_sampleFunctions[m_sampleIndex](e);
             GUI.EndArea();
         }
-            
     }
 }

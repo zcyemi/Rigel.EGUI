@@ -47,7 +47,7 @@
     <Compile Include="Collections\GUIBufferInverseArray.cs" />
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Collections\GUILayoutInfo.cs" />
-    <Compile Include="Component\GUIDemoWindow.cs" />
+    <Compile Include="Component\GUIDemoContent.cs" />
     <Compile Include="Component\GUIMenuList.cs" />
     <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
@@ -55,6 +55,7 @@
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="GUICompoundRegion.cs" />
     <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
     <Compile Include="GUIDragStatecs.cs" />
@@ -66,11 +67,13 @@
     <Compile Include="GUI.Layout.cs" />
     <Compile Include="GUIObj.cs" />
     <Compile Include="GUIOption.cs" />
-    <Compile Include="GUIRegion.cs" />
+    <Compile Include="GUISimpleView.cs" />
     <Compile Include="GUIStyle.cs" />
     <Compile Include="GUIUtility.cs" />
     <Compile Include="IGUIBuffer.cs" />
+    <Compile Include="IGUIContent.cs" />
     <Compile Include="IGUIGraphicsBind.cs" />
+    <Compile Include="IGUIView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

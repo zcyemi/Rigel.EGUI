@@ -20,9 +20,10 @@ namespace Rigel.GUI
     {
         private int m_order;
         public int Order { get { return m_order; } }
-        private List<GUIRegion> m_regions;
-        private GUIRegion m_focusedRegion = null;
-        private GUIRegion m_lastFocusedRegion = null;
+        private List<IGUIView> m_regions;
+        public IGUIView FocusedRegion { get { return m_focusedRegion; } }
+        private IGUIView m_focusedRegion = null;
+        private IGUIView m_lastFocusedRegion = null;
 
         private IGUIBuffer m_bufferRect;
         private IGUIBuffer m_bufferRectDynamic;
@@ -49,8 +50,6 @@ namespace Rigel.GUI
             get { return m_bufferTextDynamic; }
         }
 
-
-        public GUIRegion FocusedRegion { get { return m_focusedRegion; } }
 
         public GUILayerType LayerType { protected set; get; }
 
@@ -82,16 +81,16 @@ namespace Rigel.GUI
         }
 
 
-        public void AddRegion(GUIRegion region)
+        public void AddRegion(IGUIView region)
         {
-            if (m_regions == null) m_regions = new List<GUIRegion>();
+            if (m_regions == null) m_regions = new List<IGUIView>();
             if (m_regions.Contains(region)) return;
             m_regions.Add(region);
 
             m_syncAll = true;
         }
 
-        public void RemoveRegion(GUIRegion region)
+        public void RemoveRegion(IGUIView region)
         {
             if (m_regions.Contains(region))
             {
@@ -102,7 +101,7 @@ namespace Rigel.GUI
             
         }
 
-        public bool HasRegion(GUIRegion region)
+        public bool HasRegion(IGUIView region)
         {
             foreach(var reg in m_regions)
             {
@@ -216,7 +215,7 @@ namespace Rigel.GUI
 
         }
 
-        public IGUIBuffer GetBufferRect(GUIRegion region)
+        public IGUIBuffer GetBufferRect(IGUIView region)
         {
             DevUtility.Diagnostics(() => { return m_regions.Contains(region); });
 
@@ -232,7 +231,7 @@ namespace Rigel.GUI
             }
         }
 
-        public IGUIBuffer GetBufferText(GUIRegion region)
+        public IGUIBuffer GetBufferText(IGUIView region)
         {
             DevUtility.Diagnostics(() => { return m_regions.Contains(region); });
             if(m_focusedRegion != null && m_focusedRegion == region)

@@ -158,7 +158,7 @@ namespace Rigel.GUI
         }
 
 
-        public void AddRegion(GUIRegion region,GUILayerType layertype)
+        public void AddRegion(IGUIView region,GUILayerType layertype)
         {
             startFrameAction.Call(() =>
             {
@@ -176,7 +176,7 @@ namespace Rigel.GUI
             
         }
 
-        public void RemoveRegion(GUIRegion region)
+        public void RemoveRegion(IGUIView region)
         {
             startFrameAction.Call(() =>
             {
