@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI
 {
-    public class GUISimpleView : IGUIView
+    public struct GUIRegionBufferBlockInfo
     {
-        protected IGUIContent m_content;
+        public int Start;
+        public int Count;
+    }
+
+    public class GUIView
+    {
+        protected GUIContent m_content;
 
         private GUIRegionBufferBlockInfo m_blockInfoRect;
         private GUIRegionBufferBlockInfo m_blockInfoText;
@@ -23,14 +29,25 @@ namespace Rigel.GUI
         public int Order { get { return m_order; }set { m_order = value; } }
 
 
-        public GUISimpleView(IGUIContent content)
+        public GUIView(GUIContent content)
         {
             m_content = content;
-            m_content.Region = this;
+            m_content.View = this;
+        }
+
+        public GUIView()
+        {
+
+        }
+
+        public void SetContent(GUIContent content)
+        {
+            m_content = content;
+            m_content.View = this;
         }
 
 
-        public bool CheckFocused(RigelGUIEvent e)
+        public virtual bool CheckFocused(RigelGUIEvent e)
         {
             return GUIUtility.RectContainsCheck(m_rect, e.Pointer) || m_overlayFocus;
         }
@@ -40,7 +57,7 @@ namespace Rigel.GUI
             m_order = order;
         }
 
-        public void OnRegionEnd(IGUIBuffer bufferRect, IGUIBuffer bufferText)
+        public virtual void OnRegionEnd(IGUIBuffer bufferRect, IGUIBuffer bufferText)
         {
             GUI.EndArea();
 
@@ -48,7 +65,7 @@ namespace Rigel.GUI
             m_blockInfoText.Count = bufferText.Count - m_blockInfoText.Start;
         }
 
-        public void OnRegionStart(IGUIBuffer bufferRect, IGUIBuffer bufferText)
+        public virtual void OnRegionStart(IGUIBuffer bufferRect, IGUIBuffer bufferText)
         {
             m_blockInfoRect.Count = bufferRect.Count;
             m_blockInfoText.Count = bufferText.Count;

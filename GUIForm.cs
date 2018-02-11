@@ -158,7 +158,7 @@ namespace Rigel.GUI
         }
 
 
-        public void AddRegion(IGUIView region,GUILayerType layertype)
+        public void AddView(GUIView region,GUILayerType layertype)
         {
             startFrameAction.Call(() =>
             {
@@ -170,21 +170,21 @@ namespace Rigel.GUI
 
                     m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
                 }
-                layer.AddRegion(region);
+                layer.AddView(region);
 
             });
             
         }
 
-        public void RemoveRegion(IGUIView region)
+        public void RemoveView(GUIView region)
         {
             startFrameAction.Call(() =>
             {
                 foreach (var layer in m_layers)
                 {
-                    if (layer.HasRegion(region))
+                    if (layer.HasView(region))
                     {
-                        layer.RemoveRegion(region);
+                        layer.RemoveView(region);
                         return;
                     }
                 }

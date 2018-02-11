@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI.Component
 {
-    public class GUIWindowView : GUISimpleView
+    public class GUIWindowView : GUIView
     {
 
         protected Vector4 m_rectContent;
@@ -22,7 +22,7 @@ namespace Rigel.GUI.Component
 
         protected bool m_onMove = false;
 
-        public GUIWindowView(Rigel.GUI.IGUIContent content) : base(content)
+        public GUIWindowView(Rigel.GUI.GUIContent content) : base(content)
         {
             m_rect = new Vector4(100, 100, 400, 300);
             Caption = this.GetType().ToString();

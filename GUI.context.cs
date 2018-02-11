@@ -14,7 +14,7 @@ namespace Rigel.GUI
 
         private static GUIForm m_form = null;
         private static GUILayer m_layer = null;
-        private static IGUIView m_region = null;
+        private static GUIView m_region = null;
 
         private static IGUIBuffer BufRect { get; set; }
         private static IGUIBuffer BufText { get; set; }
@@ -30,7 +30,7 @@ namespace Rigel.GUI
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
 
-        public static IGUIView CurRegion { get { return m_region; } }
+        public static GUIView CurRegion { get { return m_region; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
@@ -138,7 +138,7 @@ namespace Rigel.GUI
 
         
 
-        internal static void StartGUIRegion(IGUIView region)
+        internal static void StartGUIRegion(GUIView region)
         {
             if (m_layer == null) throw new Exception();
             if (m_region != null) throw new Exception();
@@ -158,7 +158,7 @@ namespace Rigel.GUI
 
 
         }
-        internal static void EndGUIRegion(IGUIView region)
+        internal static void EndGUIRegion(GUIView region)
         {
             region.OnRegionEnd(BufRect, BufText);
            

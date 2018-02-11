@@ -55,10 +55,10 @@
     <Compile Include="Component\GUIWindow.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
-    <Compile Include="GUICompoundRegion.cs" />
+    <Compile Include="GUIMultiView.cs" />
     <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
-    <Compile Include="GUIDragStatecs.cs" />
+    <Compile Include="GUIDragState.cs" />
     <Compile Include="GUIForm.cs" />
     <Compile Include="GUIFrame.cs" />
     <Compile Include="GUIGraphicsBindDefault.cs" />
@@ -67,13 +67,12 @@
     <Compile Include="GUI.Layout.cs" />
     <Compile Include="GUIObj.cs" />
     <Compile Include="GUIOption.cs" />
-    <Compile Include="GUISimpleView.cs" />
+    <Compile Include="GUIView.cs" />
     <Compile Include="GUIStyle.cs" />
     <Compile Include="GUIUtility.cs" />
     <Compile Include="IGUIBuffer.cs" />
     <Compile Include="IGUIContent.cs" />
     <Compile Include="IGUIGraphicsBind.cs" />
-    <Compile Include="IGUIView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,26 +6,28 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI
 {
-    public interface IGUIContent
+    public abstract class GUIContent
     {
-        void OnGUI(RigelGUIEvent e);
-        IGUIView Region { get; set; }
+        public abstract void OnGUI(RigelGUIEvent e);
+        public GUIView View { get; set; }
+
+
     }
 
-    public class GUISimpleContent : IGUIContent
+    public class GUISimpleContent : GUIContent
     {
-        public IGUIView Region { get; set; }
-        
-        private Action<RigelGUIEvent, IGUIView> m_drawFunction;
 
-        public GUISimpleContent(Action<RigelGUIEvent,IGUIView> e)
+        
+        private Action<RigelGUIEvent, GUIView> m_drawFunction;
+
+        public GUISimpleContent(Action<RigelGUIEvent,GUIView> e)
         {
             m_drawFunction = e;
         }
 
-        public void OnGUI(RigelGUIEvent e)
+        public override void OnGUI(RigelGUIEvent e)
         {
-            if (m_drawFunction != null) m_drawFunction.Invoke(e, Region);
+            if (m_drawFunction != null) m_drawFunction.Invoke(e, View);
         }
     }
 }

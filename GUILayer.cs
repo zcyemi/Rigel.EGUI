@@ -20,10 +20,10 @@ namespace Rigel.GUI
     {
         private int m_order;
         public int Order { get { return m_order; } }
-        private List<IGUIView> m_regions;
-        public IGUIView FocusedRegion { get { return m_focusedRegion; } }
-        private IGUIView m_focusedRegion = null;
-        private IGUIView m_lastFocusedRegion = null;
+        private List<GUIView> m_views;
+        public GUIView FocusedView { get { return m_focusedView; } }
+        private GUIView m_focusedView = null;
+        private GUIView m_lastFocusedView = null;
 
         private IGUIBuffer m_bufferRect;
         private IGUIBuffer m_bufferRectDynamic;
@@ -81,98 +81,98 @@ namespace Rigel.GUI
         }
 
 
-        public void AddRegion(IGUIView region)
+        public void AddView(GUIView view)
         {
-            if (m_regions == null) m_regions = new List<IGUIView>();
-            if (m_regions.Contains(region)) return;
-            m_regions.Add(region);
+            if (m_views == null) m_views = new List<GUIView>();
+            if (m_views.Contains(view)) return;
+            m_views.Add(view);
 
             m_syncAll = true;
         }
 
-        public void RemoveRegion(IGUIView region)
+        public void RemoveView(GUIView view)
         {
-            if (m_regions.Contains(region))
+            if (m_views.Contains(view))
             {
-                m_regions.Remove(region);
-                if (m_focusedRegion == region) m_focusedRegion = null;
+                m_views.Remove(view);
+                if (m_focusedView == view) m_focusedView = null;
                 m_syncAll = true;
             }
             
         }
 
-        public bool HasRegion(IGUIView region)
+        public bool HasView(GUIView view)
         {
-            foreach(var reg in m_regions)
+            foreach(var reg in m_views)
             {
-                if (reg == region) return true;
+                if (reg == view) return true;
             }
             return false;
         }
 
         public void RemoveFocus(RigelGUIEvent e)
         {
-            m_lastFocusedRegion = null;
-            if(m_focusedRegion != null)
+            m_lastFocusedView = null;
+            if(m_focusedView != null)
             {
-                m_focusedRegion.IsFocused = false;
-                m_focusedRegion = null;
+                m_focusedView.IsFocused = false;
+                m_focusedView = null;
                 m_syncAll = true;
             }
         }
 
         public bool CheckFocused(RigelGUIEvent e)
         {
-            m_lastFocusedRegion = null;
+            m_lastFocusedView = null;
 
-            if(m_focusedRegion != null)
+            if(m_focusedView != null)
             {
-                if (!m_focusedRegion.CheckFocused(e))
+                if (!m_focusedView.CheckFocused(e))
                 {
-                    m_lastFocusedRegion = m_focusedRegion;
-                    m_focusedRegion.IsFocused = false;
-                    m_focusedRegion = null;
+                    m_lastFocusedView = m_focusedView;
+                    m_focusedView.IsFocused = false;
+                    m_focusedView = null;
                 }
             }
 
-            if(m_focusedRegion == null)
+            if(m_focusedView == null)
             {
-                foreach(var region in m_regions)
+                foreach(var view in m_views)
                 {
-                    if (region == m_lastFocusedRegion) continue;
+                    if (view == m_lastFocusedView) continue;
 
-                    if (region.CheckFocused(e))
+                    if (view.CheckFocused(e))
                     {
                         m_syncAll = true;
-                        region.IsFocused = true;
-                        m_focusedRegion = region;
+                        view.IsFocused = true;
+                        m_focusedView = view;
                         break;
                     }
                 }
             }
 
             //Last Frame is focuseds
-            if(m_focusedRegion == null && m_lastFocusedRegion != null)
+            if(m_focusedView == null && m_lastFocusedView != null)
             {
                 m_syncAll = true;
             }
 
-            m_regions.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
-            for(int i = 0; i < m_regions.Count; i++)
+            m_views.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
+            for(int i = 0; i < m_views.Count; i++)
             {
-                m_regions[i].Order = i;
+                m_views[i].Order = i;
             }
-            if(m_focusedRegion != null)
+            if(m_focusedView != null)
             {
-                m_focusedRegion.Order = 99;
+                m_focusedView.Order = 99;
             }
 
-            return m_focusedRegion != null;
+            return m_focusedView != null;
         }
 
         public void Update(RigelGUIEvent e)
         {
-            if (m_regions == null) return;
+            if (m_views == null) return;
 
             GUI.StartGUILayer(this);
 
@@ -183,10 +183,9 @@ namespace Rigel.GUI
                 m_bufferText.Clear();
                 m_bufferTextDynamic.Clear();
 
-                foreach (var region in m_regions)
+                foreach (var view in m_views)
                 {
-
-                    region.ProcessGUIEvent(e);
+                    view.ProcessGUIEvent(e);
                 }
 
                 m_bufferRectDynamic.IsBufferChanged = true;
@@ -194,16 +193,16 @@ namespace Rigel.GUI
                 m_bufferTextDynamic.IsBufferChanged = true;
                 m_bufferText.IsBufferChanged = true;
 
-                m_lastFocusedRegion = null;
+                m_lastFocusedView = null;
                 m_syncAll = false;
             }
             else
             {
-                if(m_focusedRegion != null)
+                if(m_focusedView != null)
                 {
                     m_bufferRectDynamic.Clear();
                     m_bufferTextDynamic.Clear();
-                    m_focusedRegion.ProcessGUIEvent(e);
+                    m_focusedView.ProcessGUIEvent(e);
                     m_bufferRectDynamic.IsBufferChanged = true;
                     m_bufferTextDynamic.IsBufferChanged = true;
                 }
@@ -215,11 +214,11 @@ namespace Rigel.GUI
 
         }
 
-        public IGUIBuffer GetBufferRect(IGUIView region)
+        public IGUIBuffer GetBufferRect(GUIView view)
         {
-            DevUtility.Diagnostics(() => { return m_regions.Contains(region); });
+            DevUtility.Diagnostics(() => { return m_views.Contains(view); });
 
-            if(m_focusedRegion != null && m_focusedRegion == region)
+            if(m_focusedView != null && m_focusedView == view)
             {
                 //Console.WriteLine($"{region.DebugInfo} - Dynamic");
                 return m_bufferRectDynamic;
@@ -231,10 +230,10 @@ namespace Rigel.GUI
             }
         }
 
-        public IGUIBuffer GetBufferText(IGUIView region)
+        public IGUIBuffer GetBufferText(GUIView view)
         {
-            DevUtility.Diagnostics(() => { return m_regions.Contains(region); });
-            if(m_focusedRegion != null && m_focusedRegion == region)
+            DevUtility.Diagnostics(() => { return m_views.Contains(view); });
+            if(m_focusedView != null && m_focusedView == view)
             {
                 return m_bufferTextDynamic;
             }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI.Component
 {
-    public class GUIDemoContent : IGUIContent
+    public class GUIDemoContent : GUIContent
     {
-        public IGUIView Region { get; set; }
 
         private List<Action<RigelGUIEvent>> m_sampleFunctions = new List<Action<RigelGUIEvent>>();
         private int m_sampleIndex;
@@ -57,7 +56,7 @@ namespace Rigel.GUI.Component
             //Absolute and relative
             {
                 GUI.Rect(new Vector4(0, 0, 20, 20), RigelColor.Red);
-                Vector4 rectab = new Vector4(Region.Rect.x + 21, Region.Rect.y + 25, 20, 20);
+                Vector4 rectab = new Vector4(View.Rect.x + 21, View.Rect.y + 25, 20, 20);
                 GUI.RectAbsolute(rectab, RigelColor.Red);
             }
 
@@ -73,7 +72,7 @@ namespace Rigel.GUI.Component
 
             //Layout
             {
-                var regionrect = Region.Rect;
+                var regionrect = View.Rect;
                 GUI.BeginArea(new Vector4(regionrect.z / 2, 0, regionrect.z / 2, regionrect.w - 25));
                 {
                     GUILayout.Button("Button1");
@@ -237,7 +236,7 @@ namespace Rigel.GUI.Component
 
         }
 
-        public void OnGUI(RigelGUIEvent e)
+        public override void OnGUI(RigelGUIEvent e)
         {
             GUILayout.BeginHorizontal();
 
