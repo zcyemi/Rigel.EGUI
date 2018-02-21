@@ -21,6 +21,7 @@ namespace Rigel.GUI.Component
             m_drawOffset.Clear();
         }
 
+        [TODO]
         public void Draw(bool click, GUIMenuList menu, Vector4 rect)
         {
             if (menu == null || menu.Items.Count == 0) return;
@@ -31,8 +32,8 @@ namespace Rigel.GUI.Component
                 m_drawLevels.Add(menu);
                 m_drawOffset.Clear();
                 m_drawOffset.Add(0);
-
-                GUI.CurRegion.SetOverlayFocuse(true);
+                //TODO
+                //GUI.CurRegion.SetOverlayFocuse(true);
             }
 
             bool active = false;
@@ -59,11 +60,13 @@ namespace Rigel.GUI.Component
                 if (!active && GUI.Event.IsMouseActiveEvent() && !GUI.Event.Used)
                 {
                     m_onActive = false;
-                    GUI.CurRegion.SetOverlayFocuse(false);
+                    //TODO
+                    //GUI.CurRegion.SetOverlayFocuse(false);
                 }
             }
         }
 
+        [TODO]
         private bool DrawMenuList(GUIMenuList menuList, int level, bool active)
         {
             GUILayout.BeginVertical();
@@ -81,7 +84,8 @@ namespace Rigel.GUI.Component
                         if (menuitem.Function != null) menuitem.Function.Invoke();
 
                         m_onActive = false;
-                        GUI.CurRegion.SetOverlayFocuse(false);
+                        //TODO
+                        //GUI.CurRegion.SetOverlayFocuse(false);
                     }
                     else if (item is GUIMenuList)
                     {

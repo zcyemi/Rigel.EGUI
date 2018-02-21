@@ -176,17 +176,13 @@ namespace Rigel.GUI
             
         }
 
-        public void RemoveView(GUIView region)
+        public void RemoveView(GUIView view)
         {
             startFrameAction.Call(() =>
             {
                 foreach (var layer in m_layers)
                 {
-                    if (layer.HasView(region))
-                    {
-                        layer.RemoveView(region);
-                        return;
-                    }
+                    if (layer.RemoveView(view)) return;
                 }
             });
         }
