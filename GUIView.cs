@@ -20,7 +20,7 @@ namespace Rigel.GUI
 
         public List<GUIView> m_childrens = null;
 
-        public Vector4 Rect = new Vector4(0, 0, 400, 300);
+        public Vector4 Rect;
 
         public int Order = 0;
 
@@ -44,17 +44,73 @@ namespace Rigel.GUI
             
         }
 
+        private bool m_debug = false;
+        private string m_debugName = "";
 
-        public bool CheckFocused(RigelGUIEvent e)
+        private Vector4 m_color = RigelColor.Random();
+        public GUIView(string debugName = null)
+        {
+            if (!string.IsNullOrEmpty(debugName))
+            {
+                m_debug = true;
+                m_debugName = debugName;
+            }
+        }
+
+        public void SetOrderFocused()
+        {
+            if(Parent != null)
+            {
+                Order = 10000;
+                Parent.SetOrderFocused();
+            }
+
+        }
+
+        public int SyncOrder(int baseOrder)
         {
             if (HasChild)
             {
+                Order = baseOrder + 1;
+                m_childrens.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
+
+                int orderMax = Order;
+
                 for(var i=0;i< m_childrens.Count; i++)
                 {
+                    orderMax = m_childrens[i].SyncOrder(orderMax)+1;
+                }
+                return orderMax;
+            }
+            else
+            {
+                Order = baseOrder + 1;
+                return Order;
+            }
+        }
+
+
+        public bool CheckFocused(RigelGUIEvent e)
+        {
+            if (Layer == null) throw new Exception();
+
+            if (HasChild)
+            {
+                for(var i= m_childrens.Count-1; i>=0; i--)
+                {
+                    //fix layer
+                    if (m_childrens[i].Layer == null) m_childrens[i].Layer = Layer;
+
                     if (m_childrens[i].CheckFocused(e))
                     {
                         return true;
                     }
+                }
+
+                if (GUIUtility.RectContainsCheck(Rect, e.Pointer))
+                {
+                    Layer.m_focusedView = this;
+                    return true;
                 }
             }
             else
@@ -70,15 +126,20 @@ namespace Rigel.GUI
 
         public void Update(RigelGUIEvent e)
         {
-            GUI.RectAbsolute(Rect, RigelColor.Random());
+            if (m_debug) m_color = RigelColor.Random();
+            GUI.RectAbsolute(Rect,m_color);
         }
 
-        internal void InternalUpdate(RigelGUIEvent e,GUIView exclude = null)
+        internal void InternalUpdate(RigelGUIEvent e,GUIView exclude = null,bool onlyself = false)
         {
-            if (exclude == this) return;
-            GUI.StartGUIRegion(this);
-            Update(e);
-            GUI.EndGUIRegion(this);
+            if (exclude != this)
+            {
+                GUI.StartGUIRegion(this);
+                Update(e);
+                GUI.EndGUIRegion(this);
+            }
+
+            if (onlyself) return;
 
             if(m_childrens != null)
             {
@@ -89,13 +150,13 @@ namespace Rigel.GUI
             }
         }
 
-        public void AddSubView(GUIView view)
+        public bool AddSubView(GUIView view)
         {
             if (m_childrens == null) m_childrens = new List<GUIView>();
 
             if (m_childrens.Contains(view))
             {
-                return;
+                throw new Exception("View already added!");
             }
 
             if(view.Parent != null)
@@ -106,6 +167,8 @@ namespace Rigel.GUI
             m_childrens.Add(view);
             view.Parent = this;
             view.Layer = Layer;
+
+            return true;
         }
 
         public bool RemoveSubView(GUIView view)
