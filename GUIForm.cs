@@ -70,12 +70,27 @@ namespace Rigel.GUI
         }
 
 
-        public void EmitGUIEvent(RigelGUIEvent e)
+        public bool EmitGUIEvent(RigelGUIEvent e)
         {
-            if (FastMode && e.EventType == RigelGUIEventType.MouseMove)
+            if (e.EventType == RigelGUIEventType.MouseMove)
             {
-                return;
+                if(FastMode)
+                    return false;
+                if(m_focusedLayer == null || m_focusedLayer.m_focusedView == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (!GUIUtility.RectContainsCheck(m_focusedLayer.m_focusedView.Rect, e.Pointer))
+                    {
+                        return false;
+                    }
+                    
+                }
             }
+
+
 
             m_rect.z = e.RenderWidth;
             m_rect.w = e.RenderHeight;
@@ -102,6 +117,8 @@ namespace Rigel.GUI
             endFrameAction.Invoke();
             GUI.EndFrame(this);
 
+
+            return true;
         }
 
 
@@ -109,19 +126,6 @@ namespace Rigel.GUI
         {
             if (!e.IsMouseActiveEvent()) return;
 
-            //GUILayer lastFocusedLayer = null;
-            //if(m_focusedLayer != null)
-            //{
-            //    if (!m_focusedLayer.CheckFocused(e))
-            //    {
-            //        lastFocusedLayer = m_focusedLayer;
-            //        m_focusedLayer = null;
-            //    }
-            //}
-            //if(m_focusedLayer == null)
-            //{
-
-            //}
 
             GUILayer lastFocusedLayer = m_focusedLayer;
 
