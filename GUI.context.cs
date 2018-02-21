@@ -137,6 +137,11 @@ namespace Rigel.GUI
         }
 
         
+        internal static void SetDrawBuffer(IGUIBuffer rectbuffer,IGUIBuffer textbuffer)
+        {
+            BufRect = rectbuffer;
+            BufText = textbuffer;
+        }
 
         internal static void StartGUIRegion(GUIView region)
         {
@@ -150,20 +155,18 @@ namespace Rigel.GUI
             DepthValue = DepthBase;
 
             //Process Buffer and Offset
-            BufRect = m_layer.GetBufferRect(m_region);
-            BufText = m_layer.GetBufferText(m_region);
+            //BufRect = m_layer.GetBufferRect(m_region);
+            //BufText = m_layer.GetBufferText(m_region);
 
 
-            region.OnRegionStart(BufRect, BufText);
+            //region.OnRegionStart(BufRect, BufText);
 
 
         }
         internal static void EndGUIRegion(GUIView region)
         {
-            region.OnRegionEnd(BufRect, BufText);
+            //region.OnRegionEnd(BufRect, BufText);
            
-            BufRect = null;
-            BufText = null;
 
             if (m_region != region) throw new Exception();
             m_region = null;
