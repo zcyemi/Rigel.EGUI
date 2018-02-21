@@ -53,6 +53,7 @@
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />
     <Compile Include="Component\GUIWindow.cs" />
+    <Compile Include="Component\GUIWindowView.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="GUIDebug.cs" />
@@ -66,11 +67,12 @@
     <Compile Include="GUI.Layout.cs" />
     <Compile Include="GUIObj.cs" />
     <Compile Include="GUIOption.cs" />
+    <Compile Include="Component\GUIRectView.cs" />
     <Compile Include="GUIView.cs" />
     <Compile Include="GUIStyle.cs" />
     <Compile Include="GUIUtility.cs" />
     <Compile Include="IGUIBuffer.cs" />
-    <Compile Include="IGUIContent.cs" />
+    <Compile Include="GUIContent.cs" />
     <Compile Include="IGUIGraphicsBind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

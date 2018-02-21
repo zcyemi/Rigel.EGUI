@@ -22,6 +22,8 @@ namespace Rigel.GUI
 
         public Vector4 Rect;
 
+        public GUIContent Content { get; protected set; } = null;
+
         public int Order = 0;
 
         public bool IsFocused
@@ -44,10 +46,17 @@ namespace Rigel.GUI
             
         }
 
+        public virtual void SetContent(GUIContent content)
+        {
+            Content = content;
+            Content.View = this;
+        }
+
         private bool m_debug = false;
         private string m_debugName = "";
 
         private Vector4 m_color = RigelColor.Random();
+
         public GUIView(string debugName = null)
         {
             if (!string.IsNullOrEmpty(debugName))
@@ -55,6 +64,12 @@ namespace Rigel.GUI
                 m_debug = true;
                 m_debugName = debugName;
             }
+        }
+
+        public void SetDebugName(string debugName)
+        {
+            m_debugName = debugName;
+            m_debug = true;
         }
 
         public void SetOrderFocused()
@@ -126,17 +141,37 @@ namespace Rigel.GUI
 
         public void Update(RigelGUIEvent e)
         {
-            if (m_debug) m_color = RigelColor.Random();
-            GUI.RectAbsolute(Rect,m_color);
+            if(Content == null)
+            {
+                if (m_debug) m_color = RigelColor.Random();
+                GUI.RectAbsolute(Rect, m_color);
+            }
+            else
+            {
+                Content.OnGUI(e);
+            }
+
+            
         }
+
+        public virtual void OnViewStart()
+        {
+            GUI.BeginArea(Rect);
+        }
+
+        public virtual void OnViewEnd()
+        {
+            GUI.EndArea();
+        }
+        
 
         internal void InternalUpdate(RigelGUIEvent e,GUIView exclude = null,bool onlyself = false)
         {
             if (exclude != this)
             {
-                GUI.StartGUIRegion(this);
+                GUI.StartGUIView(this);
                 Update(e);
-                GUI.EndGUIRegion(this);
+                GUI.EndGUIView(this);
             }
 
             if (onlyself) return;

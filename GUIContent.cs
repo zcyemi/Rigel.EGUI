@@ -10,14 +10,21 @@ namespace Rigel.GUI
     {
         public abstract void OnGUI(RigelGUIEvent e);
         public GUIView View { get; set; }
+    }
 
-
+    /// <summary>
+    /// Content With Basic background draw
+    /// </summary>
+    public class GUIRectContent : GUIContent
+    {
+        public override void OnGUI(RigelGUIEvent e)
+        {
+            GUI.RectAbsolute(View.Rect, GUIStyle.Current.ColorBackground);
+        }
     }
 
     public class GUISimpleContent : GUIContent
     {
-
-        
         private Action<RigelGUIEvent, GUIView> m_drawFunction;
 
         public GUISimpleContent(Action<RigelGUIEvent,GUIView> e)

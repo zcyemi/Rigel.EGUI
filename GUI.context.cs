@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Rigel.GUI.Collections;
 using Rigel.GUI.Component;
@@ -14,7 +10,7 @@ namespace Rigel.GUI
 
         private static GUIForm m_form = null;
         private static GUILayer m_layer = null;
-        private static GUIView m_region = null;
+        private static GUIView m_view = null;
 
         private static IGUIBuffer BufRect { get; set; }
         private static IGUIBuffer BufText { get; set; }
@@ -30,7 +26,7 @@ namespace Rigel.GUI
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
 
-        public static GUIView CurRegion { get { return m_region; } }
+        public static GUIView CurRegion { get { return m_view; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
@@ -41,8 +37,8 @@ namespace Rigel.GUI
         public static bool RegionIsFocused {
             get
             {
-                if (m_region == null) return false;
-                return m_region.IsFocused;
+                if (m_view == null) return false;
+                return m_view.IsFocused;
             }
         }
 
@@ -143,33 +139,27 @@ namespace Rigel.GUI
             BufText = textbuffer;
         }
 
-        internal static void StartGUIRegion(GUIView region)
+        internal static void StartGUIView(GUIView view)
         {
             if (m_layer == null) throw new Exception();
-            if (m_region != null) throw new Exception();
+            if (m_view != null) throw new Exception();
 
-            m_region = region;
+            m_view = view;
 
-            DepthBase = m_layer.Order - m_region.Order;
+            DepthBase = m_layer.Order - m_view.Order;
             DepthLevel = 0;
             DepthValue = DepthBase;
 
-            //Process Buffer and Offset
-            //BufRect = m_layer.GetBufferRect(m_region);
-            //BufText = m_layer.GetBufferText(m_region);
-
-
-            //region.OnRegionStart(BufRect, BufText);
-
+            m_view.OnViewStart();
 
         }
-        internal static void EndGUIRegion(GUIView region)
+        internal static void EndGUIView(GUIView view)
         {
-            //region.OnRegionEnd(BufRect, BufText);
-           
+            if (m_view != view) throw new Exception();
 
-            if (m_region != region) throw new Exception();
-            m_region = null;
+            m_view.OnViewEnd();
+
+            m_view = null;
         }
 
         internal static void StartGUILayer(GUILayer layer)
