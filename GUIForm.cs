@@ -34,8 +34,9 @@ namespace Rigel.GUI
         private Vector4 m_rect = Vector4.zero;
         public Vector4 Rect { get { return m_rect; } }
 
-        private GUIDelayAction startFrameAction = new GUIDelayAction();
-        private GUIDelayAction endFrameAction = new GUIDelayAction();
+        public GUIDelayAction startFrameAction = new GUIDelayAction();
+        public GUIDelayAction endFrameAction = new GUIDelayAction();
+
 
         protected virtual void Init()
         {
@@ -70,6 +71,9 @@ namespace Rigel.GUI
 
         public bool EmitGUIEvent(RigelGUIEvent e)
         {
+            m_rect.z = e.RenderWidth;
+            m_rect.w = e.RenderHeight;
+
             if (e.EventType == RigelGUIEventType.MouseMove)
             {
                 if(FastMode)
@@ -170,7 +174,6 @@ namespace Rigel.GUI
                 layer.AddView(region);
 
             });
-            
         }
 
         public void RemoveView(GUIView view)
