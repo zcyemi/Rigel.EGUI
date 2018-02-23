@@ -90,6 +90,7 @@ namespace Rigel.GUI.Component
                         GUILayout.Button("Btn4", GUIOption.Width(10));
                     }
                     GUILayout.EndHorizontal();
+
                     GUILayout.Button("Btn5", GUIOption.Width(20));
 
                     GUILayout.BeginHorizontal();
@@ -116,6 +117,10 @@ namespace Rigel.GUI.Component
                         GUILayout.Button("H3", GUIOption.Width(30));
                     }
                     GUILayout.EndHorizontal();
+
+                    GUILayout.Space(20);
+
+                    GUILayout.Label("Current Pointer " + e.Pointer);
 
                     GUI.Rect(new Vector4(0, 0, 5, 5), RigelColor.Red);
                 }
