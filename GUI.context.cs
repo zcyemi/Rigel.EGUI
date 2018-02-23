@@ -31,6 +31,15 @@ namespace Rigel.GUI
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
 
+        public static Vector4 CurAreaRect
+        {
+            get { return CurArea.Rect; }
+        }
+        public static Vector4 CurLayoutOffset
+        {
+            get { return CurLayout.Offset; }
+        }
+
         internal static IFontInfo Font { get; private set; }
 
         public static RigelGUIEvent Event { get; private set; }

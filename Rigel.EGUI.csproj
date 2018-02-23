@@ -52,6 +52,7 @@
     <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />
+    <Compile Include="Component\GUISplitView.cs" />
     <Compile Include="Component\GUIWindowView.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />

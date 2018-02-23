@@ -11,7 +11,6 @@ namespace Rigel.GUI
         public override void OnViewStart()
         {
             base.OnViewStart();
-
             GUI.RectAbsolute(Rect, GUIStyle.Current.ColorBackground);
         }
     }

@@ -65,7 +65,7 @@ namespace Rigel.GUI
 
             m_onMove = false;
             //Background
-            GUI.RectAbsolute(Rect.Padding(1), IsFocused ? GUIStyle.Current.ColorBackgroundL1 : GUIStyle.Current.ColorBackground);
+            GUI.RectAbsolute(Rect.Padding(1), GUIStyle.Current.ColorBackgroundL1);
 
             //Cache depth
             var headerBGdepth = GUI.GetDepth();

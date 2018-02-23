@@ -21,6 +21,7 @@ namespace Rigel.GUI
         public List<GUIView> m_childrens = null;
 
         public Vector4 Rect;
+        public Vector4 ContentRect;
 
         public GUIContent Content { get; protected set; } = null;
 
@@ -139,12 +140,15 @@ namespace Rigel.GUI
             return false;
         }
 
-        public void Update(RigelGUIEvent e)
+        public virtual void Update(RigelGUIEvent e)
         {
             if(Content == null)
             {
-                if (m_debug) m_color = RigelColor.Random();
-                GUI.RectAbsolute(Rect, m_color);
+                if (m_debug)
+                {
+                    m_color = RigelColor.Random();
+                    GUI.RectAbsolute(Rect, m_color);
+                }
             }
             else
             {
@@ -156,7 +160,8 @@ namespace Rigel.GUI
 
         public virtual void OnViewStart()
         {
-            GUI.BeginArea(Rect);
+            ContentRect = Rect.Padding(1);
+            GUI.BeginArea(ContentRect);
         }
 
         public virtual void OnViewEnd()

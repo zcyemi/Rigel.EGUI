@@ -59,6 +59,8 @@ namespace Rigel.GUI
         public GUIView m_rootView = null;
         public GUIView m_focusedView = null;
 
+        private GUIDelayAction actionBeforeUpdate;
+
         public GUILayer(GUIForm form,GUILayerType type)
         {
             LayerType = type;
@@ -76,6 +78,14 @@ namespace Rigel.GUI
             m_rootView = new GUIView();
             m_rootView.Rect = Vector4.zero;
             m_rootView.Layer = this;
+
+            actionBeforeUpdate = new GUIDelayAction();
+        }
+
+
+        public void SetDirty()
+        {
+            actionBeforeUpdate.Call(()=> m_syncAll = true);
         }
 
    
@@ -133,6 +143,7 @@ namespace Rigel.GUI
 
         public void _Update(RigelGUIEvent e)
         {
+            actionBeforeUpdate.Invoke();
 
             if (m_syncAll)
             {
