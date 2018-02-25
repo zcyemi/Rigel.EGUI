@@ -56,7 +56,7 @@ namespace Rigel.GUI
         private static GUIObjPool<GUIObjTabView> s_poolTabView = new GUIObjPool<GUIObjTabView>();
         private static GUIObjPool<GUIObjScrollView> s_poolScrollView = new GUIObjPool<GUIObjScrollView>();
         private static GUIObjPool<GUIObjMenuDraw> s_poolMenuDraw = new GUIObjPool<GUIObjMenuDraw>();
-        private static GUIObjPool<GUIObjDragRect> s_poolDragRect = new GUIObjPool<GUIObjDragRect>();
+
 
         internal static GUIObjTabView GetObjTabView(Vector4 rect, Action<GUIObjTabView> createFunction = null) 
         {
@@ -72,10 +72,7 @@ namespace Rigel.GUI
             return s_poolMenuDraw.Get(GUIUtility.GetHash(menuhash,rect, GUIObjType.MenuDraw),createFunction);
         }
 
-        internal static GUIObjDragRect GetDragRect(Vector4 rect)
-        {
-            return s_poolDragRect.Get(GUIUtility.GetHash(rect, GUIObjType.DragRegion));
-        }
+
 
 
         /////////////

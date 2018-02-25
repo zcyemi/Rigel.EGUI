@@ -50,6 +50,7 @@
     <Compile Include="Component\GUIDemoContent.cs" />
     <Compile Include="Component\GUIMenuList.cs" />
     <Compile Include="Component\GUIObjDragRect.cs" />
+    <Compile Include="Component\GUIObjDropRect.cs" />
     <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Component\GUIWindowView.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="GUI.DragDrop.cs" />
     <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
     <Compile Include="GUIDragState.cs" />

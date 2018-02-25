@@ -240,12 +240,36 @@ namespace Rigel.GUI.Component
 
         }
 
+
+        private string DropInfo1 = "None";
+        private string DropInfo2 = "None";
         private void SampleDragDrop(RigelGUIEvent e)
         {
             //GUILayout.Rect(new Vector2(100, 40), GUIStyle.Current.ColorActiveD);
 
 
-            GUILayout.DragRect("drag", new Vector4(0, 0, 50, 20));
+            GUILayout.DragRect("drag", new Vector2( 50, 20),"AAA");
+            GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
+
+
+            GUILayout.DropRect(new Vector2(100, 50),
+                (o)=> {
+                    DropInfo1 = o.ToString();
+                },
+                (r)=> {
+                    GUI.RectAbsolute(r, RigelColor.Blue);
+            });
+            GUILayout.Label(DropInfo1);
+
+
+            GUILayout.DropRect(new Vector2(100, 50),
+                (o) => {
+                    DropInfo2 = o.ToString();
+                },
+                (r) => {
+                    GUI.RectAbsolute(r, RigelColor.Green);
+                });
+            GUILayout.Label(DropInfo2);
         }
 
 
