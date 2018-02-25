@@ -137,6 +137,7 @@ namespace Rigel.GUI
             return Button(label, GUIStyle.Current.BtnColor, options);
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -338,12 +339,25 @@ namespace Rigel.GUI
 
         }
 
-        public static void DrawMenu()
+        public static void DragRect(string label,Vector4 rect)
+        {
+            GUI.Rect(rect, RigelColor.Orange);
+            var rectab = GUI.GetAbsoluteRect(rect);
+            var dragrect = GUI.GetDragRect(rectab);
+
+            if (dragrect.DragStage.OnDrag(rectab))
+            {
+                rectab = rectab.Move(GUI.Event.Pointer - dragrect.DragStage.EnterPos);
+
+                GUI.RectAbsolute(rectab, RigelColor.Red);
+
+            }
+        }
+
+        public static void DropRect(Vector2 size)
         {
 
         }
-
-
 
     }
 }

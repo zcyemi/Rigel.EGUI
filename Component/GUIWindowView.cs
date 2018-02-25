@@ -73,7 +73,7 @@ namespace Rigel.GUI
             GUILayout.BeginHorizontal();
             if (!string.IsNullOrEmpty(Caption)) GUILayout.Label(Caption, RigelColor.White);
 
-            var btnRect = new Vector4(Rect.z - 23, 1, 23, 23);
+            var btnRect = new Vector4(Rect.z - 25, 1, 22, 22);
             if (ShowWindowCloseBtn)
             {
                 if (GUI.Button(btnRect, "X")) OnClickCloseBtn();

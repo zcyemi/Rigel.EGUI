@@ -22,6 +22,7 @@ namespace Rigel.GUI.Component
                 m_sampleFunctions.Add(SampleWindow);
                 m_sampleFunctions.Add(SampleTabView);
                 m_sampleFunctions.Add(SampleScrollView);
+                m_sampleFunctions.Add(SampleDragDrop);
             }
             {
                 //SampleMenuList
@@ -193,8 +194,6 @@ namespace Rigel.GUI.Component
             }, 50);
         }
         private Vector2 m_sampleScrollPos = Vector2.zero;
-
-
         private void SampleScrollView(RigelGUIEvent e)
         {
             GUILayout.BeginScrollView(m_sampleScrollPos, GUIScrollType.All);
@@ -240,6 +239,15 @@ namespace Rigel.GUI.Component
             //}
 
         }
+
+        private void SampleDragDrop(RigelGUIEvent e)
+        {
+            //GUILayout.Rect(new Vector2(100, 40), GUIStyle.Current.ColorActiveD);
+
+
+            GUILayout.DragRect("drag", new Vector4(0, 0, 50, 20));
+        }
+
 
         public override void OnGUI(RigelGUIEvent e)
         {

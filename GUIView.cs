@@ -168,6 +168,11 @@ namespace Rigel.GUI
         {
             GUI.EndArea();
         }
+
+        public virtual void OnDynamicDraw(RigelGUIEvent e)
+        {
+
+        }
         
 
         internal void InternalUpdate(RigelGUIEvent e,GUIView exclude = null,bool onlyself = false)
@@ -196,7 +201,7 @@ namespace Rigel.GUI
 
             if (m_childrens.Contains(view))
             {
-                throw new Exception("View already added!");
+                return true;
             }
 
             if(view.Parent != null)

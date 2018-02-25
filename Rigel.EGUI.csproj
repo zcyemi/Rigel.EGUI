@@ -49,6 +49,7 @@
     <Compile Include="Collections\GUILayoutInfo.cs" />
     <Compile Include="Component\GUIDemoContent.cs" />
     <Compile Include="Component\GUIMenuList.cs" />
+    <Compile Include="Component\GUIObjDragRect.cs" />
     <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />

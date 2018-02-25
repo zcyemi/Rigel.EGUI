@@ -10,6 +10,7 @@ namespace Rigel.GUI
     {
         public abstract void OnGUI(RigelGUIEvent e);
         public GUIView View { get; set; }
+        public string ContentName = "Content";
     }
 
     /// <summary>

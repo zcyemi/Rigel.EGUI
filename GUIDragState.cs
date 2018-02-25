@@ -24,6 +24,15 @@ namespace Rigel.GUI
         public Vector2 EnterPos { get { return m_enterPos; } }
         public GUIDragStateStage Stage { get; private set; } = GUIDragStateStage.None;
 
+
+        public void Reset()
+        {
+            m_offset = Vector2.zero;
+            m_enterPos = Vector2.zero;
+            m_ondrag = false;
+            Stage = GUIDragStateStage.None;
+        }
+
         /// <summary>
         /// 
         /// </summary>
