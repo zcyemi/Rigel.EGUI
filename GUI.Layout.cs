@@ -137,6 +137,7 @@ namespace Rigel.GUI
             return Button(label, GUIStyle.Current.BtnColor, options);
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -338,9 +339,65 @@ namespace Rigel.GUI
 
         }
 
-        public static void DrawMenu()
-        {
 
+
+        public static void DragRect(string label,Vector2 size,string info)
+        {
+            var rect = new Vector4(GUI.CurLayout.Offset, size);
+            GUI.Rect(rect, RigelColor.Orange);
+            var rectab = GUI.GetAbsoluteRect(rect);
+            var dragrect = GUI.GetDragRect(rectab);
+
+
+            var ds = dragrect.DragStage;
+
+            if (ds.OnDrag(rectab))
+            {
+                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
+
+                GUI.SetDepthLevel(5);
+
+                GUI.RectAbsolute(rectab, RigelColor.Red);
+
+
+                GUI.SetDepthLevel(0);
+
+                if(ds.Stage == GUIDragStateStage.Update)
+                {
+                    GUI.HoverDrop("testdrag", info);
+
+                }
+                else if(ds.Stage == GUIDragStateStage.Exit)
+                {
+                    //checktarget
+                    GUI.EmmitDrop("testdrag",info);
+                }
+            }
+
+            AutoCaculateOffset(rect.z,rect.w);
+        }
+
+        public static void DropRect(Vector2 size,Action<object> onDrop,Action<Vector4> onDropOver = null)
+        {
+            var rect = new Vector4(GUI.CurLayout.Offset, size);
+            var rectab = GUI.GetAbsoluteRect(rect);
+            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+
+            var dropRect = GUI.GetDropRect(rectab,(d)=> {
+                d.Contract = "testdrag";
+                d.OnDropOver = onDropOver;
+            });
+
+            AutoCaculateOffset(size.x, size.y);
+
+
+            if (dropRect.CheckDropped())
+            {
+                if(onDrop!= null)
+                {
+                    onDrop.Invoke(dropRect.DroppedInfo);
+                }
+            }
         }
 
 

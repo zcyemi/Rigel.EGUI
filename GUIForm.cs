@@ -31,12 +31,11 @@ namespace Rigel.GUI
         }
 
         internal GUIFrame Frame = new GUIFrame();
-
         private Vector4 m_rect = Vector4.zero;
         public Vector4 Rect { get { return m_rect; } }
 
-        private GUIDelayAction startFrameAction = new GUIDelayAction();
-        private GUIDelayAction endFrameAction = new GUIDelayAction();
+        public GUIDelayAction startFrameAction = new GUIDelayAction();
+        public GUIDelayAction endFrameAction = new GUIDelayAction();
 
 
         protected virtual void Init()
@@ -72,6 +71,9 @@ namespace Rigel.GUI
 
         public bool EmitGUIEvent(RigelGUIEvent e)
         {
+            m_rect.z = e.RenderWidth;
+            m_rect.w = e.RenderHeight;
+
             if (e.EventType == RigelGUIEventType.MouseMove)
             {
                 if(FastMode)
@@ -90,18 +92,8 @@ namespace Rigel.GUI
                 }
             }
 
-
-
             m_rect.z = e.RenderWidth;
             m_rect.w = e.RenderHeight;
-
-            //if (e.IsMouseActiveEvent())
-            //{
-            //    foreach (var layer in m_layers)
-            //    {
-            //        Console.WriteLine($"{layer.Value.BufferRect.Count}-{layer.Value.BufferRectDynamic.Count}");
-            //    }
-            //}
 
             CheckFocused(e);
 
@@ -117,6 +109,7 @@ namespace Rigel.GUI
             endFrameAction.Invoke();
             GUI.EndFrame(this);
 
+            //m_forceUpdate = false;
 
             return true;
         }
@@ -128,7 +121,7 @@ namespace Rigel.GUI
 
 
             GUILayer lastFocusedLayer = m_focusedLayer;
-
+            m_focusedLayer = null;
 
             foreach (var layer in m_layers)
             {
@@ -149,7 +142,11 @@ namespace Rigel.GUI
             if(lastFocusedLayer != null && lastFocusedLayer != m_focusedLayer)
             {
                 lastFocusedLayer.RemoveFocus(e);
+
+                Console.WriteLine("remove focus");
+                return;
             }
+
         }
 
         public GUILayer GetLayer(GUILayerType type)
@@ -177,7 +174,6 @@ namespace Rigel.GUI
                 layer.AddView(region);
 
             });
-            
         }
 
         public void RemoveView(GUIView view)

@@ -43,6 +43,27 @@ namespace Rigel.GUI
             DepthValue -= DepthStep;
         }
 
+        public static void Border(Vector4 rect,Vector4 color, int width = 1)
+        {
+            rect = rect.Move(CurArea.Rect);
+            BorderAbsolute(rect, color,width);
+        }
+
+        public static void BorderAbsolute(Vector4 rect,Vector4 color,int width = 1)
+        {
+            var r = rect;
+            var rh = rect;
+            r.z = width;
+            RectAbsolute(r, color);
+            r.x += (rect.z - width);
+            RectAbsolute(r, color);
+
+            rh.w = 1;
+            RectAbsolute(rh, color);
+            rh.y += (rect.w - width);
+            RectAbsolute(rh, color);
+        }
+
         public static void DebugFontTexture(Vector4 rect,Vector4 color)
         {
 

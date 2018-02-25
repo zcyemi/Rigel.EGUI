@@ -22,6 +22,7 @@ namespace Rigel.GUI.Component
                 m_sampleFunctions.Add(SampleWindow);
                 m_sampleFunctions.Add(SampleTabView);
                 m_sampleFunctions.Add(SampleScrollView);
+                m_sampleFunctions.Add(SampleDragDrop);
             }
             {
                 //SampleMenuList
@@ -90,6 +91,7 @@ namespace Rigel.GUI.Component
                         GUILayout.Button("Btn4", GUIOption.Width(10));
                     }
                     GUILayout.EndHorizontal();
+
                     GUILayout.Button("Btn5", GUIOption.Width(20));
 
                     GUILayout.BeginHorizontal();
@@ -116,6 +118,10 @@ namespace Rigel.GUI.Component
                         GUILayout.Button("H3", GUIOption.Width(30));
                     }
                     GUILayout.EndHorizontal();
+
+                    GUILayout.Space(20);
+
+                    GUILayout.Label("Current Pointer " + e.Pointer);
 
                     GUI.Rect(new Vector4(0, 0, 5, 5), RigelColor.Red);
                 }
@@ -188,8 +194,6 @@ namespace Rigel.GUI.Component
             }, 50);
         }
         private Vector2 m_sampleScrollPos = Vector2.zero;
-
-
         private void SampleScrollView(RigelGUIEvent e)
         {
             GUILayout.BeginScrollView(m_sampleScrollPos, GUIScrollType.All);
@@ -235,6 +239,39 @@ namespace Rigel.GUI.Component
             //}
 
         }
+
+
+        private string DropInfo1 = "None";
+        private string DropInfo2 = "None";
+        private void SampleDragDrop(RigelGUIEvent e)
+        {
+            //GUILayout.Rect(new Vector2(100, 40), GUIStyle.Current.ColorActiveD);
+
+
+            GUILayout.DragRect("drag", new Vector2( 50, 20),"AAA");
+            GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
+
+
+            GUILayout.DropRect(new Vector2(100, 50),
+                (o)=> {
+                    DropInfo1 = o.ToString();
+                },
+                (r)=> {
+                    GUI.RectAbsolute(r, RigelColor.Blue);
+            });
+            GUILayout.Label(DropInfo1);
+
+
+            GUILayout.DropRect(new Vector2(100, 50),
+                (o) => {
+                    DropInfo2 = o.ToString();
+                },
+                (r) => {
+                    GUI.RectAbsolute(r, RigelColor.Green);
+                });
+            GUILayout.Label(DropInfo2);
+        }
+
 
         public override void OnGUI(RigelGUIEvent e)
         {

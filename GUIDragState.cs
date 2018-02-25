@@ -18,9 +18,20 @@ namespace Rigel.GUI
     public class GUIDragState
     {
         private Vector2 m_offset;
+        private Vector2 m_enterPos;
         private bool m_ondrag = false;
         public Vector2 OffSet { get { return m_offset; } }
+        public Vector2 EnterPos { get { return m_enterPos; } }
         public GUIDragStateStage Stage { get; private set; } = GUIDragStateStage.None;
+
+
+        public void Reset()
+        {
+            m_offset = Vector2.zero;
+            m_enterPos = Vector2.zero;
+            m_ondrag = false;
+            Stage = GUIDragStateStage.None;
+        }
 
         /// <summary>
         /// 
@@ -46,6 +57,7 @@ namespace Rigel.GUI
                     m_ondrag = true;
                     e.Use();
                     m_offset = Vector2.Zero;
+                    m_enterPos = e.Pointer;
                     Stage = GUIDragStateStage.Enter;
                     return true;
                 }

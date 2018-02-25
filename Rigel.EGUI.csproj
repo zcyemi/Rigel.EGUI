@@ -49,12 +49,16 @@
     <Compile Include="Collections\GUILayoutInfo.cs" />
     <Compile Include="Component\GUIDemoContent.cs" />
     <Compile Include="Component\GUIMenuList.cs" />
+    <Compile Include="Component\GUIObjDragRect.cs" />
+    <Compile Include="Component\GUIObjDropRect.cs" />
     <Compile Include="Component\GUIObjMenuDraw.cs" />
     <Compile Include="Component\GUIObjScrollView.cs" />
     <Compile Include="Component\GUIObjTabView.cs" />
-    <Compile Include="Component\GUIWindow.cs" />
+    <Compile Include="Component\GUISplitView.cs" />
+    <Compile Include="Component\GUIWindowView.cs" />
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="GUI.DragDrop.cs" />
     <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
     <Compile Include="GUIDragState.cs" />
@@ -66,11 +70,12 @@
     <Compile Include="GUI.Layout.cs" />
     <Compile Include="GUIObj.cs" />
     <Compile Include="GUIOption.cs" />
+    <Compile Include="Component\GUIRectView.cs" />
     <Compile Include="GUIView.cs" />
     <Compile Include="GUIStyle.cs" />
     <Compile Include="GUIUtility.cs" />
     <Compile Include="IGUIBuffer.cs" />
-    <Compile Include="IGUIContent.cs" />
+    <Compile Include="GUIContent.cs" />
     <Compile Include="IGUIGraphicsBind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
