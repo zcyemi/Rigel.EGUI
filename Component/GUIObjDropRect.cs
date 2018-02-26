@@ -12,7 +12,7 @@ namespace Rigel.GUI.Component
         public string Contract = null;
         public bool OnDropped = false;
         public string DroppedInfo = null;
-        public Action<Vector4> OnDropOver = null;
+        public GUIContextDraw<GUIContent> OnDropOver = null;
         //ab
         public Vector4 Rect;
 
@@ -29,7 +29,7 @@ namespace Rigel.GUI.Component
         {
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
-                if (OnDropOver != null) OnDropOver.Invoke(Rect);
+                if (OnDropOver != null) OnDropOver.Draw(null);
                 return true;
             }
             return false;

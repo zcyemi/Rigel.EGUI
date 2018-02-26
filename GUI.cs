@@ -24,9 +24,9 @@ namespace Rigel.GUI
             RectAbsolute(rect, color);
         }
 
-        public static void RectAbsolute(Vector4 rect,Vector4 color)
+        public static void RectAbsolute(Vector4 rect,Vector4 color,bool noclip = false)
         {
-            if (GUI.CurArea.Clip)
+            if (GUI.CurArea.Clip && !noclip)
             {
                 //RectIntersectCheck
                 var arearect = GUI.CurArea.Rect;

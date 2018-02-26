@@ -333,7 +333,7 @@ namespace Rigel.GUI
             var lastRect = GUI.CurLayout.LastDrawRect;
             var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
 
-            var lastLevel = GUI.SetDepthLevel(5);
+            var lastLevel = GUI.SetDepthLevel(50000);
             menuDraw.Draw(clicked, menu, lastRect);
             GUI.SetDepthLevel(lastLevel);
 
@@ -355,14 +355,11 @@ namespace Rigel.GUI
             {
                 rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
 
-                GUI.SetDepthLevel(5);
+                GUI.SetDepthLayer(GUILayerType.Overlay);
+                GUI.RectAbsolute(rectab, RigelColor.Red,true);
+                GUI.RestoreDepthLayer();
 
-                GUI.RectAbsolute(rectab, RigelColor.Red);
-
-
-                GUI.SetDepthLevel(0);
-
-                if(ds.Stage == GUIDragStateStage.Update)
+                if (ds.Stage == GUIDragStateStage.Update)
                 {
                     GUI.HoverDrop("testdrag", info);
 
@@ -377,7 +374,7 @@ namespace Rigel.GUI
             AutoCaculateOffset(rect.z,rect.w);
         }
 
-        public static void DropRect(Vector2 size,Action<object> onDrop,Action<Vector4> onDropOver = null)
+        public static void DropRect(Vector2 size,Action<object> onDrop,GUIContextDraw<GUIContent> onDropOver = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);

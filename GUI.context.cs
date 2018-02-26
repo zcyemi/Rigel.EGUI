@@ -130,6 +130,21 @@ namespace Rigel.GUI
             CurLayout.Reset();
         }
 
+        public static void BeginAreaAbsolute(Vector4 rect, bool clip = false)
+        {
+            CurArea = new GUIAreaInfo()
+            {
+                Rect = rect.Truncate(),
+                Clip = clip
+            };
+            CurArea.ContentMax = CurArea.Rect.Size();
+            Frame.AreaStack.Push(CurArea);
+            Frame.LayoutStack.Push(CurLayout);
+
+            CurLayout.RemainSize = CurArea.Rect.Size() - CurLayout.Offset;
+            CurLayout.Reset();
+        }
+
         public static void EndArea()
         {
             Frame.AreaStack.Pop();
@@ -209,6 +224,20 @@ namespace Rigel.GUI
             DepthValue -= DepthLevel * 0.1f;
             return ret;
         }
+
+
+        public static int SetDepthLayer(GUILayerType  layer)
+        {
+            int offset = GUI.CurRegion.Layer.LayerType - layer;
+            return SetDepthLevel(offset * 10);
+        }
+
+        public static int RestoreDepthLayer()
+        {
+            return SetDepthLayer(GUI.CurRegion.Layer.LayerType);
+        }
+
+
 
 
     }

@@ -252,24 +252,24 @@ namespace Rigel.GUI.Component
             GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
 
 
-            GUILayout.DropRect(new Vector2(100, 50),
-                (o)=> {
-                    DropInfo1 = o.ToString();
-                },
-                (r)=> {
-                    GUI.RectAbsolute(r, RigelColor.Blue);
-            });
-            GUILayout.Label(DropInfo1);
+            //GUILayout.DropRect(new Vector2(100, 50),
+            //    (o)=> {
+            //        DropInfo1 = o.ToString();
+            //    },
+            //    (r)=> {
+            //        GUI.RectAbsolute(r, RigelColor.Blue);
+            //});
+            //GUILayout.Label(DropInfo1);
 
 
-            GUILayout.DropRect(new Vector2(100, 50),
-                (o) => {
-                    DropInfo2 = o.ToString();
-                },
-                (r) => {
-                    GUI.RectAbsolute(r, RigelColor.Green);
-                });
-            GUILayout.Label(DropInfo2);
+            //GUILayout.DropRect(new Vector2(100, 50),
+            //    (o) => {
+            //        DropInfo2 = o.ToString();
+            //    },
+            //    (r) => {
+            //        GUI.RectAbsolute(r, RigelColor.Green);
+            //    });
+            //GUILayout.Label(DropInfo2);
         }
 
 
