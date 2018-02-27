@@ -89,7 +89,7 @@ namespace Rigel.GUI
             Event = e;
 
             m_frame = m_form.Frame;
-            m_frame.Reset(m_form);
+            m_frame.Reset(m_form,e);
 
             Font = m_form.GraphicsBind.FontInfo;
 
@@ -115,6 +115,11 @@ namespace Rigel.GUI
             m_frame = null;
 
             return eventUsed;
+        }
+
+        internal static void SetFrameDragDrop()
+        {
+            m_frame.OnDragDrop = true;
         }
 
         public static void BeginArea(Vector4 rect,bool clip = false)
@@ -248,6 +253,7 @@ namespace Rigel.GUI
             var layerwin = m_form.GetLayer(GUILayerType.Window);
 
             GUILayout.Label(layerwin.SyncAll + " " + layerwin.m_focusedView);
+            GUILayout.Label("FrameDragDrop:" + GUI.m_frame.OnDragDrop);
         }
 
 

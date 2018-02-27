@@ -353,6 +353,8 @@ namespace Rigel.GUI
 
             if (ds.OnDrag(rectab))
             {
+                GUI.SetFrameDragDrop();
+
                 rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
 
                 GUI.SetDepthLayer(GUILayerType.Overlay);

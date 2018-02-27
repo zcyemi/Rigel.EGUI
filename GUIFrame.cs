@@ -12,16 +12,29 @@ namespace Rigel.GUI
     {
         public Stack<GUIAreaInfo> AreaStack = new Stack<GUIAreaInfo>();
         public Stack<GUILayoutInfo> LayoutStack = new Stack<GUILayoutInfo>();
+        public bool OnDragDrop = false;
 
         public Vector4 RootRect;
 
 
-        public void Reset(GUIForm form)
+        public void Reset(GUIForm form,RigelGUIEvent e)
         {
             AreaStack.Clear();
             LayoutStack.Clear();
 
             RootRect = form.Rect;
+
+            if(e.EventType == RigelGUIEventType.MouseDragLeave)
+            {
+                OnDragDrop = false;
+            }
+            else if(e.EventType == RigelGUIEventType.MouseDragUpdate)
+            {
+                if (OnDragDrop)
+                {
+                    OnDragDrop = true;
+                }
+            }
         }
 
         /// <summary>
