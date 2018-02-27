@@ -11,7 +11,9 @@ namespace Rigel.GUI.Component
 
         public string Contract = null;
         public bool OnDropped = false;
-        public string DroppedInfo = null;
+        public object DropData = null;
+
+        public bool OnHover = false;
 
         //ab
         public Vector4 Rect;
@@ -21,26 +23,31 @@ namespace Rigel.GUI.Component
             Rect = Vector4.zero;
             Contract = null;
             OnDropped = false;
-            DroppedInfo = null;
+            DropData = null;
+            OnHover = false;
         }
 
 
         public bool CheckOver(Vector2 pointer)
         {
-            GUILayout.Label(Rect.ToString() +" - "+ pointer);
-
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
-                GUILayout.Label("CheckOver");
-
-                GUI.SetDepthLayer(GUILayerType.Overlay);
-                GUI.RectAbsolute(Rect, RigelColor.Green, true);
-
-                GUI.RestoreDepthLayer();
-
+                OnHover = true;
                 return true;
             }
             return false;
+        }
+
+        public void Draw(Action onhoverdraw)
+        {
+            if (OnHover)
+            {
+                if(onhoverdraw != null)
+                {
+                    onhoverdraw.Invoke();
+                }
+                OnHover = false;
+            }
         }
 
         public bool CheckDropped()
