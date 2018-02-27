@@ -23,6 +23,7 @@ namespace Rigel.GUI
         public string Caption { get; set; }
 
         protected bool m_onMove = false;
+        public bool DrawBackground = true;
 
         public GUIWindowView()
         {
@@ -65,7 +66,8 @@ namespace Rigel.GUI
 
             m_onMove = false;
             //Background
-            GUI.RectAbsolute(Rect.Padding(1), GUIStyle.Current.ColorBackgroundL1);
+            if(DrawBackground)
+                GUI.RectAbsolute(Rect.Padding(1), GUIStyle.Current.ColorBackgroundL1);
 
             //Cache depth
             var headerBGdepth = GUI.GetDepth();

@@ -96,6 +96,8 @@ namespace Rigel.GUI
             s_poolTabView.OnFrame();
             s_poolScrollView.OnFrame();
             s_poolMenuDraw.OnFrame();
+            s_poolDragRect.OnFrame();
+            s_poolDropRect.OnFrame();
         }
         internal static bool EndFrame(GUIForm form)
         {
@@ -238,6 +240,15 @@ namespace Rigel.GUI
         }
 
 
+
+        internal static void DrawDebugInfo()
+        {
+            GUILayout.Label("poolDropRect: " + s_poolDropRect.m_objects.Values.Count);
+
+            var layerwin = m_form.GetLayer(GUILayerType.Window);
+
+            GUILayout.Label(layerwin.SyncAll + " " + layerwin.m_focusedView);
+        }
 
 
     }

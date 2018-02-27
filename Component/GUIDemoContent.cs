@@ -252,6 +252,8 @@ namespace Rigel.GUI.Component
             GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
 
 
+            GUI.DrawDebugInfo();
+
             //GUILayout.DropRect(new Vector2(100, 50),
             //    (o)=> {
             //        DropInfo1 = o.ToString();

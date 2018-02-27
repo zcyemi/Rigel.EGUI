@@ -374,16 +374,19 @@ namespace Rigel.GUI
             AutoCaculateOffset(rect.z,rect.w);
         }
 
-        public static void DropRect(Vector2 size,Action<object> onDrop,GUIContextDraw<GUIContent> onDropOver = null)
+        public static void DropRect(Vector2 size,Action<object> onDrop,Vector4 recta)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
+            
+
             var dropRect = GUI.GetDropRect(rectab,(d)=> {
                 d.Contract = "testdrag";
-                d.OnDropOver = onDropOver;
             });
+
+            GUILayout.Label(dropRect.Rect.ToString());
 
             AutoCaculateOffset(size.x, size.y);
 

@@ -59,6 +59,7 @@ namespace Rigel.GUI
         public GUIView m_rootView = null;
         public GUIView m_focusedView = null;
 
+
         private GUIDelayAction actionBeforeUpdate;
 
         public GUILayer(GUIForm form,GUILayerType type)
@@ -117,6 +118,8 @@ namespace Rigel.GUI
 
         public bool _CheckFocused(RigelGUIEvent e)
         {
+            GUIView lastFocus = null;
+
             if (m_focusedView != null)
             {
                 var curfocus = m_focusedView;
@@ -125,12 +128,17 @@ namespace Rigel.GUI
                 {
                     if (curfocus == m_focusedView) return true;
                 }
+                lastFocus = m_focusedView;
                 m_focusedView = null;
                 m_syncAll = true;
             }
 
             if (!m_rootView.CheckFocused(e))
             {
+                if(lastFocus!= null)
+                {
+                    m_focusedView = lastFocus;
+                }
                 return false;
             }
 

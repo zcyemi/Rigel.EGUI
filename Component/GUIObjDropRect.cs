@@ -12,7 +12,7 @@ namespace Rigel.GUI.Component
         public string Contract = null;
         public bool OnDropped = false;
         public string DroppedInfo = null;
-        public GUIContextDraw<GUIContent> OnDropOver = null;
+
         //ab
         public Vector4 Rect;
 
@@ -27,9 +27,17 @@ namespace Rigel.GUI.Component
 
         public bool CheckOver(Vector2 pointer)
         {
+            GUILayout.Label(Rect.ToString() +" - "+ pointer);
+
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
-                if (OnDropOver != null) OnDropOver.Draw(null);
+                GUILayout.Label("CheckOver");
+
+                GUI.SetDepthLayer(GUILayerType.Overlay);
+                GUI.RectAbsolute(Rect, RigelColor.Green, true);
+
+                GUI.RestoreDepthLayer();
+
                 return true;
             }
             return false;
