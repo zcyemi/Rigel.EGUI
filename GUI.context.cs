@@ -26,7 +26,7 @@ namespace Rigel.GUI
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
 
-        public static GUIView CurRegion { get { return m_view; } }
+        public static GUIView CurView { get { return m_view; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
@@ -43,7 +43,7 @@ namespace Rigel.GUI
         internal static IFontInfo Font { get; private set; }
 
         public static RigelGUIEvent Event { get; private set; }
-        public static bool RegionIsFocused {
+        public static bool ViewIsFocused {
             get
             {
                 if (m_view == null) return false;
@@ -235,13 +235,13 @@ namespace Rigel.GUI
 
         public static int SetDepthLayer(GUILayerType  layer)
         {
-            int offset = GUI.CurRegion.Layer.LayerType - layer;
+            int offset = GUI.CurView.Layer.LayerType - layer;
             return SetDepthLevel(offset * 10);
         }
 
         public static int RestoreDepthLayer()
         {
-            return SetDepthLayer(GUI.CurRegion.Layer.LayerType);
+            return SetDepthLayer(GUI.CurView.Layer.LayerType);
         }
 
 

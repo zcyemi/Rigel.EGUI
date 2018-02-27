@@ -73,8 +73,8 @@ namespace Rigel.GUI.Component
 
             //Layout
             {
-                var regionrect = View.Rect;
-                GUI.BeginArea(new Vector4(regionrect.z / 2, 0, regionrect.z / 2, regionrect.w - 25));
+                var viewRect = View.Rect;
+                GUI.BeginArea(new Vector4(viewRect.z / 2, 0, viewRect.z / 2, viewRect.w - 25));
                 {
                     GUILayout.Button("Button1");
                     GUILayout.Button("Button2");

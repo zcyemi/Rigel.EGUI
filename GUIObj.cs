@@ -9,7 +9,7 @@ namespace Rigel.GUI
     public enum GUIObjType : byte
     {
         ScrollView = 1,
-        DragRegion = 2,
+        DragRect = 2,
         TextInput = 3,
         TabView = 4,
         MenuDraw = 5,

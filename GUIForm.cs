@@ -161,7 +161,7 @@ namespace Rigel.GUI
         }
 
 
-        public void AddView(GUIView region,GUILayerType layertype)
+        public void AddView(GUIView view,GUILayerType layertype)
         {
             startFrameAction.Call(() =>
             {
@@ -173,7 +173,7 @@ namespace Rigel.GUI
 
                     m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
                 }
-                layer.AddView(region);
+                layer.AddView(view);
 
             });
         }

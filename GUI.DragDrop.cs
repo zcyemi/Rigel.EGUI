@@ -17,7 +17,7 @@ namespace Rigel.GUI
 
         internal static GUIObjDragRect GetDragRect(Vector4 rect,Action<GUIObjDragRect> creationFunction = null)
         {
-            return s_poolDragRect.Get(GUIUtility.GetHash(rect, GUIObjType.DragRegion));
+            return s_poolDragRect.Get(GUIUtility.GetHash(rect, GUIObjType.DragRect));
         }
 
         internal static GUIObjDropRect GetDropRect(Vector4 rectab,Action<GUIObjDropRect> creationFunction = null)
