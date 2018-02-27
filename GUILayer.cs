@@ -215,6 +215,7 @@ namespace Rigel.GUI
             {
                 m_syncAll = true;
             }
+            view.Layer = this;
             return result;
         }
 

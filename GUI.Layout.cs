@@ -333,9 +333,11 @@ namespace Rigel.GUI
             var lastRect = GUI.CurLayout.LastDrawRect;
             var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
 
-            var lastLevel = GUI.SetDepthLevel(50000);
+            //var lastLevel = GUI.SetDepthLevel(50000);
+
+            GUI.SetDepthLayer(GUILayerType.Overlay);
             menuDraw.Draw(clicked, menu, lastRect);
-            GUI.SetDepthLevel(lastLevel);
+            GUI.RestoreDepthLayer();
 
         }
 
