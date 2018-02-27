@@ -73,8 +73,8 @@ namespace Rigel.GUI.Component
 
             //Layout
             {
-                var regionrect = View.Rect;
-                GUI.BeginArea(new Vector4(regionrect.z / 2, 0, regionrect.z / 2, regionrect.w - 25));
+                var viewRect = View.Rect;
+                GUI.BeginArea(new Vector4(viewRect.z / 2, 0, viewRect.z / 2, viewRect.w - 25));
                 {
                     GUILayout.Button("Button1");
                     GUILayout.Button("Button2");
@@ -241,35 +241,27 @@ namespace Rigel.GUI.Component
         }
 
 
-        private string DropInfo1 = "None";
-        private string DropInfo2 = "None";
         private void SampleDragDrop(RigelGUIEvent e)
         {
-            //GUILayout.Rect(new Vector2(100, 40), GUIStyle.Current.ColorActiveD);
+
+            GUILayout.DragRect("contract1",new Vector2( 50, 20),"AAA");
+            GUILayout.DragRect("contract2", new Vector2( 50, 20),"BBB");
 
 
-            GUILayout.DragRect("drag", new Vector2( 50, 20),"AAA");
-            GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
-
-
-            GUILayout.DropRect(new Vector2(100, 50),
-                (o)=> {
-                    DropInfo1 = o.ToString();
-                },
-                (r)=> {
-                    GUI.RectAbsolute(r, RigelColor.Blue);
+            GUILayout.DropRect(new Vector2(100, 50), "contract1", (o) => {
+                Console.WriteLine("OnDrop " + o);
+            }, () => {
+                GUILayout.Label("contract1:OnHover");
             });
-            GUILayout.Label(DropInfo1);
+
+            GUILayout.DropRect(new Vector2(100, 50), "contract2", (o) => {
+                Console.WriteLine("OnDrop " + o);
+            }, () => {
+                GUILayout.Label("contract2:OnHover");
+            });
 
 
-            GUILayout.DropRect(new Vector2(100, 50),
-                (o) => {
-                    DropInfo2 = o.ToString();
-                },
-                (r) => {
-                    GUI.RectAbsolute(r, RigelColor.Green);
-                });
-            GUILayout.Label(DropInfo2);
+            //GUI.DrawDebugInfo();
         }
 
 

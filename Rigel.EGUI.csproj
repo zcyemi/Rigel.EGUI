@@ -47,6 +47,7 @@
     <Compile Include="Collections\GUIBufferInverseArray.cs" />
     <Compile Include="Collections\GUIBufferList.cs" />
     <Compile Include="Collections\GUILayoutInfo.cs" />
+    <Compile Include="Component\GUIDebugContent.cs" />
     <Compile Include="Component\GUIDemoContent.cs" />
     <Compile Include="Component\GUIMenuList.cs" />
     <Compile Include="Component\GUIObjDragRect.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="GUI.context.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="GUI.DragDrop.cs" />
+    <Compile Include="GUIContextDraw.cs" />
     <Compile Include="GUIDebug.cs" />
     <Compile Include="GUIDelayAction.cs" />
     <Compile Include="GUIDragState.cs" />

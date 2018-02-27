@@ -15,9 +15,9 @@ namespace Rigel.GUI
         private static GUIObjPool<GUIObjDragRect> s_poolDragRect = new GUIObjPool<GUIObjDragRect>();
         private static GUIObjPool<GUIObjDropRect> s_poolDropRect = new GUIObjPool<GUIObjDropRect>();
 
-        internal static GUIObjDragRect GetDragRect(Vector4 rect)
+        internal static GUIObjDragRect GetDragRect(Vector4 rect,Action<GUIObjDragRect> creationFunction = null)
         {
-            return s_poolDragRect.Get(GUIUtility.GetHash(rect, GUIObjType.DragRegion));
+            return s_poolDragRect.Get(GUIUtility.GetHash(rect, GUIObjType.DragRect));
         }
 
         internal static GUIObjDropRect GetDropRect(Vector4 rectab,Action<GUIObjDropRect> creationFunction = null)
@@ -27,7 +27,10 @@ namespace Rigel.GUI
             return ret;
         }
 
-        internal static bool HoverDrop(string contract, string content)
+
+
+
+        internal static bool HoverDrop(string contract,object content)
         {
             var pool = s_poolDropRect.m_objects;
 
@@ -44,7 +47,7 @@ namespace Rigel.GUI
             return false;
         }
 
-        internal static bool EmmitDrop(string contract,string content)
+        internal static bool EmmitDrop(string contract, object content)
         {
 
             var pool = s_poolDropRect.m_objects;
@@ -55,7 +58,7 @@ namespace Rigel.GUI
                 if(o.CheckOver(GUI.Event.Pointer))
                 {
                     o.OnDropped = true;
-                    o.DroppedInfo = content;
+                    o.DropData = content;
                     return true;
                 }
             }

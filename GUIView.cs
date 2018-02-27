@@ -190,7 +190,12 @@ namespace Rigel.GUI
             {
                 for(var i = 0; i < m_childrens.Count; i++)
                 {
-                    m_childrens[i].InternalUpdate(e, exclude);
+                    var cview = m_childrens[i];
+                    if(cview.Layer == null)
+                    {
+                        cview.Layer = Layer;
+                    }
+                    cview.InternalUpdate(e, exclude);
                 }
             }
         }
@@ -211,7 +216,7 @@ namespace Rigel.GUI
 
             m_childrens.Add(view);
             view.Parent = this;
-            view.Layer = Layer;
+            if(Layer != null)view.Layer = Layer;
 
             return true;
         }

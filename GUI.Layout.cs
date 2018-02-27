@@ -333,69 +333,128 @@ namespace Rigel.GUI
             var lastRect = GUI.CurLayout.LastDrawRect;
             var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
 
-            var lastLevel = GUI.SetDepthLevel(5);
+            //var lastLevel = GUI.SetDepthLevel(50000);
+
+            GUI.SetDepthLayer(GUILayerType.Overlay);
             menuDraw.Draw(clicked, menu, lastRect);
-            GUI.SetDepthLevel(lastLevel);
+            GUI.RestoreDepthLayer();
 
         }
 
-
-
-        public static void DragRect(string label,Vector2 size,string info)
+        public static void DragRect<T>(Vector2 size,T dropcontent, string contract = "")
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
-            GUI.Rect(rect, RigelColor.Orange);
+            GUI.Rect(rect, GUIStyle.Current.ColorActiveD);
             var rectab = GUI.GetAbsoluteRect(rect);
             var dragrect = GUI.GetDragRect(rectab);
-
 
             var ds = dragrect.DragStage;
 
             if (ds.OnDrag(rectab))
             {
+                GUI.SetFrameDragDrop();
+
                 rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
 
-                GUI.SetDepthLevel(5);
-
-                GUI.RectAbsolute(rectab, RigelColor.Red);
-
-
-                GUI.SetDepthLevel(0);
-
-                if(ds.Stage == GUIDragStateStage.Update)
+                if (ds.Stage == GUIDragStateStage.Update)
                 {
-                    GUI.HoverDrop("testdrag", info);
+                    
+                    GUI.HoverDrop(typeof(T).FullName + contract, dropcontent);
 
                 }
-                else if(ds.Stage == GUIDragStateStage.Exit)
+                else if (ds.Stage == GUIDragStateStage.Exit)
                 {
                     //checktarget
-                    GUI.EmmitDrop("testdrag",info);
+                    GUI.EmmitDrop(typeof(T).FullName + contract, dropcontent);
                 }
+
+                GUI.SetDepthLayer(GUILayerType.Overlay);
+                GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
+                GUI.RestoreDepthLayer();
             }
 
-            AutoCaculateOffset(rect.z,rect.w);
+            AutoCaculateOffset(rect.z, rect.w);
+            GUILayout.Space(2);
         }
 
-        public static void DropRect(Vector2 size,Action<object> onDrop,Action<Vector4> onDropOver = null)
+        public static void DragRect(string contract,Vector2 size,object dropcontent = null)
+        {
+            var rect = new Vector4(GUI.CurLayout.Offset, size);
+            GUI.Rect(rect, GUIStyle.Current.ColorActiveD);
+            var rectab = GUI.GetAbsoluteRect(rect);
+            var dragrect = GUI.GetDragRect(rectab);
+
+            var ds = dragrect.DragStage;
+
+            if (ds.OnDrag(rectab))
+            {
+                GUI.SetFrameDragDrop();
+
+                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
+
+                if (ds.Stage == GUIDragStateStage.Update)
+                {
+
+                    GUI.HoverDrop(contract, dropcontent);
+
+                }
+                else if (ds.Stage == GUIDragStateStage.Exit)
+                {
+                    //checktarget
+                    GUI.EmmitDrop(contract, dropcontent);
+                }
+
+                GUI.SetDepthLayer(GUILayerType.Overlay);
+                GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
+                GUI.RestoreDepthLayer();
+            }
+
+            AutoCaculateOffset(rect.z, rect.w);
+            GUILayout.Space(2);
+        }
+
+        public static void DropRect<T>(Vector2 size,Action<T> onDrop, string contract = "",Action onHover = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
-            var dropRect = GUI.GetDropRect(rectab,(d)=> {
-                d.Contract = "testdrag";
-                d.OnDropOver = onDropOver;
+            var dropRect = GUI.GetDropRect(rectab, (d) => {
+                d.Contract = typeof(T).FullName + contract;
             });
+
+            dropRect.Draw(onHover);
 
             AutoCaculateOffset(size.x, size.y);
 
+            if (dropRect.CheckDropped())
+            {
+                if (onDrop != null)
+                {
+                    onDrop.Invoke((T)dropRect.DropData);
+                }
+            }
+        }
+
+        public static void DropRect(Vector2 size,string contract,Action<object> onDrop,Action onHover = null)
+        {
+            var rect = new Vector4(GUI.CurLayout.Offset, size);
+            var rectab = GUI.GetAbsoluteRect(rect);
+            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+
+            var dropRect = GUI.GetDropRect(rectab, (d) => {
+                d.Contract = contract;
+            });
+
+            dropRect.Draw(onHover);
+
+            AutoCaculateOffset(size.x, size.y);
 
             if (dropRect.CheckDropped())
             {
-                if(onDrop!= null)
+                if (onDrop != null)
                 {
-                    onDrop.Invoke(dropRect.DroppedInfo);
+                    onDrop.Invoke(dropRect.DropData);
                 }
             }
         }

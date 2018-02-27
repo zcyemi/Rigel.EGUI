@@ -59,6 +59,7 @@ namespace Rigel.GUI
         public GUIView m_rootView = null;
         public GUIView m_focusedView = null;
 
+
         private GUIDelayAction actionBeforeUpdate;
 
         public GUILayer(GUIForm form,GUILayerType type)
@@ -101,22 +102,10 @@ namespace Rigel.GUI
             
         }
 
-        public bool CheckFocused(RigelGUIEvent e)
+        internal bool CheckFocused(RigelGUIEvent e,GUIFrame lastframe)
         {
-            return _CheckFocused(e);
-        }
+            GUIView lastFocus = null;
 
-        public void Update(RigelGUIEvent e)
-        {
-            GUI.StartGUILayer(this);
-            _Update(e);
-            GUI.EndGUILayer(this);
-
-        }
-
-
-        public bool _CheckFocused(RigelGUIEvent e)
-        {
             if (m_focusedView != null)
             {
                 var curfocus = m_focusedView;
@@ -125,12 +114,17 @@ namespace Rigel.GUI
                 {
                     if (curfocus == m_focusedView) return true;
                 }
+                lastFocus = m_focusedView;
                 m_focusedView = null;
                 m_syncAll = true;
             }
 
             if (!m_rootView.CheckFocused(e))
             {
+                if (lastFocus != null && lastframe!= null && lastframe.OnDragDrop)
+                {
+                    m_focusedView = lastFocus;
+                }
                 return false;
             }
 
@@ -141,66 +135,70 @@ namespace Rigel.GUI
             return true;
         }
 
-        public void _Update(RigelGUIEvent e)
+        public void Update(RigelGUIEvent e)
         {
-            actionBeforeUpdate.Invoke();
-
-            if (m_syncAll)
+            GUI.StartGUILayer(this);
             {
-                
-                if(m_focusedView == null)
+                actionBeforeUpdate.Invoke();
+
+                if (m_syncAll)
                 {
-                    //No focused view
 
-                    GUI.SetDrawBuffer(m_bufferRect, m_bufferText);
-                    m_bufferRect.Clear();
-                    m_bufferText.Clear();
+                    if (m_focusedView == null)
+                    {
+                        //No focused view
 
-                    m_rootView.InternalUpdate(e);
+                        GUI.SetDrawBuffer(m_bufferRect, m_bufferText);
+                        m_bufferRect.Clear();
+                        m_bufferText.Clear();
 
-                    m_bufferRect.IsBufferChanged = true;
-                    m_bufferText.IsBufferChanged = true;
+                        m_rootView.InternalUpdate(e);
+
+                        m_bufferRect.IsBufferChanged = true;
+                        m_bufferText.IsBufferChanged = true;
+
+                    }
+                    else
+                    {
+                        //has focused view
+
+                        //dynamic set buffer
+                        GUI.SetDrawBuffer(m_bufferRectDynamic, m_bufferTextDynamic);
+                        BufferRectDynamic.Clear();
+                        BufferTextDynamic.Clear();
+                        m_focusedView.InternalUpdate(e, null, true);
+                        BufferRectDynamic.IsBufferChanged = true;
+                        BufferTextDynamic.IsBufferChanged = true;
+
+                        //normal set buffer
+                        GUI.SetDrawBuffer(m_bufferRect, m_bufferText);
+                        m_bufferRect.Clear();
+                        m_bufferText.Clear();
+                        m_rootView.InternalUpdate(e, m_focusedView);
+                        m_bufferRect.IsBufferChanged = true;
+                        m_bufferText.IsBufferChanged = true;
+                    }
+                    m_syncAll = false;
 
                 }
                 else
                 {
-                    //has focused view
+                    //Update Dynamic
 
-                    //dynamic set buffer
-                    GUI.SetDrawBuffer(m_bufferRectDynamic, m_bufferTextDynamic);
-                    BufferRectDynamic.Clear();
-                    BufferTextDynamic.Clear();
-                    m_focusedView.InternalUpdate(e,null,true);
-                    BufferRectDynamic.IsBufferChanged = true;
-                    BufferTextDynamic.IsBufferChanged = true;
-
-                    //normal set buffer
-                    GUI.SetDrawBuffer(m_bufferRect, m_bufferText);
-                    m_bufferRect.Clear();
-                    m_bufferText.Clear();
-                    m_rootView.InternalUpdate(e, m_focusedView);
-                    m_bufferRect.IsBufferChanged = true;
-                    m_bufferText.IsBufferChanged = true;
-                }
-                m_syncAll = false;
-
-            }
-            else
-            {
-                //Update Dynamic
-
-                if(m_focusedView != null)
-                {
-                    GUI.SetDrawBuffer(m_bufferRectDynamic, m_bufferTextDynamic);
-                    BufferRectDynamic.Clear();
-                    BufferTextDynamic.Clear();
-                    m_focusedView.InternalUpdate(e,null,true);
-                    BufferRectDynamic.IsBufferChanged = true;
-                    BufferTextDynamic.IsBufferChanged = true;
+                    if (m_focusedView != null)
+                    {
+                        GUI.SetDrawBuffer(m_bufferRectDynamic, m_bufferTextDynamic);
+                        BufferRectDynamic.Clear();
+                        BufferTextDynamic.Clear();
+                        m_focusedView.InternalUpdate(e, null, true);
+                        BufferRectDynamic.IsBufferChanged = true;
+                        BufferTextDynamic.IsBufferChanged = true;
+                    }
                 }
             }
+            GUI.EndGUILayer(this);
+
         }
-
 
         public void Destroy()
         {
@@ -217,6 +215,7 @@ namespace Rigel.GUI
             {
                 m_syncAll = true;
             }
+            view.Layer = this;
             return result;
         }
 

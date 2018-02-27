@@ -117,18 +117,20 @@ namespace Rigel.GUI
 
         private void CheckFocused(RigelGUIEvent e)
         {
-            if (!e.IsMouseActiveEvent()) return;
-
+            if((!e.IsMouseDragEvent() || !Frame.OnDragDrop) && !e.IsMouseActiveEvent())
+            {
+                return;
+            }
 
             GUILayer lastFocusedLayer = m_focusedLayer;
             m_focusedLayer = null;
 
             foreach (var layer in m_layers)
             {
-                if (layer.CheckFocused(e))
+                if (layer.CheckFocused(e,Frame))
                 {
                     m_focusedLayer = layer;
-                    break;
+                    if(!Frame.OnDragDrop) break;
                 }
                 else
                 {
@@ -159,7 +161,7 @@ namespace Rigel.GUI
         }
 
 
-        public void AddView(GUIView region,GUILayerType layertype)
+        public void AddView(GUIView view,GUILayerType layertype)
         {
             startFrameAction.Call(() =>
             {
@@ -171,7 +173,7 @@ namespace Rigel.GUI
 
                     m_layers.Sort((a, b) => { return a.Order.CompareTo(b.Order); });
                 }
-                layer.AddView(region);
+                layer.AddView(view);
 
             });
         }

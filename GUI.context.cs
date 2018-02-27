@@ -26,7 +26,7 @@ namespace Rigel.GUI
         internal static GUIFrame m_frame;
         private static GUIFrame Frame { get { return m_frame; } }
 
-        public static GUIView CurRegion { get { return m_view; } }
+        public static GUIView CurView { get { return m_view; } }
 
         internal static GUIAreaInfo CurArea;
         internal static GUILayoutInfo CurLayout;
@@ -43,7 +43,7 @@ namespace Rigel.GUI
         internal static IFontInfo Font { get; private set; }
 
         public static RigelGUIEvent Event { get; private set; }
-        public static bool RegionIsFocused {
+        public static bool ViewIsFocused {
             get
             {
                 if (m_view == null) return false;
@@ -89,13 +89,15 @@ namespace Rigel.GUI
             Event = e;
 
             m_frame = m_form.Frame;
-            m_frame.Reset(m_form);
+            m_frame.Reset(m_form,e);
 
             Font = m_form.GraphicsBind.FontInfo;
 
             s_poolTabView.OnFrame();
             s_poolScrollView.OnFrame();
             s_poolMenuDraw.OnFrame();
+            s_poolDragRect.OnFrame();
+            s_poolDropRect.OnFrame();
         }
         internal static bool EndFrame(GUIForm form)
         {
@@ -115,11 +117,31 @@ namespace Rigel.GUI
             return eventUsed;
         }
 
+        internal static void SetFrameDragDrop()
+        {
+            m_frame.OnDragDrop = true;
+        }
+
         public static void BeginArea(Vector4 rect,bool clip = false)
         {
             CurArea = new GUIAreaInfo()
             {
                 Rect = rect.Move(CurArea.Rect.Pos()).Truncate(),
+                Clip = clip
+            };
+            CurArea.ContentMax = CurArea.Rect.Size();
+            Frame.AreaStack.Push(CurArea);
+            Frame.LayoutStack.Push(CurLayout);
+
+            CurLayout.RemainSize = CurArea.Rect.Size() - CurLayout.Offset;
+            CurLayout.Reset();
+        }
+
+        public static void BeginAreaAbsolute(Vector4 rect, bool clip = false)
+        {
+            CurArea = new GUIAreaInfo()
+            {
+                Rect = rect.Truncate(),
                 Clip = clip
             };
             CurArea.ContentMax = CurArea.Rect.Size();
@@ -208,6 +230,30 @@ namespace Rigel.GUI
             DepthLevel = level;
             DepthValue -= DepthLevel * 0.1f;
             return ret;
+        }
+
+
+        public static int SetDepthLayer(GUILayerType  layer)
+        {
+            int offset = GUI.CurView.Layer.LayerType - layer;
+            return SetDepthLevel(offset * 10);
+        }
+
+        public static int RestoreDepthLayer()
+        {
+            return SetDepthLayer(GUI.CurView.Layer.LayerType);
+        }
+
+
+
+        internal static void DrawDebugInfo()
+        {
+            GUILayout.Label("poolDropRect: " + s_poolDropRect.m_objects.Values.Count);
+
+            var layerwin = m_form.GetLayer(GUILayerType.Window);
+
+            GUILayout.Label(layerwin.SyncAll + " " + layerwin.m_focusedView);
+            GUILayout.Label("FrameDragDrop:" + GUI.m_frame.OnDragDrop);
         }
 
 

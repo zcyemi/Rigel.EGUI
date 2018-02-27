@@ -11,8 +11,10 @@ namespace Rigel.GUI.Component
 
         public string Contract = null;
         public bool OnDropped = false;
-        public string DroppedInfo = null;
-        public Action<Vector4> OnDropOver = null;
+        public object DropData = null;
+
+        public bool OnHover = false;
+
         //ab
         public Vector4 Rect;
 
@@ -21,7 +23,8 @@ namespace Rigel.GUI.Component
             Rect = Vector4.zero;
             Contract = null;
             OnDropped = false;
-            DroppedInfo = null;
+            DropData = null;
+            OnHover = false;
         }
 
 
@@ -29,10 +32,22 @@ namespace Rigel.GUI.Component
         {
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
-                if (OnDropOver != null) OnDropOver.Invoke(Rect);
+                OnHover = true;
                 return true;
             }
             return false;
+        }
+
+        public void Draw(Action onhoverdraw)
+        {
+            if (OnHover)
+            {
+                if(onhoverdraw != null)
+                {
+                    onhoverdraw.Invoke();
+                }
+                OnHover = false;
+            }
         }
 
         public bool CheckDropped()
