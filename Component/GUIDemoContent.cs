@@ -248,6 +248,8 @@ namespace Rigel.GUI.Component
             //GUILayout.Rect(new Vector2(100, 40), GUIStyle.Current.ColorActiveD);
 
 
+            GUILayout.Rect(new Vector2(10, 10), RigelColor.Random());
+
             GUILayout.DragRect("drag", new Vector2( 50, 20),"AAA");
             GUILayout.DragRect("drag", new Vector2( 50, 20), "BBB");
 

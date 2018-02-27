@@ -117,18 +117,20 @@ namespace Rigel.GUI
 
         private void CheckFocused(RigelGUIEvent e)
         {
-            if (!e.IsMouseActiveEvent()) return;
-
+            if((!e.IsMouseDragEvent() || !Frame.OnDragDrop) && !e.IsMouseActiveEvent())
+            {
+                return;
+            }
 
             GUILayer lastFocusedLayer = m_focusedLayer;
             m_focusedLayer = null;
 
             foreach (var layer in m_layers)
             {
-                if (layer.CheckFocused(e))
+                if (layer.CheckFocused(e,Frame))
                 {
                     m_focusedLayer = layer;
-                    break;
+                    if(!Frame.OnDragDrop) break;
                 }
                 else
                 {
