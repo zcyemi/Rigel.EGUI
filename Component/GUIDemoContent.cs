@@ -261,6 +261,11 @@ namespace Rigel.GUI.Component
             });
 
 
+            GUILayout.DropRect(new Vector2(100, 100), (GUIView view) =>
+              {
+
+              }, "", null);
+
             //GUI.DrawDebugInfo();
         }
 

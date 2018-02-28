@@ -24,13 +24,13 @@ namespace Rigel.GUI
             RectAbsolute(rect, color);
         }
 
-        public static void RectAbsolute(Vector4 rect,Vector4 color,bool noclip = false)
+        public static void RectAbsolute(Vector4 rect, Vector4 color, bool noclip = false)
         {
             if (GUI.CurArea.Clip && !noclip)
             {
                 //RectIntersectCheck
                 var arearect = GUI.CurArea.Rect;
-                if(!GUIUtility.RectClipAbosolute(ref rect, GUI.CurArea.Rect))
+                if (!GUIUtility.RectClipAbosolute(ref rect, GUI.CurArea.Rect))
                 {
                     return;
                 }
@@ -43,13 +43,13 @@ namespace Rigel.GUI
             DepthValue -= DepthStep;
         }
 
-        public static void Border(Vector4 rect,Vector4 color, int width = 1)
+        public static void Border(Vector4 rect, Vector4 color, int width = 1)
         {
             rect = rect.Move(CurArea.Rect);
-            BorderAbsolute(rect, color,width);
+            BorderAbsolute(rect, color, width);
         }
 
-        public static void BorderAbsolute(Vector4 rect,Vector4 color,int width = 1)
+        public static void BorderAbsolute(Vector4 rect, Vector4 color, int width = 1)
         {
             var r = rect;
             var rh = rect;
@@ -64,24 +64,24 @@ namespace Rigel.GUI
             RectAbsolute(rh, color);
         }
 
-        public static void DebugFontTexture(Vector4 rect,Vector4 color)
+        public static void DebugFontTexture(Vector4 rect, Vector4 color)
         {
 
             BufText.AddVertices(new Vector4(rect.x, rect.y, DepthValue, 1), color, Vector2.zero);
-            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, new Vector2(1,0));
+            BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y, DepthValue, 1), color, new Vector2(1, 0));
             BufText.AddVertices(new Vector4(rect.x + rect.z, rect.y + rect.w, DepthValue, 1), color, new Vector2(1, 1));
             BufText.AddVertices(new Vector4(rect.x, rect.y + rect.w, DepthValue, 1), color, new Vector2(0, 1));
 
             DepthValue -= DepthStep;
         }
 
-        public static int Char(Vector4 rect,Char c,Vector4 color,Vector2 pos,bool clip = true)
+        public static int Char(Vector4 rect, Char c, Vector4 color, Vector2 pos, bool clip = true)
         {
             rect = rect.Move(CurArea.Rect);
             return CharAbsolute(rect, c, color, pos, clip);
         }
 
-        public static int CharAbsolute(Vector4 recta,Char c,Vector4 color,Vector2 pos,bool clip = true)
+        public static int CharAbsolute(Vector4 recta, Char c, Vector4 color, Vector2 pos, bool clip = true)
         {
             Vector2 posa = recta.Pos() + pos;
 
@@ -106,15 +106,15 @@ namespace Rigel.GUI
                 Vector2 uv1 = glyph.UV[1];
 
 
-                if(x2 > rectx2)
+                if (x2 > rectx2)
                 {
-                    var xoff =(x2 - rectx2) * GUI.Font.UVUnit;
+                    var xoff = (x2 - rectx2) * GUI.Font.UVUnit;
                     uv3.x -= xoff;
                     uv2.x -= xoff;
 
                     x2 = rectx2;
                 }
-                if(y2 > recty2)
+                if (y2 > recty2)
                 {
                     var yoff = (y2 - recty2) * GUI.Font.UVUnit;
                     uv1.y -= yoff;
@@ -123,7 +123,7 @@ namespace Rigel.GUI
                     y2 = recty2;
                 }
 
-                if(charrect.x < recta.x)
+                if (charrect.x < recta.x)
                 {
                     var xoff = recta.x - charrect.x;
                     uv0.x += xoff;
@@ -131,7 +131,7 @@ namespace Rigel.GUI
 
                     charrect.x = recta.x;
                 }
-                if(charrect.y < recta.y)
+                if (charrect.y < recta.y)
                 {
                     var yoff = recta.y - charrect.y;
                     uv0.y += yoff;
@@ -155,13 +155,14 @@ namespace Rigel.GUI
 
             DepthValue -= DepthStep;
 
-            return glyph.AdvancedX+1;
+            return glyph.AdvancedX + 1;
         }
 
 
-        public static void Text(Vector4 rect,String text,Vector4 color,Vector2 pos,bool clip = true)
+        public static void Text(Vector4 rect, String text, Vector4 color, Vector2 pos, bool clip = true)
         {
-            if (GUI.CurArea.Clip) {
+            if (GUI.CurArea.Clip)
+            {
                 var intersect = GUIUtility.RectIntersectCheck(GUI.CurArea.Rect, rect);
                 if (!intersect) return;
             }
@@ -177,7 +178,7 @@ namespace Rigel.GUI
         /// <param name="color"></param>
         /// <param name="pos"></param>
         /// <param name="noclip"></param>
-        public static void TextAbsolute(Vector4 recta,String text,Vector4 color,Vector2 pos,bool clip = true)
+        public static void TextAbsolute(Vector4 recta, String text, Vector4 color, Vector2 pos, bool clip = true)
         {
             if (GUI.CurArea.Clip)
             {
@@ -187,22 +188,22 @@ namespace Rigel.GUI
                 rect.x -= areaRect.x;
                 rect.y -= areaRect.y;
 
-                if(rect.x < 0)
+                if (rect.x < 0)
                 {
                     pos.x += rect.x;
                     rect.x = 0;
                 }
-                if(rect.z + rect.x > areaRect.z)
+                if (rect.z + rect.x > areaRect.z)
                 {
                     rect.z = areaRect.z - rect.x;
                 }
 
-                if(rect.y < 0)
+                if (rect.y < 0)
                 {
                     pos.y += rect.y;
                     rect.y = 0;
                 }
-                if(rect.w+ rect.y > areaRect.w)
+                if (rect.w + rect.y > areaRect.w)
                 {
                     rect.w = areaRect.w - rect.y;
                 }
@@ -215,16 +216,16 @@ namespace Rigel.GUI
             if (pos.x > recta.z) return;
 
             bool yclip = true;
-            if(pos.y >= 0 && pos.y + Font.FontPixelSize < recta.w)
+            if (pos.y >= 0 && pos.y + Font.FontPixelSize < recta.w)
             {
                 yclip = false;
             }
 
             if (yclip && GUIDebug.DebugTextClip) color = RigelColor.Green;
 
-            foreach(var c in text)
+            foreach (var c in text)
             {
-                if(c< 33)
+                if (c < 33)
                 {
                     startpos.x += 6;
                     continue;
@@ -233,7 +234,7 @@ namespace Rigel.GUI
                 var charWidth = Font.GetCharWidth(c);
                 int charendpos = (int)startpos.x + charWidth;
 
-                if(charendpos < 0)
+                if (charendpos < 0)
                 {
                     startpos.x = charendpos;
                     continue;
@@ -243,7 +244,7 @@ namespace Rigel.GUI
 
                 if (clip)
                 {
-                    if (startpos.x >=0 && charendpos < recta.z && !yclip)
+                    if (startpos.x >= 0 && charendpos < recta.z && !yclip)
                     {
                         startpos.x += CharAbsolute(recta, c, color, startpos, false);
                     }
@@ -261,18 +262,18 @@ namespace Rigel.GUI
         }
 
 
-        public static bool Button(Vector4 rect,string label,params GUIOption[] option)
+        public static bool Button(Vector4 rect, string label, params GUIOption[] option)
         {
             rect = rect.Move(CurArea.Rect);
             return ButtonAbsolute(rect, label, option);
         }
 
-        public static bool ButtonAbsolute(Vector4 recta,string label,params GUIOption[] option)
+        public static bool ButtonAbsolute(Vector4 recta, string label, params GUIOption[] option)
         {
             recta = recta.Padding(1);
 
             GUIOptionAlign optAlign = null;
-            if(option != null)
+            if (option != null)
             {
                 option.GetOption(out optAlign);
             }
@@ -286,7 +287,7 @@ namespace Rigel.GUI
             }
             else
             {
-                if(GUIUtility.RectContainsCheck(recta, GUI.Event.Pointer))
+                if (GUIUtility.RectContainsCheck(recta, GUI.Event.Pointer))
                 {
 
                     if (GUI.Event.EventType == RigelGUIEventType.MouseClick)
@@ -307,12 +308,12 @@ namespace Rigel.GUI
                 }
             }
 
-            Vector2 offset = new Vector2(2,(int)(recta.w - GUI.Font.FontPixelSize) / 2);
-            if(optAlign == null || optAlign == GUIOption.AlignCenter)
+            Vector2 offset = new Vector2(2, (int)(recta.w - GUI.Font.FontPixelSize) / 2);
+            if (optAlign == null || optAlign == GUIOption.AlignCenter)
             {
                 offset.x = Mathf.FloorToInt((recta.z - GUI.Font.GetTextWidth(label)) / 2);
             }
-            else if(optAlign == GUIOption.AlignRight)
+            else if (optAlign == GUIOption.AlignRight)
             {
                 offset.x = recta.z - GUI.Font.GetTextWidth(label) - 2;
             }
@@ -320,6 +321,84 @@ namespace Rigel.GUI
             GUI.TextAbsolute(recta, label, RigelColor.White, offset, true);
 
             return clicked;
+        }
+
+        public static void DragRect(string contract, Vector4 rect, object dropcontent = null, bool draw = false, bool drawondrag = true)
+        {
+            var rectab = GUI.GetAbsoluteRect(rect);
+            DragRectAbsolute(contract, rectab, dropcontent, draw, drawondrag);
+        }
+
+        public static void DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, bool draw = false, bool drawondrag = true)
+        {
+            if (draw)
+                GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+
+            var dragrect = GUI.GetDragRect(rectab);
+            var ds = dragrect.DragStage;
+            if (ds.OnDrag(rectab))
+            {
+                GUI.SetFrameDragDrop();
+
+                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
+
+                if (ds.Stage == GUIDragStateStage.Update)
+                {
+
+                    GUI.HoverDrop(contract, dropcontent);
+
+                }
+                else if (ds.Stage == GUIDragStateStage.Exit)
+                {
+                    GUI.EmmitDrop(contract, dropcontent);
+                }
+
+                if (drawondrag)
+                {
+                    GUI.SetDepthLayer(GUILayerType.Overlay);
+                    GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
+                    GUI.RestoreDepthLayer();
+                }
+            }
+        }
+
+
+        public static void DragRect<T>(Vector4 rect, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true)
+        {
+            var ractab = GUI.GetAbsoluteRect(rect);
+            DragRectAbsolute(ractab, dropcontent, contract, draw, drawondrag);
+        }
+
+        public static void DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true)
+        {
+            if (draw)
+                GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+            var dragrect = GUI.GetDragRect(rectab);
+            var ds = dragrect.DragStage;
+            if (ds.OnDrag(rectab))
+            {
+                GUI.SetFrameDragDrop();
+
+                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
+
+                var contractfull = typeof(T).FullName + contract;
+
+                if (ds.Stage == GUIDragStateStage.Update)
+                {
+                    GUI.HoverDrop(contractfull, dropcontent);
+                }
+                else if (ds.Stage == GUIDragStateStage.Exit)
+                {
+                    GUI.EmmitDrop(contractfull, dropcontent);
+                }
+
+                if (drawondrag)
+                {
+                    GUI.SetDepthLayer(GUILayerType.Overlay);
+                    GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
+                    GUI.RestoreDepthLayer();
+                }
+            }
         }
     }
 }

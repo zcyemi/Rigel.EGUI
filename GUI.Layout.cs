@@ -344,34 +344,8 @@ namespace Rigel.GUI
         public static void DragRect<T>(Vector2 size,T dropcontent, string contract = "")
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
-            GUI.Rect(rect, GUIStyle.Current.ColorActiveD);
-            var rectab = GUI.GetAbsoluteRect(rect);
-            var dragrect = GUI.GetDragRect(rectab);
 
-            var ds = dragrect.DragStage;
-
-            if (ds.OnDrag(rectab))
-            {
-                GUI.SetFrameDragDrop();
-
-                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
-
-                if (ds.Stage == GUIDragStateStage.Update)
-                {
-                    
-                    GUI.HoverDrop(typeof(T).FullName + contract, dropcontent);
-
-                }
-                else if (ds.Stage == GUIDragStateStage.Exit)
-                {
-                    //checktarget
-                    GUI.EmmitDrop(typeof(T).FullName + contract, dropcontent);
-                }
-
-                GUI.SetDepthLayer(GUILayerType.Overlay);
-                GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
-                GUI.RestoreDepthLayer();
-            }
+            GUI.DragRect(rect, dropcontent, contract,true,true);
 
             AutoCaculateOffset(rect.z, rect.w);
             GUILayout.Space(2);
@@ -380,34 +354,7 @@ namespace Rigel.GUI
         public static void DragRect(string contract,Vector2 size,object dropcontent = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
-            GUI.Rect(rect, GUIStyle.Current.ColorActiveD);
-            var rectab = GUI.GetAbsoluteRect(rect);
-            var dragrect = GUI.GetDragRect(rectab);
-
-            var ds = dragrect.DragStage;
-
-            if (ds.OnDrag(rectab))
-            {
-                GUI.SetFrameDragDrop();
-
-                rectab = rectab.Move(GUI.Event.Pointer - ds.EnterPos);
-
-                if (ds.Stage == GUIDragStateStage.Update)
-                {
-
-                    GUI.HoverDrop(contract, dropcontent);
-
-                }
-                else if (ds.Stage == GUIDragStateStage.Exit)
-                {
-                    //checktarget
-                    GUI.EmmitDrop(contract, dropcontent);
-                }
-
-                GUI.SetDepthLayer(GUILayerType.Overlay);
-                GUI.RectAbsolute(rectab, GUIStyle.Current.ColorActiveD, true);
-                GUI.RestoreDepthLayer();
-            }
+            GUI.DragRect(contract, rect, dropcontent, true, true);
 
             AutoCaculateOffset(rect.z, rect.w);
             GUILayout.Space(2);

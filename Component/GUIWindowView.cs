@@ -40,12 +40,10 @@ namespace Rigel.GUI
         {
 
         }
-
         protected virtual void OnClickMaximizeBtn()
         {
 
         }
-
         protected virtual void OnClickMinimizeBtn()
         {
 
@@ -68,6 +66,9 @@ namespace Rigel.GUI
             //Background
             if(DrawBackground)
                 GUI.RectAbsolute(Rect.Padding(1), GUIStyle.Current.ColorBackgroundL1);
+
+            GUI.BorderAbsolute(Rect, GUIStyle.Current.ColorActiveD);
+
 
             //Cache depth
             var headerBGdepth = GUI.GetDepth();
@@ -130,7 +131,9 @@ namespace Rigel.GUI
             RectContent = Rect;
             RectContent.y = 25;
             RectContent.x = 0;
+            RectContent.z -= 2;
             RectContent.w -= 25;
+
 
             GUI.BeginArea(RectContent);
         }
@@ -138,6 +141,8 @@ namespace Rigel.GUI
         public override void OnViewEnd()
         {
             GUI.EndArea();
+
+            
             base.OnViewEnd();
         }
     }
