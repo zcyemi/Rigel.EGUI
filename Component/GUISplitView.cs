@@ -28,8 +28,8 @@ namespace Rigel.GUI.Component
         public GUISplitView m_leftView = null;
         public GUISplitView m_rightView = null;
 
-        public List<GUIContent> m_contents = new List<GUIContent>();
-        public List<string> m_contenName = new List<string>();
+
+        private GUIContentDocker m_mainDocker;
 
         private int m_contentIndex = 0;
 
@@ -55,8 +55,7 @@ namespace Rigel.GUI.Component
 
             content.View = this;
 
-            m_contents.Add(content);
-            m_contenName.Add(content.ContentName);
+            m_mainDocker.AddContent(content);
         }
 
 
@@ -64,6 +63,11 @@ namespace Rigel.GUI.Component
 
         public void SetSplitMode(GUISplitViewContentMode mode)
         {
+            if(m_mainDocker== null)
+            {
+                m_mainDocker = new GUIContentDocker();
+            }
+
             if (mode == SplitMode) return;
             if (mode == GUISplitViewContentMode.Container)
             {
@@ -94,15 +98,8 @@ namespace Rigel.GUI.Component
         {
             if (SplitMode == GUISplitViewContentMode.Content)
             {
-                if(m_contents.Count != 0)
-                {
 
-                    m_contentIndex = GUILayout.TabView(m_contentIndex, m_contenName, (i) =>
-                    {
-                        m_contents[i].OnGUI(e);
-                    });
-
-                }
+                GUI.DrawContentDocker(m_mainDocker,new Vector4(1,0,GUI.CurAreaRect.z,GUI.CurAreaRect.w));
 
             }
             else

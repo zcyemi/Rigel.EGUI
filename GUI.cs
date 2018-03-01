@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Rigel.GUI.Collections;
+using Rigel.GUI.Component;
 
 namespace Rigel.GUI
 {
@@ -23,7 +24,6 @@ namespace Rigel.GUI
             rect = rect.Move(CurArea.Rect);
             RectAbsolute(rect, color);
         }
-
         public static void RectAbsolute(Vector4 rect, Vector4 color, bool noclip = false)
         {
             if (GUI.CurArea.Clip && !noclip)
@@ -42,13 +42,11 @@ namespace Rigel.GUI
 
             DepthValue -= DepthStep;
         }
-
         public static void Border(Vector4 rect, Vector4 color, int width = 1)
         {
             rect = rect.Move(CurArea.Rect);
             BorderAbsolute(rect, color, width);
         }
-
         public static void BorderAbsolute(Vector4 rect, Vector4 color, int width = 1)
         {
             var r = rect;
@@ -74,13 +72,11 @@ namespace Rigel.GUI
 
             DepthValue -= DepthStep;
         }
-
         public static int Char(Vector4 rect, Char c, Vector4 color, Vector2 pos, bool clip = true)
         {
             rect = rect.Move(CurArea.Rect);
             return CharAbsolute(rect, c, color, pos, clip);
         }
-
         public static int CharAbsolute(Vector4 recta, Char c, Vector4 color, Vector2 pos, bool clip = true)
         {
             Vector2 posa = recta.Pos() + pos;
@@ -157,8 +153,6 @@ namespace Rigel.GUI
 
             return glyph.AdvancedX + 1;
         }
-
-
         public static void Text(Vector4 rect, String text, Vector4 color, Vector2 pos, bool clip = true)
         {
             if (GUI.CurArea.Clip)
@@ -169,7 +163,6 @@ namespace Rigel.GUI
             rect = rect.Move(CurArea.Rect);
             TextAbsolute(rect, text, color, pos, clip);
         }
-
         /// <summary>
         /// Single line text
         /// </summary>
@@ -261,13 +254,11 @@ namespace Rigel.GUI
             }
         }
 
-
         public static bool Button(Vector4 rect, string label, params GUIOption[] option)
         {
             rect = rect.Move(CurArea.Rect);
             return ButtonAbsolute(rect, label, option);
         }
-
         public static bool ButtonAbsolute(Vector4 recta, string label, params GUIOption[] option)
         {
             recta = recta.Padding(1);
@@ -328,7 +319,6 @@ namespace Rigel.GUI
             var rectab = GUI.GetAbsoluteRect(rect);
             DragRectAbsolute(contract, rectab, dropcontent, draw, drawondrag);
         }
-
         public static void DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, bool draw = false, bool drawondrag = true)
         {
             if (draw)
@@ -361,14 +351,11 @@ namespace Rigel.GUI
                 }
             }
         }
-
-
         public static void DragRect<T>(Vector4 rect, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true)
         {
             var ractab = GUI.GetAbsoluteRect(rect);
             DragRectAbsolute(ractab, dropcontent, contract, draw, drawondrag);
         }
-
         public static void DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true)
         {
             if (draw)
@@ -399,6 +386,21 @@ namespace Rigel.GUI
                     GUI.RestoreDepthLayer();
                 }
             }
+        }
+
+        public static void DrawContentDocker(GUIContentDocker docker,Vector4 rect)
+        {
+            var rectab = GetAbsoluteRect(rect);
+            DrawContentDockerAbsolute(docker, rectab);
+        }
+        public static void DrawContentDockerAbsolute(GUIContentDocker docker,Vector4 rectab)
+        {
+            docker.Draw(rectab);
+        }
+
+        public static int SortedListAbsolute<T>(IList<T> list,Vector4 rectab)
+        {
+            return 0;
         }
     }
 }
