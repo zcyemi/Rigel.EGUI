@@ -398,8 +398,41 @@ namespace Rigel.GUI
             docker.Draw(rectab);
         }
 
-        public static int SortedListAbsolute<T>(IList<T> list,Vector4 rectab)
+
+        private static Vector2 SortedListDrawFunction<T>(T item,Vector4 area,Vector2 startpos)
         {
+            var drawrect = new Vector4(startpos, 40, area.w);
+            GUI.Rect(drawrect, GUIStyle.Current.ColorBackgroundL2);
+            return new Vector2(40,drawrect.w);
+        }
+
+        public static int SortedList<T>(IList<T> list,Vector4 rect, Func<T, Vector4, Vector2, Vector2> drawfunction = null)
+        {
+            var rectab = GetAbsoluteRect(rect);
+            return SortedListAbsolute(list, rectab, drawfunction);
+        }
+
+        [TODO("DEV","need test")]
+        public static int SortedListAbsolute<T>(IList<T> list,Vector4 rectab,Func<T,Vector4,Vector2,Vector2> drawfunction = null)
+        {
+
+            GUI.BeginAreaAbsolute(rectab, false);
+
+            if (drawfunction == null)
+                drawfunction = SortedListDrawFunction;
+
+            var contentrect = rectab.Padding(1);
+            Vector2 startpos = new Vector2(1, 1);
+            if(list != null && list.Count != 0)
+            {
+                for(var i = 0; i < list.Count; i++)
+                {
+                    var drawsize = drawfunction.Invoke(list[i], contentrect, startpos);
+                    startpos.x += (drawsize.x + 1);
+
+                }
+            }
+            GUI.EndArea();
             return 0;
         }
     }
