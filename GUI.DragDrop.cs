@@ -28,8 +28,6 @@ namespace Rigel.GUI
         }
 
 
-
-
         internal static bool HoverDrop(string contract,object content)
         {
             var pool = s_poolDropRect.m_objects;

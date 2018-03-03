@@ -28,7 +28,7 @@ namespace Rigel.GUI.Component
         }
 
 
-        public bool CheckOver(Vector2 pointer)
+        internal bool CheckOver(Vector2 pointer)
         {
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
@@ -38,16 +38,14 @@ namespace Rigel.GUI.Component
             return false;
         }
 
-        public void Draw(Action onhoverdraw)
+        public bool GetHoverStatus()
         {
             if (OnHover)
             {
-                if(onhoverdraw != null)
-                {
-                    onhoverdraw.Invoke();
-                }
                 OnHover = false;
+                return true;
             }
+            return false;
         }
 
         public bool CheckDropped()

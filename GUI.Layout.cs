@@ -15,7 +15,8 @@ namespace Rigel.GUI
         private static GUIFrame Frame { get { return GUI.m_frame; } }
 
         internal static int LineHeight = 23;
-        //private static int LineOffset = 2;
+
+        #region Layouting
 
         public static void BeginHorizontal()
         {
@@ -24,7 +25,6 @@ namespace Rigel.GUI
             GUI.CurLayout.SizeMax = Vector3.zero;
             GUI.CurLayout.RemainSize = GUI.CurArea.Rect.Size() - GUI.CurLayout.Offset;
         }
-
         public static Vector4 EndHorizontal()
         {
             var curLayout = GUI.CurLayout;
@@ -36,7 +36,6 @@ namespace Rigel.GUI
 
             return layoutrect;
         }
-
         public static void BeginVertical()
         {
             Frame.LayoutStack.Push(GUI.CurLayout);
@@ -56,6 +55,20 @@ namespace Rigel.GUI
             return layoutrect;
         }
 
+        #endregion
+
+        #region Primitive
+
+        public static void Rect(Vector2 size, Vector4 color)
+        {
+            GUI.Rect(new Vector4(GUI.CurLayout.Offset, size), color);
+            AutoCaculateOffset(size.x, size.y);
+        }
+
+        #endregion
+
+        #region Basic Flow Control
+
         public static void Space(int offset)
         {
             GUI.CurLayout.Offset.y += offset;
@@ -64,7 +77,6 @@ namespace Rigel.GUI
         {
             GUI.CurLayout.Offset.y += (int)offset;
         }
-
         public static void Indent(int offset)
         {
             GUI.CurLayout.Offset.x += offset;
@@ -73,7 +85,6 @@ namespace Rigel.GUI
         {
             GUI.CurLayout.Offset.x += (int)offset;
         }
-
         internal static void AutoCaculateOffsetWidth(float w)
         {
             AutoCaculateOffset((int)w, LineHeight);
@@ -90,12 +101,10 @@ namespace Rigel.GUI
         {
             AutoCaculateOffset(0, h);
         }
-
         public static void AutoCaculateOffset(float w, float h)
         {
             AutoCaculateOffset((int)w, (int)h);
         }
-
         public static void AutoCaculateOffset(int w, int h)
         {
             var layout = GUI.CurLayout;
@@ -125,21 +134,23 @@ namespace Rigel.GUI
             GUI.CurLayout = layout;
         }
 
-        public static void Rect(Vector2 size, Vector4 color)
-        {
-            GUI.Rect(new Vector4(GUI.CurLayout.Offset, size), color);
-            AutoCaculateOffset(size.x, size.y);
-        }
+        #endregion
 
+        #region Button
 
+        /// <summary>
+        /// Draw Button
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static bool Button(string label, params GUIOption[] options)
         {
             return Button(label, GUIStyle.Current.BtnColor, options);
         }
 
-
         /// <summary>
-        /// 
+        /// Draw Button
         /// </summary>
         /// <param name="label"></param>
         /// <param name="options">GUIOptionGrid | GUIOptionWidth | GUIOptionHeight | GUIOptionAlign </param>
@@ -226,6 +237,10 @@ namespace Rigel.GUI
             return clicked;
         }
 
+        #endregion
+
+        #region Text
+
         public static void Label(string content)
         {
             Label(content, RigelColor.White);
@@ -240,15 +255,12 @@ namespace Rigel.GUI
             AutoCaculateOffset(textWidth, LineHeight);
         }
 
+        #endregion
 
-        //////////////////
-        //Components
-        //1.TabView
-        //2.ScrollView
-        //3.TextField
+        #region TabView
 
         /// <summary>
-        /// 
+        /// Draw TabView Horizontal
         /// </summary>
         /// <param name="index"></param>
         /// <param name="tabnames"></param>
@@ -277,6 +289,16 @@ namespace Rigel.GUI
 
             return ret;
         }
+
+        /// <summary>
+        /// Draw TabView Vertical
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="tabnames"></param>
+        /// <param name="draw"></param>
+        /// <param name="tabWidth"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static int TabViewVertical(int index, List<string> tabnames, Action<int> draw, int tabWidth, params GUIOption[] options)
         {
             var sizeRemain = GUI.CurLayout.RemainSize;
@@ -295,6 +317,16 @@ namespace Rigel.GUI
             return ret;
         }
 
+        #endregion
+
+        #region ScrollView
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="scrolltype"></param>
+        /// <param name="options"></param>
         public static void BeginScrollView(Vector2 pos, GUIScrollType scrolltype = GUIScrollType.Vertical, params GUIOption[] options)
         {
             {
@@ -316,6 +348,10 @@ namespace Rigel.GUI
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static Vector2 EndScrollView()
         {
             var rect = GUI.CurArea.Rect;
@@ -327,84 +363,112 @@ namespace Rigel.GUI
             return pos;
         }
 
+        #endregion
+
+        #region Menu
+
+        /// <summary>
+        /// Draw GUIMenuList
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="option"></param>
         public static void DrawMenu(GUIMenuList menu, params GUIOption[] option)
         {
             var clicked = GUILayout.Button(menu.Label, option);
             var lastRect = GUI.CurLayout.LastDrawRect;
             var menuDraw = GUI.GetObjMenuDraw(menu.GetHashCode(), lastRect);
-
-            //var lastLevel = GUI.SetDepthLevel(50000);
-
             GUI.SetDepthLayer(GUILayerType.Overlay);
             menuDraw.Draw(clicked, menu, lastRect);
             GUI.RestoreDepthLayer();
 
         }
 
-        public static void DragRect<T>(Vector2 size,T dropcontent, string contract = "")
+        [TODO]
+        public static void ContextMenu()
+        {
+
+        }
+
+        #endregion
+
+        #region Drag Drop
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="size"></param>
+        /// <param name="dropcontent"></param>
+        /// <param name="contract"></param>
+        /// <returns>is ondrag</returns>
+        public static bool DragRect<T>(Vector2 size,T dropcontent, string contract = "")
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
 
-            GUI.DragRect(rect, dropcontent, contract,true,true);
+            bool ondrag = GUI.DragRect(rect, dropcontent, contract,true,true);
 
             AutoCaculateOffset(rect.z, rect.w);
             GUILayout.Space(2);
+
+            return ondrag;
         }
 
-        public static void DragRect(string contract,Vector2 size,object dropcontent = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contract"></param>
+        /// <param name="size"></param>
+        /// <param name="dropcontent"></param>
+        /// <returns>is ondrag</returns>
+        public static bool DragRect(string contract,Vector2 size,object dropcontent = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
-            GUI.DragRect(contract, rect, dropcontent, true, true);
+            var onhover = GUI.DragRect(contract, rect, dropcontent, true, true);
 
             AutoCaculateOffset(rect.z, rect.w);
             GUILayout.Space(2);
+
+            return onhover;
         }
 
-        public static void DropRect<T>(Vector2 size,Action<T> onDrop, string contract = "",Action onHover = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="size"></param>
+        /// <param name="onDrop"></param>
+        /// <param name="contract"></param>
+        /// <param name="onHover"></param>
+        /// <returns>is onhover</returns>
+        public static bool DropRect<T>(Vector2 size,Action<T> onDrop, string contract = "",Action onHover = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
-            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
-            var dropRect = GUI.GetDropRect(rectab, (d) => {
-                d.Contract = typeof(T).FullName + contract;
-            });
-
-            dropRect.Draw(onHover);
-
+            bool isonhover = GUI.DropRectAbsolute(rectab, onDrop, contract, onHover);
             AutoCaculateOffset(size.x, size.y);
-
-            if (dropRect.CheckDropped())
-            {
-                if (onDrop != null)
-                {
-                    onDrop.Invoke((T)dropRect.DropData);
-                }
-            }
+            return isonhover;
         }
 
-        public static void DropRect(Vector2 size,string contract,Action<object> onDrop,Action onHover = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="contract"></param>
+        /// <param name="onDrop"></param>
+        /// <param name="onHover"></param>
+        /// <returns>is ondrag</returns>
+        public static bool DropRect(Vector2 size,string contract,Action<object> onDrop,Action onHover = null)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
-            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
-            var dropRect = GUI.GetDropRect(rectab, (d) => {
-                d.Contract = contract;
-            });
-
-            dropRect.Draw(onHover);
-
+            bool isonhover = GUI.DropRectAbsolute(rectab, contract, onDrop, onHover);
             AutoCaculateOffset(size.x, size.y);
-
-            if (dropRect.CheckDropped())
-            {
-                if (onDrop != null)
-                {
-                    onDrop.Invoke(dropRect.DropData);
-                }
-            }
+            return isonhover;
         }
+
+        #endregion
 
 
 
