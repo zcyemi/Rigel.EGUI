@@ -14,6 +14,7 @@ namespace Rigel.GUI
         TabView = 4,
         MenuDraw = 5,
         DropRect = 6,
+        DragState = 7,
     }
 
     public abstract class GUIObjBase

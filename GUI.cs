@@ -259,7 +259,16 @@ namespace Rigel.GUI
             rect = rect.Move(CurArea.Rect);
             return ButtonAbsolute(rect, label, option);
         }
+        public static bool Button(Vector4 rect, string label, Vector4 color, params GUIOption[] option)
+        {
+            rect = rect.Move(CurArea.Rect);
+            return ButtonAbsolute(rect, label, color, option);
+        }
         public static bool ButtonAbsolute(Vector4 recta, string label, params GUIOption[] option)
+        {
+            return ButtonAbsolute(recta, label, GUIStyle.Current.BtnColor, option);
+        }
+        public static bool ButtonAbsolute(Vector4 recta, string label, Vector4 color, params GUIOption[] option)
         {
             recta = recta.Padding(1);
 
@@ -276,7 +285,7 @@ namespace Rigel.GUI
 
             if (e.Used)
             {
-                GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                GUI.RectAbsolute(recta, color);
             }
             else
             {
@@ -292,20 +301,20 @@ namespace Rigel.GUI
                     }
                     else
                     {
-                        if(e.EventType == RigelGUIEventType.MouseMove)
+                        if (e.EventType == RigelGUIEventType.MouseMove)
                         {
                             GUI.RectAbsolute(recta, GUIStyle.Current.ColorActive);
                         }
                         else
                         {
-                            GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                            GUI.RectAbsolute(recta, color);
                         }
-                        
+
                     }
                 }
                 else
                 {
-                    GUI.RectAbsolute(recta, GUIStyle.Current.BtnColor);
+                    GUI.RectAbsolute(recta, color);
                 }
             }
 
@@ -337,10 +346,10 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRect(string contract, Vector4 rect, object dropcontent = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRect(string contract, Vector4 rect, object dropcontent = null, object context = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             var rectab = GUI.GetAbsoluteRect(rect);
-            return DragRectAbsolute(contract, rectab, dropcontent, draw, drawondrag,drawonhover);
+            return DragRectAbsolute(contract, rectab, dropcontent,context, draw, drawondrag, drawonhover);
         }
 
         /// <summary>
@@ -353,7 +362,7 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, object context = null,bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             if (draw)
                 GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
@@ -372,12 +381,12 @@ namespace Rigel.GUI
                 if (ds.Stage == GUIDragStateStage.Update)
                 {
 
-                    onhover = GUI.HoverDrop(contract, dropcontent);
+                    onhover = GUI.EmmitHover(contract, dropcontent);
 
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
                 {
-                    GUI.EmmitDrop(contract, dropcontent);
+                    GUI.EmmitDrop(contract, dropcontent,context);
                 }
 
                 if (drawondrag && (drawonhover || !onhover))
@@ -403,10 +412,10 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRect<T>(Vector4 rect, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRect<T>(Vector4 rect, T dropcontent, string contract = "",object context = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             var ractab = GUI.GetAbsoluteRect(rect);
-            return DragRectAbsolute(ractab, dropcontent, contract, draw, drawondrag,drawonhover);
+            return DragRectAbsolute(ractab, dropcontent, contract, context, draw, drawondrag, drawonhover);
         }
 
         /// <summary>
@@ -420,7 +429,7 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag </returns>
-        public static bool DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true,bool drawonhover = false)
+        public static bool DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "",object context = null,bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             if (draw)
                 GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
@@ -438,11 +447,11 @@ namespace Rigel.GUI
 
                 if (ds.Stage == GUIDragStateStage.Update)
                 {
-                    onhover = GUI.HoverDrop(contractfull, dropcontent);
+                    onhover = GUI.EmmitHover(contractfull, dropcontent);
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
                 {
-                    onhover = GUI.EmmitDrop(contractfull, dropcontent);
+                    onhover = GUI.EmmitDrop(contractfull, dropcontent,context);
                 }
 
                 if (drawondrag && (drawonhover || !onhover))
@@ -465,10 +474,10 @@ namespace Rigel.GUI
         /// <param name="ondrop"></param>
         /// <param name="onHover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRect(Vector4 rect, string contract, Action<object> ondrop, Action onHover = null)
+        public static bool DropRect(Vector4 rect, string contract, Action<object,object> ondrop)
         {
             var rectab = GetAbsoluteRect(rect);
-            return DropRectAbsolute(rectab, contract, ondrop, onHover);
+            return DropRectAbsolute(rectab, contract, ondrop);
         }
         /// <summary>
         /// Create a drop rect region which receives all draggable object with contract.
@@ -478,20 +487,23 @@ namespace Rigel.GUI
         /// <param name="ondrop"></param>
         /// <param name="onHover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRectAbsolute(Vector4 rectab,string contract,Action<object> ondrop,Action onHover = null)
+        public static bool DropRectAbsolute(Vector4 rectab, string contract, Action<object,object> ondrop)
         {
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
-            var objDropRect = GUI.GetDropRect(rectab, (d) => {
+            var objDropRect = GUI.GetDropRect(rectab, (d) =>
+            {
                 d.Contract = contract;
-             });
+            });
 
+            var di = objDropRect.Info;
 
-            if (objDropRect.CheckDropped())
+            if (di.Staus == DropRectStatus.OnDrop)
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke(objDropRect.DropData);
+                    ondrop.Invoke(di.Target, di.TargetContext);
                 }
+                objDropRect.SetStatus(DropRectStatus.None);
                 return false;
             }
 
@@ -506,10 +518,10 @@ namespace Rigel.GUI
         /// <param name="contract"></param>
         /// <param name="onhover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRect<T>(Vector4 rect, Action<T> ondrop, string contract = "", Action onhover = null)
+        public static bool DropRect<T>(Vector4 rect, Action<T,object> ondrop, string contract = "")
         {
             var rectab = GetAbsoluteRect(rect);
-            return DropRectAbsolute(rectab, ondrop, contract, onhover);
+            return DropRectAbsolute(rectab, ondrop, contract);
         }
         /// <summary>
         /// Create a drop rect region which receives draggable object with type of T.
@@ -520,39 +532,175 @@ namespace Rigel.GUI
         /// <param name="contract"></param>
         /// <param name="onhover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRectAbsolute<T>(Vector4 rectab,Action<T> ondrop,string contract = "",Action onhover = null)
+        public static bool DropRectAbsolute<T>(Vector4 rectab, Action<T,object> ondrop, string contract = "")
         {
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
-            var objDropRect = GUI.GetDropRect(rectab, (d) => {
+            var objDropRect = GUI.GetDropRect(rectab, (d) =>
+            {
                 d.Contract = typeof(T).FullName + contract;
             });
 
-            if (objDropRect.CheckDropped())
+            var di = objDropRect.Info;
+
+            if (di.Staus == DropRectStatus.OnDrop)
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke((T)objDropRect.DropData);
+                    ondrop.Invoke((T)di.Target,di.TargetContext);
                 }
+                objDropRect.SetStatus(DropRectStatus.None);
                 return false;
             }
-
             return objDropRect.GetHoverStatus();
         }
 
         #endregion
 
-        public static void DrawContentDocker(GUIContentDocker docker,Vector4 rect)
+        public static void DrawContentDocker(GUIContentDocker docker, Vector4 rect)
         {
             var rectab = GetAbsoluteRect(rect);
             DrawContentDockerAbsolute(docker, rectab);
         }
-        public static void DrawContentDockerAbsolute(GUIContentDocker docker,Vector4 rectab)
+        public static void DrawContentDockerAbsolute(GUIContentDocker docker, Vector4 rectab)
         {
             docker.Draw(rectab);
         }
 
+        #region ReorderedList
 
+        public static bool ReorderedList<T>(IList<T> list, Vector4 rect) where T : class
+        {
+            var rectab = GetAbsoluteRect(rect);
+            return ReorderedListAbsolute(list, rectab);
+        }
+        public static bool ReorderedListVertical<T>(IList<T> list, Vector4 rect) where T : class
+        {
+            var rectab = GetAbsoluteRect(rect);
+            return ReorderedListVerticalAbsolute(list, rect);
+        }
+        public static bool ReorderedListAbsolute<T>(IList<T> list, Vector4 rectab) where T : class
+        {
+            if (list == null) return false;
+            var itemrect = rectab;
+            itemrect.z = 50;
+            int dragindex = -1;
+            int tarindex = -1;
+            bool swap = false;
+            for (var i = 0; i < list.Count; i++)
+            {
+                var dragstate = GUI.GetObjDragStete(itemrect);
+                if (dragstate.OnDrag(itemrect))
+                {
+                    dragindex = i;
+                    tarindex = Mathf.FloorToInt((GUI.Event.Pointer.x - rectab.x) / 50);
+                    if (dragstate.Stage == GUIDragStateStage.Exit) swap = true;
+                    break;
+                }
+                itemrect.x += 50;
 
+            }
+            //Swap
+            tarindex = Mathf.Clamp(tarindex, 0, list.Count - 1);
+            if (swap && dragindex != tarindex)
+            {
+                var temp = list[dragindex];
+                list[dragindex] = list[tarindex];
+                list[tarindex] = temp;
+                dragindex = -1;
+                tarindex = -1;
+            }
+            if (dragindex >= 0 && (tarindex != dragindex))
+            {
+                itemrect.x = rectab.x;
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (i == tarindex || i == dragindex)
+                    {
+                        var di = (i == tarindex ? dragindex : tarindex);
+                        GUI.ButtonAbsolute(itemrect, list[di].ToString(), di == dragindex ? GUIStyle.Current.ColorActive : GUIStyle.Current.ColorActiveD);
+                    }
+                    else
+                    {
+                        GUI.ButtonAbsolute(itemrect, list[i].ToString());
+                    }
+                    itemrect.x += 50;
+                }
+            }
+            else
+            {
+                itemrect.x = rectab.x;
+                for (var i = 0; i < list.Count; i++)
+                {
+                    GUI.ButtonAbsolute(itemrect, list[i].ToString());
+                    itemrect.x += 50;
+                }
+            }
+            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+            return false;
+        }
+        public static bool ReorderedListVerticalAbsolute<T>(IList<T> list, Vector4 rectab) where T : class
+        {
+            if (list == null) return false;
+            var itemrect = rectab;
+            itemrect.w = 25;
+            int dragindex = -1;
+            int tarindex = -1;
+            bool swap = false;
+            for (var i = 0; i < list.Count; i++)
+            {
+                var dragstate = GUI.GetObjDragStete(itemrect);
+                if (dragstate.OnDrag(itemrect))
+                {
+                    dragindex = i;
+                    tarindex = Mathf.FloorToInt((GUI.Event.Pointer.y - rectab.y) / 25);
+                    if (dragstate.Stage == GUIDragStateStage.Exit) swap = true;
+                    break;
+                }
+
+                itemrect.y += 25;
+            }
+            //Swap
+            tarindex = Mathf.Clamp(tarindex, 0, list.Count - 1);
+            if (swap && dragindex != tarindex)
+            {
+                var temp = list[dragindex];
+                list[dragindex] = list[tarindex];
+                list[tarindex] = temp;
+
+                dragindex = -1;
+                tarindex = -1;
+            }
+            if (dragindex >= 0 && (tarindex != dragindex))
+            {
+                itemrect.y = rectab.y;
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (i == tarindex || i == dragindex)
+                    {
+                        var di = (i == tarindex ? dragindex : tarindex);
+                        GUI.ButtonAbsolute(itemrect, list[di].ToString(), di == dragindex ? GUIStyle.Current.ColorActive : GUIStyle.Current.ColorActiveD);
+                    }
+                    else
+                    {
+                        GUI.ButtonAbsolute(itemrect, list[i].ToString());
+                    }
+                    itemrect.y += 25;
+                }
+            }
+            else
+            {
+                itemrect.y = rectab.y;
+                for (var i = 0; i < list.Count; i++)
+                {
+                    GUI.ButtonAbsolute(itemrect, list[i].ToString());
+                    itemrect.y += 25;
+                }
+            }
+            GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
+            return false;
+        }
+
+        #endregion
     }
 }

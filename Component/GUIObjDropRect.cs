@@ -6,25 +6,46 @@ using System.Threading.Tasks;
 
 namespace Rigel.GUI.Component
 {
+    public enum DropRectStatus
+    {
+        None,
+        OnHover,
+        OnDrop,
+    }
+
+    public class GUIDropRectInfo
+    {
+        public DropRectStatus Staus;
+        public object Target;
+        public object TargetContext;
+
+        public void Reset()
+        {
+            Staus = DropRectStatus.None;
+            Target = null;
+            TargetContext = null;
+        }
+    }
+
+
     internal class GUIObjDropRect : GUIObjBase
     {
-
+        internal GUIDropRectInfo m_info = new GUIDropRectInfo();
+        internal GUIDropRectInfo Info { get
+            {
+                return m_info;
+            } }
         public string Contract = null;
-        public bool OnDropped = false;
-        public object DropData = null;
 
-        public bool OnHover = false;
-
-        //ab
+        //Absolute
         public Vector4 Rect;
 
         public override void Reset()
         {
+            m_info.Reset();
+
             Rect = Vector4.zero;
             Contract = null;
-            OnDropped = false;
-            DropData = null;
-            OnHover = false;
         }
 
 
@@ -32,33 +53,27 @@ namespace Rigel.GUI.Component
         {
             if (GUIUtility.RectContainsCheck(Rect, pointer))
             {
-                OnHover = true;
                 return true;
             }
             return false;
+        }
+
+        public void SetStatus(DropRectStatus status,object target = null,object context = null)
+        {
+            m_info.Staus = status;
+            m_info.Target = target;
+            m_info.TargetContext = context;
         }
 
         public bool GetHoverStatus()
         {
-            if (OnHover)
+            if (m_info.Staus == DropRectStatus.OnHover)
             {
-                OnHover = false;
+                m_info.Staus = DropRectStatus.None;
                 return true;
             }
             return false;
         }
 
-        public bool CheckDropped()
-        {
-            if (OnDropped)
-            {
-                OnDropped = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }

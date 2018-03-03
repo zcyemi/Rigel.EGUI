@@ -14,6 +14,8 @@ namespace Rigel.GUI.Component
 
         public GUIDemoContent()
         {
+            ContentName = "DemoContent";
+
             {
                 m_sampleFunctions.Add(SampleMenuList);
                 m_sampleFunctions.Add(SampleLayout);
@@ -277,10 +279,23 @@ namespace Rigel.GUI.Component
                 var rect = new Vector4(offset, 300, 23);
 
             }
+
+            {
+                var rect = new Vector4(GUI.CurLayout.Offset, 200, 25);
+                var rectab = GUI.GetAbsoluteRect(rect);
+                GUI.ReorderedListAbsolute(sortedList, rectab);
+
+                rectab.y += 30;
+                rectab.z = 120;
+                rectab.w = 100;
+                GUI.ReorderedListVerticalAbsolute(sortedList, rectab);
+
+            }
             
             
 
         }
+
 
 
         public override void OnGUI(RigelGUIEvent e)

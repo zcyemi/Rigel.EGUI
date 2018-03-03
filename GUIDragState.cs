@@ -15,17 +15,19 @@ namespace Rigel.GUI
         None,
     }
 
-    public class GUIDragState
+    public class GUIDragState : GUIObjBase
     {
         private Vector2 m_offset;
         private Vector2 m_enterPos;
         private bool m_ondrag = false;
-        public Vector2 OffSet { get { return m_offset; } }
-        public Vector2 EnterPos { get { return m_enterPos; } }
         public GUIDragStateStage Stage { get; private set; } = GUIDragStateStage.None;
 
+        public Vector2 OffSet { get { return m_offset; } }
+        public Vector2 EnterPos { get { return m_enterPos; } }
+        
 
-        public void Reset()
+
+        public override void Reset()
         {
             m_offset = Vector2.zero;
             m_enterPos = Vector2.zero;

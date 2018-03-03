@@ -28,7 +28,7 @@ namespace Rigel.GUI
         }
 
 
-        internal static bool HoverDrop(string contract,object content)
+        internal static bool EmmitHover(string contract,object content)
         {
             var pool = s_poolDropRect.m_objects;
 
@@ -37,6 +37,7 @@ namespace Rigel.GUI
                 if (o.Contract != contract) continue;
                 if (o.CheckOver(GUI.Event.Pointer))
                 {
+                    o.SetStatus(DropRectStatus.OnHover, content, null);
                     return true;
                 }
             }
@@ -45,7 +46,7 @@ namespace Rigel.GUI
             return false;
         }
 
-        internal static bool EmmitDrop(string contract, object content)
+        internal static bool EmmitDrop(string contract, object content,object context)
         {
 
             var pool = s_poolDropRect.m_objects;
@@ -55,8 +56,7 @@ namespace Rigel.GUI
                 if (o.Contract != contract) continue;
                 if(o.CheckOver(GUI.Event.Pointer))
                 {
-                    o.OnDropped = true;
-                    o.DropData = content;
+                    o.SetStatus(DropRectStatus.OnDrop, content, context);
                     return true;
                 }
             }
