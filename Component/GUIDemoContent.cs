@@ -49,7 +49,7 @@ namespace Rigel.GUI.Component
         private void SampleMenuList(RigelGUIEvent e)
         {
             GUILayout.Indent(250);
-            GUILayout.DrawMenu(m_sampleMenuList,GUIOption.Width(150));
+            GUILayout.DrawMenu(m_sampleMenuList, GUIOption.Width(150));
             GUILayout.Button("Button on nextline");
         }
         private void SampleLayout(RigelGUIEvent e)
@@ -128,7 +128,7 @@ namespace Rigel.GUI.Component
                 GUI.EndArea();
             }
 
-    }
+        }
         private void SampleText(RigelGUIEvent e)
         {
             //Draw Text
@@ -150,16 +150,16 @@ namespace Rigel.GUI.Component
             GUILayout.Rect(new Vector2(30, 10), RigelColor.Green);
             GUILayout.Label(">> Label <<", RigelColor.White);
 
-            
+
         }
         private void SampleButton(RigelGUIEvent e)
         {
             //Button Align
-            if(GUI.Button(new Vector4(0, 0, 100, 23), "BtnC"))
+            if (GUI.Button(new Vector4(0, 0, 100, 23), "BtnC"))
             {
                 Console.WriteLine("GUI.Button Center Click");
             }
-            if (GUI.Button(new Vector4(100, 0, 100, 38), "BtnL",GUIOption.AlignLeft))
+            if (GUI.Button(new Vector4(100, 0, 100, 38), "BtnL", GUIOption.AlignLeft))
             {
                 Console.WriteLine("GUI.Button Left Click");
             }
@@ -186,11 +186,11 @@ namespace Rigel.GUI.Component
             m_sampleTabViewIndex = GUILayout.TabView(m_sampleTabViewIndex, m_sampleTabViewList, (i) =>
             {
                 GUILayout.Button("Btn in tabview : " + i);
-            },GUIOption.Height(100));
+            }, GUIOption.Height(100));
 
             m_sampleTabViewIndex = GUILayout.TabViewVertical(m_sampleTabViewIndex, m_sampleTabViewList, (i) =>
             {
-                GUILayout.Label("label in vertical tabview : " + i,Vector4.one);
+                GUILayout.Label("label in vertical tabview : " + i, Vector4.one);
             }, 50);
         }
         private Vector2 m_sampleScrollPos = Vector2.zero;
@@ -241,32 +241,45 @@ namespace Rigel.GUI.Component
         }
 
 
+        private List<string> sortedList = new List<string>()
+        {
+            "Tab1",
+            "Tab2",
+            "Tab3",
+            "Tab4"
+        };
         private void SampleDragDrop(RigelGUIEvent e)
         {
+            //DragRect/DropRect
+            {
+                GUILayout.DragRect("contract1", new Vector2(50, 20), "AAA");
+                GUILayout.DragRect("contract2", new Vector2(50, 20), "BBB");
+                //GUILayout.DropRect(new Vector2(100, 50), "contract1", (o) =>
+                //{
+                //    Console.WriteLine("OnDrop " + o);
+                //}, () =>
+                //{
+                //    GUILayout.Label("contract1:OnHover");
+                //});
+                //GUILayout.DropRect(new Vector2(100, 50), "contract2", (o) =>
+                //{
+                //    Console.WriteLine("OnDrop " + o);
+                //}, () =>
+                //{
+                //    GUILayout.Label("contract2:OnHover");
+                //});
+            }
 
-            GUILayout.DragRect("contract1",new Vector2( 50, 20),"AAA");
-            GUILayout.DragRect("contract2", new Vector2( 50, 20),"BBB");
+            {
+                GUILayout.Space(5);
 
+                var offset = GUI.CurLayout.Offset;
+                var rect = new Vector4(offset, 300, 23);
 
-            GUILayout.DropRect(new Vector2(100, 50), "contract1", (o) => {
-                Console.WriteLine("OnDrop " + o);
-            }, () => {
-                GUILayout.Label("contract1:OnHover");
-            });
+            }
+            
+            
 
-            GUILayout.DropRect(new Vector2(100, 50), "contract2", (o) => {
-                Console.WriteLine("OnDrop " + o);
-            }, () => {
-                GUILayout.Label("contract2:OnHover");
-            });
-
-
-            GUILayout.DropRect(new Vector2(100, 100), (GUIView view) =>
-              {
-
-              }, "", null);
-
-            //GUI.DrawDebugInfo();
         }
 
 
