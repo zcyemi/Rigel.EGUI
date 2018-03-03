@@ -248,6 +248,7 @@ namespace Rigel.GUI.Component
             "Tab3",
             "Tab4"
         };
+
         private void SampleDragDrop(RigelGUIEvent e)
         {
             //DragRect/DropRect
@@ -275,6 +276,18 @@ namespace Rigel.GUI.Component
 
                 var offset = GUI.CurLayout.Offset;
                 var rect = new Vector4(offset, 300, 23);
+
+            }
+
+            {
+                var rect = new Vector4(GUI.CurLayout.Offset, 200, 25);
+                var rectab = GUI.GetAbsoluteRect(rect);
+                GUI.ReorderedListAbsolute(sortedList, rectab);
+
+                rectab.y += 30;
+                rectab.z = 120;
+                rectab.w = 100;
+                GUI.ReorderedListVerticalAbsolute(sortedList, rectab);
 
             }
             

@@ -56,6 +56,7 @@ namespace Rigel.GUI
         private static GUIObjPool<GUIObjTabView> s_poolTabView = new GUIObjPool<GUIObjTabView>();
         private static GUIObjPool<GUIObjScrollView> s_poolScrollView = new GUIObjPool<GUIObjScrollView>();
         private static GUIObjPool<GUIObjMenuDraw> s_poolMenuDraw = new GUIObjPool<GUIObjMenuDraw>();
+        private static GUIObjPool<GUIDragState> s_poolDragState = new GUIObjPool<GUIDragState>();
 
 
         internal static GUIObjTabView GetObjTabView(Vector4 rect, Action<GUIObjTabView> createFunction = null) 
@@ -72,6 +73,10 @@ namespace Rigel.GUI
             return s_poolMenuDraw.Get(GUIUtility.GetHash(menuhash,rect, GUIObjType.MenuDraw),createFunction);
         }
 
+        internal static GUIDragState GetObjDragStete(Vector4 rectab,Action<GUIDragState> createFunction = null)
+        {
+            return s_poolDragState.Get(GUIUtility.GetHash(rectab, GUIObjType.DragState), createFunction);
+        }
 
 
 
@@ -98,6 +103,7 @@ namespace Rigel.GUI
             s_poolMenuDraw.OnFrame();
             s_poolDragRect.OnFrame();
             s_poolDropRect.OnFrame();
+            s_poolDragState.OnFrame();
         }
         internal static bool EndFrame(GUIForm form)
         {
