@@ -381,7 +381,7 @@ namespace Rigel.GUI
                 if (ds.Stage == GUIDragStateStage.Update)
                 {
 
-                    onhover = GUI.HoverDrop(contract, dropcontent);
+                    onhover = GUI.EmmitHover(contract, dropcontent);
 
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
@@ -447,7 +447,7 @@ namespace Rigel.GUI
 
                 if (ds.Stage == GUIDragStateStage.Update)
                 {
-                    onhover = GUI.HoverDrop(contractfull, dropcontent);
+                    onhover = GUI.EmmitHover(contractfull, dropcontent);
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
                 {
@@ -495,13 +495,15 @@ namespace Rigel.GUI
                 d.Contract = contract;
             });
 
+            var di = objDropRect.Info;
 
-            if (objDropRect.CheckDropped())
+            if (di.Staus == DropRectStatus.OnDrop)
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke(objDropRect.DropData,objDropRect.DropContext);
+                    ondrop.Invoke(di.Target, di.TargetContext);
                 }
+                objDropRect.SetStatus(DropRectStatus.None);
                 return false;
             }
 
@@ -539,15 +541,17 @@ namespace Rigel.GUI
                 d.Contract = typeof(T).FullName + contract;
             });
 
-            if (objDropRect.CheckDropped())
+            var di = objDropRect.Info;
+
+            if (di.Staus == DropRectStatus.OnDrop)
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke((T)objDropRect.DropData,objDropRect.DropContext);
+                    ondrop.Invoke((T)di.Target,di.TargetContext);
                 }
+                objDropRect.SetStatus(DropRectStatus.None);
                 return false;
             }
-
             return objDropRect.GetHoverStatus();
         }
 
