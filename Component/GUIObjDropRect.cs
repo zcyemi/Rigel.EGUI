@@ -12,6 +12,7 @@ namespace Rigel.GUI.Component
         public string Contract = null;
         public bool OnDropped = false;
         public object DropData = null;
+        public object DropContext = null;
 
         public bool OnHover = false;
 
@@ -24,6 +25,7 @@ namespace Rigel.GUI.Component
             Contract = null;
             OnDropped = false;
             DropData = null;
+            DropContext = null;
             OnHover = false;
         }
 

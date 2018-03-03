@@ -14,6 +14,8 @@ namespace Rigel.GUI.Component
 
         public GUIDemoContent()
         {
+            ContentName = "DemoContent";
+
             {
                 m_sampleFunctions.Add(SampleMenuList);
                 m_sampleFunctions.Add(SampleLayout);
@@ -248,7 +250,6 @@ namespace Rigel.GUI.Component
             "Tab3",
             "Tab4"
         };
-
         private void SampleDragDrop(RigelGUIEvent e)
         {
             //DragRect/DropRect
@@ -294,6 +295,7 @@ namespace Rigel.GUI.Component
             
 
         }
+
 
 
         public override void OnGUI(RigelGUIEvent e)

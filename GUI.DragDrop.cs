@@ -45,7 +45,7 @@ namespace Rigel.GUI
             return false;
         }
 
-        internal static bool EmmitDrop(string contract, object content)
+        internal static bool EmmitDrop(string contract, object content,object context)
         {
 
             var pool = s_poolDropRect.m_objects;
@@ -57,6 +57,7 @@ namespace Rigel.GUI
                 {
                     o.OnDropped = true;
                     o.DropData = content;
+                    o.DropContext = context;
                     return true;
                 }
             }

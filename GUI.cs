@@ -346,10 +346,10 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRect(string contract, Vector4 rect, object dropcontent = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRect(string contract, Vector4 rect, object dropcontent = null, object context = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             var rectab = GUI.GetAbsoluteRect(rect);
-            return DragRectAbsolute(contract, rectab, dropcontent, draw, drawondrag, drawonhover);
+            return DragRectAbsolute(contract, rectab, dropcontent,context, draw, drawondrag, drawonhover);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRectAbsolute(string contract, Vector4 rectab, object dropcontent = null, object context = null,bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             if (draw)
                 GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
@@ -386,7 +386,7 @@ namespace Rigel.GUI
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
                 {
-                    GUI.EmmitDrop(contract, dropcontent);
+                    GUI.EmmitDrop(contract, dropcontent,context);
                 }
 
                 if (drawondrag && (drawonhover || !onhover))
@@ -412,10 +412,10 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DragRect<T>(Vector4 rect, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRect<T>(Vector4 rect, T dropcontent, string contract = "",object context = null, bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             var ractab = GUI.GetAbsoluteRect(rect);
-            return DragRectAbsolute(ractab, dropcontent, contract, draw, drawondrag, drawonhover);
+            return DragRectAbsolute(ractab, dropcontent, contract, context, draw, drawondrag, drawonhover);
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace Rigel.GUI
         /// <param name="drawondrag"></param>
         /// <param name="drawonhover"></param>
         /// <returns>is ondrag </returns>
-        public static bool DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "", bool draw = false, bool drawondrag = true, bool drawonhover = false)
+        public static bool DragRectAbsolute<T>(Vector4 rectab, T dropcontent, string contract = "",object context = null,bool draw = false, bool drawondrag = true, bool drawonhover = false)
         {
             if (draw)
                 GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
@@ -451,7 +451,7 @@ namespace Rigel.GUI
                 }
                 else if (ds.Stage == GUIDragStateStage.Exit)
                 {
-                    onhover = GUI.EmmitDrop(contractfull, dropcontent);
+                    onhover = GUI.EmmitDrop(contractfull, dropcontent,context);
                 }
 
                 if (drawondrag && (drawonhover || !onhover))
@@ -474,10 +474,10 @@ namespace Rigel.GUI
         /// <param name="ondrop"></param>
         /// <param name="onHover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRect(Vector4 rect, string contract, Action<object> ondrop, Action onHover = null)
+        public static bool DropRect(Vector4 rect, string contract, Action<object,object> ondrop)
         {
             var rectab = GetAbsoluteRect(rect);
-            return DropRectAbsolute(rectab, contract, ondrop, onHover);
+            return DropRectAbsolute(rectab, contract, ondrop);
         }
         /// <summary>
         /// Create a drop rect region which receives all draggable object with contract.
@@ -487,7 +487,7 @@ namespace Rigel.GUI
         /// <param name="ondrop"></param>
         /// <param name="onHover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRectAbsolute(Vector4 rectab, string contract, Action<object> ondrop, Action onHover = null)
+        public static bool DropRectAbsolute(Vector4 rectab, string contract, Action<object,object> ondrop)
         {
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
             var objDropRect = GUI.GetDropRect(rectab, (d) =>
@@ -500,7 +500,7 @@ namespace Rigel.GUI
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke(objDropRect.DropData);
+                    ondrop.Invoke(objDropRect.DropData,objDropRect.DropContext);
                 }
                 return false;
             }
@@ -516,10 +516,10 @@ namespace Rigel.GUI
         /// <param name="contract"></param>
         /// <param name="onhover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRect<T>(Vector4 rect, Action<T> ondrop, string contract = "", Action onhover = null)
+        public static bool DropRect<T>(Vector4 rect, Action<T,object> ondrop, string contract = "")
         {
             var rectab = GetAbsoluteRect(rect);
-            return DropRectAbsolute(rectab, ondrop, contract, onhover);
+            return DropRectAbsolute(rectab, ondrop, contract);
         }
         /// <summary>
         /// Create a drop rect region which receives draggable object with type of T.
@@ -530,7 +530,7 @@ namespace Rigel.GUI
         /// <param name="contract"></param>
         /// <param name="onhover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRectAbsolute<T>(Vector4 rectab, Action<T> ondrop, string contract = "", Action onhover = null)
+        public static bool DropRectAbsolute<T>(Vector4 rectab, Action<T,object> ondrop, string contract = "")
         {
             GUI.BorderAbsolute(rectab, GUIStyle.Current.ColorActiveD);
 
@@ -543,7 +543,7 @@ namespace Rigel.GUI
             {
                 if (ondrop != null)
                 {
-                    ondrop.Invoke((T)objDropRect.DropData);
+                    ondrop.Invoke((T)objDropRect.DropData,objDropRect.DropContext);
                 }
                 return false;
             }

@@ -440,12 +440,12 @@ namespace Rigel.GUI
         /// <param name="contract"></param>
         /// <param name="onHover"></param>
         /// <returns>is onhover</returns>
-        public static bool DropRect<T>(Vector2 size,Action<T> onDrop, string contract = "",Action onHover = null)
+        public static bool DropRect<T>(Vector2 size,Action<T,object> onDrop, string contract = "")
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
 
-            bool isonhover = GUI.DropRectAbsolute(rectab, onDrop, contract, onHover);
+            bool isonhover = GUI.DropRectAbsolute(rectab, onDrop, contract);
             AutoCaculateOffset(size.x, size.y);
             return isonhover;
         }
@@ -458,12 +458,12 @@ namespace Rigel.GUI
         /// <param name="onDrop"></param>
         /// <param name="onHover"></param>
         /// <returns>is ondrag</returns>
-        public static bool DropRect(Vector2 size,string contract,Action<object> onDrop,Action onHover = null)
+        public static bool DropRect(Vector2 size,string contract,Action<object,object> onDrop)
         {
             var rect = new Vector4(GUI.CurLayout.Offset, size);
             var rectab = GUI.GetAbsoluteRect(rect);
 
-            bool isonhover = GUI.DropRectAbsolute(rectab, contract, onDrop, onHover);
+            bool isonhover = GUI.DropRectAbsolute(rectab, contract, onDrop);
             AutoCaculateOffset(size.x, size.y);
             return isonhover;
         }
